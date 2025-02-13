@@ -1,0 +1,284 @@
+body {
+  background-color: cornsilk;
+  font-family: Arial, Helvetica, sans-serif;
+  /* font-family: "Alef", sans-serif; */
+}
+
+h2.title {
+  margin-left: 105px;
+  font-size: 30px;
+}
+
+.container {
+  perspective: 1000px;
+}
+
+.keyarea {
+  width: 500px;
+  height: 500px;
+}
+
+.keyarea:focus {
+  outline: none;
+}
+
+.card {
+  position: relative;
+  border: 10px solid rgb(119, 173, 209);
+  width: 200px;
+  height: 250px;
+  text-align: center;
+  left: 55px;
+  font-size: 40px;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  font-weight: bold;
+  border-radius: 15px;
+  transition: transform 665ms;
+  transform-style: preserve-3d;
+}
+
+.card-top {
+  position: absolute;
+  width: 100%;
+  height: 65px;
+  border-radius: 5px 5px 0 0;
+  /* opacity: 0.2; */
+  z-index: 2;
+}
+
+.card-bottom {
+  position: absolute;
+  width: 100%;
+  height: 118px;
+  bottom: 0px;
+  border-radius: 0 0 5px 5px;
+  /* opacity: 0.2; */
+  z-index: 2;
+}
+
+.latin {
+  /* color: purple; */
+}
+
+.hebrew {
+  font-size: 45px;
+  font-family: "Frank Ruhl Libre", "David Libre";
+  font-weight: bold;
+  font-style: normal;
+  /* color: #800; */
+  /* margin-top: -4px; */
+  /* color: red; */
+}
+
+.small {
+  font-size: 30px;
+}
+
+.smaller {
+  font-size: 23px;
+  margin-top: 4px;
+}
+
+.smallest {
+  font-size: 18px;
+  margin-top: 4px;
+}
+
+.hebrew-small {
+  font-size: 35px;
+}
+
+.hebrew-smaller {
+  font-size: 27px;
+}
+
+.hebrew-smallest {
+  font-size: 20px;
+}
+
+.front,
+.back {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  backface-visibility: hidden;
+  border-radius: 7px;
+}
+
+.front {
+}
+
+.back {
+  transform: rotateY(-180deg);
+}
+
+.text-box {
+  position: absolute;
+  background-color: #eee;
+  width: 100%;
+  /* padding: 5px 10px 10px 10px; */
+  top: 65px;
+  transition: transform 600ms;
+  line-height: 60px;
+  text-wrap: nowrap;
+  overflow: hidden;
+  user-select: none;
+}
+
+.front-text-box {
+  /* background-color: violet; */
+  height: 127px;
+}
+
+.top-text {
+  /* background-color: yellow; */
+  height: 60px;
+  width: 100%;
+  padding-top: 2px;
+  transition: opacity 500ms ease-in;
+  opacity: 1;
+  /* border: 2px dotted red; */
+}
+
+.bottom-text {
+  /* background-color: orange; */
+  position: absolute;
+  height: 60px;
+  width: 100%;
+  top: 68px;
+  margin-top: -6px;
+  /* color: purple; */
+  transition: opacity 500ms ease-in;
+  opacity: 1;
+  /* border: 2px dotted violet; */
+}
+
+.back-text {
+  width: 100%;
+  height: 68px;
+  margin-top: 3px;
+}
+
+.foo {
+  background-color: lightslategray;
+  margin-top: -10px;
+  height: 40px;
+}
+
+.flip-button {
+  /* background-color: #8ff; */
+  margin-top: 30px;
+  margin-left: 140px;
+  font-size: 20px;
+  border-radius: 10px;
+  position: absolute;
+}
+
+.next-button {
+  background-color: rgb(189, 218, 238);
+  margin-top: 25px;
+  margin-left: 175px;
+  font-size: 20px;
+  border-radius: 10px;
+  position: absolute;
+}
+
+.prev-button {
+  background-color: rgb(189, 218, 238);
+  margin-top: 25px;
+  margin-left: 85px;
+  font-size: 20px;
+  border-radius: 10px;
+  position: absolute;
+}
+
+.go-button {
+  background-color: rgb(151, 212, 151);
+  /* background-color: rgb(219, 170, 170); */
+  margin-top: 65px;
+  margin-left: 142px;
+  font-size: 20px;
+  border-radius: 10px;
+  position: absolute;
+}
+
+.stop-button {
+  background-color: rgb(219, 170, 170);
+  margin-top: 65px;
+  margin-left: 132px;
+  font-size: 20px;
+  border-radius: 10px;
+  position: absolute;
+}
+
+.speed-label {
+  position: absolute;
+  margin-top: 120px;
+  margin-left: 75px;
+}
+
+.speed-input {
+  background-color: aqua;
+  position: absolute;
+  margin-top: 121px;
+  margin-left: 133px;
+  width: 100px;
+}
+
+.options {
+  /* color: red; */
+  /* background-color: #eee; */
+  position: absolute;
+  /* border: 1px solid green; */
+  height: 400px;
+  width: 250px;
+  margin-left: 320px;
+  margin-top: -265px;
+}
+
+.reverse-check {
+  position: absolute;
+  margin-top: 40px;
+  margin-left: -195px;
+}
+
+.reverse-label {
+  position: absolute;
+  margin-top: 38px;
+  margin-left: -175px;
+  user-select: none;
+}
+
+.practice-check {
+  position: absolute;
+  margin-top: 70px;
+  margin-left: -195px;
+}
+
+.practice-label {
+  position: absolute;
+  margin-top: 68px;
+  margin-left: -175px;
+  user-select: none;
+}
+
+.practice-input {
+  width: 30px;
+  position: absolute;
+  margin-top: 67px;
+  margin-left: -53px;
+}
+
+.input-invalid {
+  background-color: pink;
+}
+
+.card-message {
+  font-size: 16px;
+  margin-top: 40px;
+  user-select: none;
+  font-style: italic;
+  width: 135px;
+  margin-left: 31px;
+  background-color: rgba(240, 240, 240, 0.4);
+}

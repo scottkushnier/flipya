@@ -1,0 +1,68 @@
+// API For FlipYa app
+// Gets information re wordset dictionaries that provide data for flash cards
+
+// Wordset object:
+//    id: index key, one unique per word set
+//    language1: nominal language for words on fronts of cards
+//    language2: nominal language for words on backs of cards
+//    theme: succint description of set (e.g. 1000 common words, words handy for tourists, etc.)
+//    color: background color of cards in this set - differentiates sets clearly & easily and make it look interesting
+//    enabled: flag - tells whether FlipYa should include this set for possible user choice (some sets are for testing font sizes, minimal sizes for testing, etc.)
+//    size: approx size of set, 10,100,1000,3000 etc., currently only used in sorting for selection menu
+
+// Word object:
+//    id: index key, each card gets unique id
+//    word1: a word in 'language1'
+//    word2: translation into 'language2'
+//    wordset_id: wordset that this card is part of
+
+import axios from "axios";
+
+const BASE_URL = process.env.REACT_APP_BASE_URL || "http://192.168.5.129:3001";
+
+class DictsApi {
+  static async request(endpoint, data = {}, method = "get") {
+    // console.debug("API Call:", endpoint, data, method);
+    const url = `${BASE_URL}/${endpoint}`;
+    const params = method === "get" ? data : {};
+    try {
+      return (await axios({ url, method, data, params })).data;
+    } catch (err) {
+      console.error("API Error:", err.response);
+      let message = err.response.data.error.message;
+      throw Array.isArray(message) ? message : [message];
+    }
+  }
+
+  // get all wordset data, handy for building selection menu in UI
+  static async getWordSets() {
+    const res = await this.request("wordset");
+    return res.wordsets;
+  }
+
+  static async getWordSet(n) {
+    const res = await this.request(`wordset/${n}`);
+    return res.wordset;
+  }
+
+  // get exact count of words in a particular set, needed to pick a random word properly
+  static async numWordsInSet(set_id) {
+    const res = await this.request(`wordset/${set_id}/count`);
+    return res.count;
+  }
+
+  // get nth word from one of wordsets
+  static async getWord(wordset_id, n) {
+    const res = await this.request(`word/${wordset_id}/${n}`);
+    return res.word[0];
+  }
+
+  // for testing, might want to include delays to see how App reacts
+  static async delay(secs) {
+    return new Promise((res) => {
+      setTimeout(res, secs * 1000);
+    });
+  }
+}
+
+export default DictsApi;
