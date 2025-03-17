@@ -42,6 +42,39 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: emails; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.emails (
+    id integer NOT NULL,
+    email character varying,
+    status character varying,
+    num_attempts integer DEFAULT 0,
+    key character varying
+);
+
+
+--
+-- Name: emails_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.emails_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: emails_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.emails_id_seq OWNED BY public.emails.id;
+
+
+--
 -- Name: words; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -109,6 +142,13 @@ ALTER SEQUENCE public.wordsets_id_seq OWNED BY public.wordsets.id;
 
 
 --
+-- Name: emails id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.emails ALTER COLUMN id SET DEFAULT nextval('public.emails_id_seq'::regclass);
+
+
+--
 -- Name: words id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -120,6 +160,27 @@ ALTER TABLE ONLY public.words ALTER COLUMN id SET DEFAULT nextval('public.words_
 --
 
 ALTER TABLE ONLY public.wordsets ALTER COLUMN id SET DEFAULT nextval('public.wordsets_id_seq'::regclass);
+
+
+--
+-- Data for Name: emails; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.emails (id, email, status, num_attempts, key) FROM stdin;
+1	scott_kushnier@yahoo.com	verified	1	\N
+3	bar@foo.com	unverified	0	\N
+66	bbb@foo.com	verified	3	nmvmzljbdu
+54	kushnier@hstreet.com	verified	1	\N
+67	ccc@foo.com	verified	1	yzmixwrvdj
+52	pessia@foo.com	verified	1	\N
+58	jay@foo.com	unverified	0	bylqsvkhat
+60	boo@foo.com	unverified	0	frmimxceuf
+62	carey@foo.com	unverified	1	kyofvwybti
+63	dave@foo.com	unverified	1	mfeeazglac
+64	tom@foo.com	verified	1	gogrvvwvck
+65	aaa@foo.com	verified	2	xeaxqyofpu
+53	scottkushnier@gmail.com	verified	1	\N
+\.
 
 
 --
@@ -17228,9 +17289,16 @@ COPY public.wordsets (id, language1, language2, theme, color, enabled, size) FRO
 4	English	Hebrew	religious	aqua	f	\N
 5	English	Hebrew	Israeli	aqua	f	\N
 6	English	Italian	colors	green	f	\N
-8	English	Hebrew	font-sizes	#800	f	\N
 10	English	Hebrew	ashrei	brown	f	\N
+8	English	Hebrew	font-sizes	#800	f	30
 \.
+
+
+--
+-- Name: emails_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.emails_id_seq', 67, true);
 
 
 --
@@ -17245,6 +17313,14 @@ SELECT pg_catalog.setval('public.words_id_seq', 17114, true);
 --
 
 SELECT pg_catalog.setval('public.wordsets_id_seq', 6, true);
+
+
+--
+-- Name: emails emails_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.emails
+    ADD CONSTRAINT emails_pkey PRIMARY KEY (id);
 
 
 --

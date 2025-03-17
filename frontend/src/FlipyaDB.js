@@ -1,5 +1,6 @@
 // API For FlipYa app
 // Gets information re wordset dictionaries that provide data for flash cards
+//  also keeps track of verified email addresses for sending session info
 
 // Wordset object:
 //    id: index key, one unique per word set
@@ -16,17 +17,30 @@
 //    word2: translation into 'language2'
 //    wordset_id: wordset that this card is part of
 
+// Email object:
+//    id: index
+//    email: email address as string (e.g. "bob@tdbank.com")
+//    status: "verified" or "unverified", string type - to leave door open for other statuses
+//    num_attempts: number of times user has tried to verify this email - limited attempts possible
+//    key: random character string - used to prevent unauthorized emails
+
 import axios from "axios";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL || "http://192.168.5.129:3001";
+// require("dotenv").config();
 
-class DictsApi {
-  static async request(endpoint, data = {}, method = "get") {
+// const DB_BASE_URL = process.env.DB_BASE_URL || "http://192.168.5.129:3001";
+
+// const DB_BASE_URL = "http://192.168.5.129:3001";
+
+const DB_BASE_URL = process.env.REACT_APP_DB_BASE_URL;
+
+class FlipyaDB {
+  static async request(endpoint, method = "get") {
+    // console.log(`url: ${DB_BASE_URL}`);
     // console.debug("API Call:", endpoint, data, method);
-    const url = `${BASE_URL}/${endpoint}`;
-    const params = method === "get" ? data : {};
+    const url = `${DB_BASE_URL}/${endpoint}`;
     try {
-      return (await axios({ url, method, data, params })).data;
+      return (await axios({ url, method })).data;
     } catch (err) {
       console.error("API Error:", err.response);
       let message = err.response.data.error.message;
@@ -57,6 +71,34 @@ class DictsApi {
     return res.word[0];
   }
 
+  static async getAllEmails() {
+    const res = await this.request("email/");
+    return res;
+  }
+
+  static async getEmail(email) {
+    const res = await this.request(`email/${email}`);
+    // console.log("get email returning: ", res.email);
+    return res.email;
+  }
+
+  static async addEmail(email, key) {
+    const res = await this.request(`email/${email}/${key}`, "POST");
+    return res;
+  }
+
+  // mark email address as verified
+  static async verifyEmail(email) {
+    // console.log("dictapi verify: ", email);
+    const res = await this.request(`email/verify/${email}`, "POST");
+    return res;
+  }
+
+  static async incAttempts(email) {
+    const res = await this.request(`email/inc_attempts/${email}`, "POST");
+    return res;
+  }
+
   // for testing, might want to include delays to see how App reacts
   static async delay(secs) {
     return new Promise((res) => {
@@ -65,4 +107,4 @@ class DictsApi {
   }
 }
 
-export default DictsApi;
+export default FlipyaDB;

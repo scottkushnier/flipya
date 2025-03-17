@@ -110,6 +110,7 @@ function decorateWord(word) {
 //                                      fast
 //
 
+// enum type for Card showing configuration
 const Config = {
   ShowTopWord: 1,
   ShowBottomWord: 2,
@@ -149,7 +150,7 @@ function Card({ topWord, bottomWord, flipWord, config, color, flipFn }) {
   // similarly animated scroll up or down via CSS
   const slideUp = () => {
     document.getElementById("front-text-box").style.transform =
-      "translateY(-60px)";
+      "translateY(-9vw)";
     setshowTop(false);
   };
   const slideDown = () => {
@@ -194,7 +195,7 @@ function Card({ topWord, bottomWord, flipWord, config, color, flipFn }) {
             style={
               showTop
                 ? { transform: "translateY(0px)" }
-                : { transform: "translateY(-60px)" }
+                : { transform: "translateY(-9vw)" }
             }
           >
             <div className="top-text">{decorateWord(topWord)}</div>

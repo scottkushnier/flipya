@@ -10,7 +10,7 @@ class Word {
   }
 
   static async addWord(word1, word2, wordset_id) {
-    console.log("add word: ", word1, word2, wordset_id);
+    // console.log("add word: ", word1, word2, wordset_id);
     const query =
       "INSERT INTO words (word1, word2, wordset_id) VALUES ($1, $2, $3)";
     const res = await db.query(query, [word1, word2, wordset_id]);

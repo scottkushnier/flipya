@@ -1,7 +1,8 @@
 import "./App.css";
 import { useState, useEffect, useRef } from "react";
 import { Card, Config } from "./Card";
-import DictsApi from "./DictsApi";
+
+import FlipyaDB from "./FlipyaDB";
 import wordData from "./wordData";
 import Options from "./Options";
 
@@ -11,6 +12,8 @@ let reverse = false;
 let saveConfig;
 let going = false;
 let myInterval;
+
+let resetTransitionCount = 0;
 
 // functions to get transform delays depending on speed setting
 
@@ -65,10 +68,15 @@ function Console() {
     myTextBox.style.transition = newWordTransform(speed);
   };
 
+  // const restoreNewWordTransform = () => {
+  //   const myTextBox = document.getElementById("front-text-box");
+  //   myTextBox.style.transition = newWordTransform(speed);
+  // };
+
   // initially set color for card properly
   useEffect(() => {
     // console.log("getting color");
-    DictsApi.getWordSet(wordsetId).then((wordset) => {
+    FlipyaDB.getWordSet(wordsetId).then((wordset) => {
       setCardColor(wordset.color);
     });
   }, []);
@@ -209,10 +217,12 @@ function Console() {
       // then just keep calling doRound on interval timer until STOP button pressed
       going = true;
       doRound();
+      console.log("starting interval");
       myInterval = setInterval(doRound, roundTiming(speedRef.current) * 2.5);
     } else {
       going = false;
       clearInterval(myInterval);
+      console.log("stopping interval");
     }
     setAuto(!auto);
   };
@@ -227,7 +237,7 @@ function Console() {
     setFlipWord("(hit NEXT to begin)");
     wordsetId = id;
     reverse = reverseVal;
-    DictsApi.getWordSet(wordsetId).then((wordset) => {
+    FlipyaDB.getWordSet(wordsetId).then((wordset) => {
       setCardColor(wordset.color);
     });
   }
@@ -308,60 +318,99 @@ function Console() {
     }
   }
 
+  function resetTransition(count) {
+    // console.log("reset transition", count);
+    if (count === resetTransitionCount) {
+      // console.log("reset transition for real");
+      const myTextBox = document.getElementById("front-text-box");
+      myTextBox.style.transition = newWordTransform(speedRef.current);
+    }
+  }
+
+  window.addEventListener("resize", function (event) {
+    // Code to execute when the window is resized
+    // console.log("Window has been resized");
+    // You can access the new window dimensions using:
+    // console.log("New width:", newWidth, "New height:", newHeight);
+    const myTextBox = document.getElementById("front-text-box");
+    myTextBox.style.transition = "transform 0ms";
+    resetTransitionCount++;
+    const i = resetTransitionCount;
+    (function close(i) {
+      setTimeout(() => {
+        resetTransition(i);
+      }, 500);
+    })(i);
+  });
+
   return (
     <>
-      <div className="Console">
-        <h2 className="title"> FLIP YA! </h2>
-        <Card
-          topWord={topWord}
-          bottomWord={bottomWord}
-          flipWord={flipWord}
-          config={config}
-          color={cardColor}
-          flipFn={flip}
+      <div className="main">
+        <div className="console">
+          <h2 className="title"> FLIP YA! </h2>
+          <Card
+            topWord={topWord}
+            bottomWord={bottomWord}
+            flipWord={flipWord}
+            config={config}
+            color={cardColor}
+            flipFn={flip}
+          />
+          {!auto ? (
+            <div className="prev-next-row">
+              <button onClick={backOneWord} className="prev-button">
+                PREV
+              </button>
+              <button
+                onClick={nextWord}
+                className="next-button"
+                id="next-button"
+              >
+                NEXT
+              </button>
+            </div>
+          ) : null}
+          {auto ? (
+            <div className="go-row">
+              <button onClick={stopGo} className="stop-button">
+                STOP
+              </button>
+            </div>
+          ) : (
+            <div className="go-row">
+              <button onClick={stopGo} className="go-button">
+                GO
+              </button>
+            </div>
+          )}
+          {!auto ? (
+            <form>
+              <div className="speed-row">
+                <label htmlFor="speed" className="speed-label">
+                  Speed
+                </label>
+                <input
+                  type="range"
+                  className="speed-input"
+                  id="speed"
+                  name="speed"
+                  min="1"
+                  max="100"
+                  value={speed}
+                  onChange={handleSpeedChange}
+                />
+              </div>
+            </form>
+          ) : (
+            <div style={{ height: "6vw" }}> </div>
+          )}
+        </div>
+        <Options
+          newSetFn={newWordSetFunction}
+          flipDeck={flipDeckGeneral}
+          auto={auto}
         />
       </div>
-      {!auto ? (
-        <>
-          <button onClick={backOneWord} className="prev-button">
-            PREV
-          </button>
-          <button onClick={nextWord} className="next-button" id="next-button">
-            NEXT
-          </button>
-        </>
-      ) : null}
-      {auto ? (
-        <button onClick={stopGo} className="stop-button">
-          STOP
-        </button>
-      ) : (
-        <button onClick={stopGo} className="go-button">
-          GO
-        </button>
-      )}
-      {!auto ? (
-        <form>
-          <label htmlFor="speed" className="speed-label">
-            Speed
-          </label>
-          <input
-            type="range"
-            className="speed-input"
-            id="speed"
-            name="speed"
-            min="1"
-            max="100"
-            value={speed}
-            onChange={handleSpeedChange}
-          />
-        </form>
-      ) : null}
-      <Options
-        newSetFn={newWordSetFunction}
-        flipDeck={flipDeckGeneral}
-        auto={auto}
-      />
     </>
   );
 }

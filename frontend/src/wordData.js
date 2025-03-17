@@ -1,6 +1,6 @@
 // sets of utilities to pick words, keep track of history, limit to practice size if desired, etc.
 
-import DictsApi from "./DictsApi";
+import FlipyaDB from "./FlipyaDB";
 
 // pick a random integer between 'from' and 'to', inclusive
 function randomInt(from, to) {
@@ -22,15 +22,27 @@ let currentNumWords = null;
 let wordArray = [];
 let currentWordIndex = null;
 
+let noRandom = false;
+let count = 1;
+
 // get next word for new card, if have full practice size, pick from that set, ow get a random word
 async function chooseNextWord() {
   let word;
-  if (practiceSize && practiceWordArray.length == practiceSize) {
+  if (noRandom) {
+    word = await FlipyaDB.getWord(currentWordsetId, count);
+    if (count < currentNumWords) {
+      count++;
+    }
+    return word;
+  }
+  // console.log("practicesize: ", practiceSize);
+  // console.log("practiceWordArray: ", practiceWordArray);
+  if (practiceSize && practiceWordArray.length === practiceSize) {
     const pick = randomInt(1, practiceSize);
     word = practiceWordArray[pick - 1];
   } else {
     const pick = randomInt(1, currentNumWords);
-    word = await DictsApi.getWord(currentWordsetId, pick);
+    word = await FlipyaDB.getWord(currentWordsetId, pick);
     if (practiceSize) {
       practiceWordArray.push(word);
     }
@@ -50,7 +62,7 @@ async function chooseNextWordNoRepeats() {
   // if having trouble finding non-redundant words, give up after like 25 tries
   while (count < 25) {
     pickWord = await chooseNextWord();
-    if (!(pickWord.id == lastWordId || pickWord.id == lastWordId2)) {
+    if (!(pickWord.id === lastWordId || pickWord.id === lastWordId2)) {
       lastWordId2 = lastWordId;
       lastWordId = pickWord.id;
       return pickWord;
@@ -74,7 +86,7 @@ class wordData {
   static async getAnotherWord(wordsetId) {
     if (!currentWordsetId) {
       currentWordsetId = wordsetId;
-      currentNumWords = await DictsApi.numWordsInSet(currentWordsetId);
+      currentNumWords = await FlipyaDB.numWordsInSet(currentWordsetId);
     }
     const word = await chooseNextWordNoRepeats();
     return word;
@@ -134,6 +146,34 @@ class wordData {
     }
     // console.log("setting practice size: ", newSize);
     practiceSize = newSize;
+  }
+
+  static getSessionWordArray() {
+    return wordArray;
+  }
+
+  static async generateEmailTextForSession() {
+    // console.log("composing...");
+    let acc = "";
+    const d = new Date();
+    acc += "FlipYa Session @ \n" + d.toUTCString() + "\n\n";
+    if (currentWordsetId) {
+      const wordSet = await FlipyaDB.getWordSet(currentWordsetId);
+      acc += wordSet.language1 + ", " + wordSet.language2 + "\n\n";
+      if (practiceSize) {
+        acc += "(Practice Set Size: " + practiceSize + ")\n\n";
+        practiceWordArray.forEach((word) => {
+          acc += word.word1 + ", " + word.word2 + "\n";
+        });
+      } else {
+        wordArray.forEach((word) => {
+          acc += word.word1 + ", " + word.word2 + "\n";
+        });
+      }
+      return acc;
+    } else {
+      return acc;
+    }
   }
 }
 

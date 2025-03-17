@@ -1,38 +1,37 @@
 body {
   background-color: cornsilk;
   font-family: Arial, Helvetica, sans-serif;
-  /* font-family: "Alef", sans-serif; */
 }
 
-h2.title {
-  margin-left: 105px;
-  font-size: 30px;
+.title {
+  font-size: 4.5vw;
+  text-align: center;
 }
 
 .container {
   perspective: 1000px;
 }
 
-.keyarea {
-  width: 500px;
-  height: 500px;
+.main {
+  display: flex;
+  flex-direction: row;
 }
 
-.keyarea:focus {
-  outline: none;
+.console {
+  width: 50%;
 }
 
 .card {
   position: relative;
-  border: 10px solid rgb(119, 173, 209);
-  width: 200px;
-  height: 250px;
+  border: 1.5vw solid rgb(119, 173, 209);
+  width: 30vw;
+  height: 40vw;
   text-align: center;
-  left: 55px;
-  font-size: 40px;
+  left: 8.25vw;
+  font-size: 6vw;
   font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
   font-weight: bold;
-  border-radius: 15px;
+  border-radius: 2.25vw;
   transition: transform 665ms;
   transform-style: preserve-3d;
 }
@@ -40,8 +39,8 @@ h2.title {
 .card-top {
   position: absolute;
   width: 100%;
-  height: 65px;
-  border-radius: 5px 5px 0 0;
+  height: 9.75vw;
+  border-radius: 0.75vw 0.75vw 0 0;
   /* opacity: 0.2; */
   z-index: 2;
 }
@@ -49,51 +48,45 @@ h2.title {
 .card-bottom {
   position: absolute;
   width: 100%;
-  height: 118px;
+  height: 21vw;
   bottom: 0px;
-  border-radius: 0 0 5px 5px;
+  border-radius: 0 0 0.75vw 0.75vw;
   /* opacity: 0.2; */
   z-index: 2;
 }
 
-.latin {
-  /* color: purple; */
-}
-
 .hebrew {
-  font-size: 45px;
+  font-size: 6.75vw;
   font-family: "Frank Ruhl Libre", "David Libre";
   font-weight: bold;
   font-style: normal;
-  /* color: #800; */
-  /* margin-top: -4px; */
-  /* color: red; */
+  margin-top: -0.2vw;
 }
 
 .small {
-  font-size: 30px;
+  font-size: 4.5vw;
 }
 
 .smaller {
-  font-size: 23px;
-  margin-top: 4px;
+  font-size: 3.45vw;
+  margin-top: 0.6vw;
 }
 
 .smallest {
-  font-size: 18px;
-  margin-top: 4px;
+  font-size: 2.7vw;
+  margin-top: 0.6vw;
 }
 
 .hebrew-small {
-  font-size: 35px;
+  font-size: 5.25vw;
 }
 
 .hebrew-smaller {
-  font-size: 27px;
+  font-size: 4.05vw;
 }
 
 .hebrew-smallest {
-  font-size: 20px;
+  font-size: 3vw;
 }
 
 .front,
@@ -102,10 +95,7 @@ h2.title {
   height: 100%;
   width: 100%;
   backface-visibility: hidden;
-  border-radius: 7px;
-}
-
-.front {
+  border-radius: 1vw;
 }
 
 .back {
@@ -116,157 +106,155 @@ h2.title {
   position: absolute;
   background-color: #eee;
   width: 100%;
-  /* padding: 5px 10px 10px 10px; */
-  top: 65px;
+  top: 9.75vw;
   transition: transform 600ms;
-  line-height: 60px;
+  line-height: 9vw;
   text-wrap: nowrap;
   overflow: hidden;
   user-select: none;
 }
 
 .front-text-box {
-  /* background-color: violet; */
-  height: 127px;
+  height: 19vw;
 }
 
 .top-text {
-  /* background-color: yellow; */
-  height: 60px;
+  height: 9vw;
   width: 100%;
-  padding-top: 2px;
+  padding-top: 0.3vw;
   transition: opacity 500ms ease-in;
   opacity: 1;
-  /* border: 2px dotted red; */
 }
 
 .bottom-text {
-  /* background-color: orange; */
   position: absolute;
-  height: 60px;
+  height: 9vw;
   width: 100%;
-  top: 68px;
-  margin-top: -6px;
-  /* color: purple; */
+  top: 10.2vw;
+  margin-top: -0.9vw;
   transition: opacity 500ms ease-in;
   opacity: 1;
-  /* border: 2px dotted violet; */
 }
 
 .back-text {
   width: 100%;
-  height: 68px;
-  margin-top: 3px;
+  height: 10.2vw;
+  margin-top: 0.45vw;
+  container-type: inline-size;
 }
 
-.foo {
-  background-color: lightslategray;
-  margin-top: -10px;
-  height: 40px;
-}
-
-.flip-button {
-  /* background-color: #8ff; */
-  margin-top: 30px;
-  margin-left: 140px;
-  font-size: 20px;
-  border-radius: 10px;
-  position: absolute;
+.prev-next-row {
+  margin-top: 3vw;
+  display: flex;
+  justify-content: center;
+  /* border: 1px solid red; */
 }
 
 .next-button {
   background-color: rgb(189, 218, 238);
-  margin-top: 25px;
-  margin-left: 175px;
-  font-size: 20px;
-  border-radius: 10px;
-  position: absolute;
+  font-size: 3vw;
+  border-radius: 1.5vw;
+  margin-left: 1.5vw;
+  margin-right: 1.5vw;
 }
 
 .prev-button {
   background-color: rgb(189, 218, 238);
-  margin-top: 25px;
-  margin-left: 85px;
-  font-size: 20px;
-  border-radius: 10px;
-  position: absolute;
+  font-size: 3vw;
+  border-radius: 1.5vw;
+  margin-left: 1.5vw;
+  margin-right: 1.5vw;
+}
+
+.go-row {
+  margin-top: 2vw;
+  display: flex;
+  justify-content: center;
 }
 
 .go-button {
   background-color: rgb(151, 212, 151);
-  /* background-color: rgb(219, 170, 170); */
-  margin-top: 65px;
-  margin-left: 142px;
-  font-size: 20px;
-  border-radius: 10px;
-  position: absolute;
+  font-size: 3vw;
+  border-radius: 1.5vw;
 }
 
 .stop-button {
   background-color: rgb(219, 170, 170);
-  margin-top: 65px;
-  margin-left: 132px;
-  font-size: 20px;
-  border-radius: 10px;
-  position: absolute;
+  font-size: 3vw;
+  border-radius: 1.5vw;
+  margin-top: 7.4vw;
+}
+
+.restart-button {
+  font-size: 3vw;
+  border-radius: 1.5vw;
+  background-color: rgb(189, 218, 238);
+  margin-top: 4vw;
+}
+
+.speed-row {
+  margin-top: 3vw;
+  display: flex;
+  justify-content: center;
 }
 
 .speed-label {
-  position: absolute;
-  margin-top: 120px;
-  margin-left: 75px;
+  font-size: 2.5vw;
+  align-content: center;
 }
 
 .speed-input {
   background-color: aqua;
-  position: absolute;
-  margin-top: 121px;
-  margin-left: 133px;
-  width: 100px;
+  width: 15vw;
+  margin-left: 1.5vw;
 }
 
 .options {
-  /* color: red; */
-  /* background-color: #eee; */
-  position: absolute;
-  /* border: 1px solid green; */
-  height: 400px;
-  width: 250px;
-  margin-left: 320px;
-  margin-top: -265px;
+  height: 60vw;
+  width: 37.5vw;
+  margin-top: 13vw;
 }
 
-.reverse-check {
-  position: absolute;
-  margin-top: 40px;
-  margin-left: -195px;
+.reverse-row {
+  margin-top: 15px;
 }
 
 .reverse-label {
-  position: absolute;
-  margin-top: 38px;
-  margin-left: -175px;
   user-select: none;
+  padding-left: 5px;
 }
 
-.practice-check {
-  position: absolute;
-  margin-top: 70px;
-  margin-left: -195px;
+.practice-row {
+  margin-top: 10px;
 }
 
 .practice-label {
-  position: absolute;
-  margin-top: 68px;
-  margin-left: -175px;
   user-select: none;
+  padding-left: 5px;
 }
 
 .practice-input {
   width: 30px;
-  position: absolute;
-  margin-top: 67px;
-  margin-left: -53px;
+  margin-left: 10px;
+}
+
+.email-row {
+  margin-top: 15px;
+}
+
+.email-label {
+  user-select: none;
+}
+
+.email-input {
+  margin-left: 10px;
+}
+
+.email-button-row {
+  margin-top: 10px;
+}
+
+.email-button {
 }
 
 .input-invalid {
@@ -274,11 +262,21 @@ h2.title {
 }
 
 .card-message {
-  font-size: 16px;
-  margin-top: 40px;
+  font-size: 2.4vw;
+  margin-top: 6vw;
   user-select: none;
   font-style: italic;
-  width: 135px;
-  margin-left: 31px;
+  width: 20.25vw;
+  margin-left: 4.65vw;
   background-color: rgba(240, 240, 240, 0.4);
+}
+
+.verified-box {
+  background-color: rgb(166, 238, 166);
+  padding: 15px 30px 15px 30px;
+}
+
+.unverified-box {
+  background-color: lightpink;
+  padding: 15px 30px 15px 30px;
 }

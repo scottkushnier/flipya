@@ -5,6 +5,8 @@ let cors = require("cors");
 
 const wordsetRoutes = require("./routes/wordsets");
 const wordRoutes = require("./routes/words");
+const emailRoutes = require("./routes/emails");
+const emailapiRoutes = require("./routes/email-api"); // API for sending email out
 const { NotFoundError } = require("./expressError");
 
 const app = express();
@@ -14,6 +16,8 @@ app.use(cors());
 
 app.use("/wordset", wordsetRoutes);
 app.use("/word", wordRoutes);
+app.use("/email", emailRoutes);
+app.use("/email-api", emailapiRoutes);
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {

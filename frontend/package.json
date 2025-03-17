@@ -3,8 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/react": "^16.2.0",
     "axios": "^1.7.9",
+    "bcryptjs": "^3.0.2",
     "cra-template": "1.2.0",
+    "dot-env": "^0.0.1",
+    "dotenv": "^16.4.7",
+    "dotenv-webpack": "^8.1.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-scripts": "5.0.1",
@@ -33,5 +39,13 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+  },
+  "jest": {
+	    "transformIgnorePatterns": [
+		    "node_modules/(?!axios)/"
+	    ]
   }
 }
