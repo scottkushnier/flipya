@@ -5,6 +5,7 @@ import { Card, Config } from "./Card";
 import FlipyaDB from "./FlipyaDB";
 import wordData from "./wordData";
 import Options from "./Options";
+import Login from "./Login";
 
 let wordsetId = 1;
 let reverse = false;
@@ -46,6 +47,7 @@ function Console() {
   const [cardColor, setCardColor] = useState("green");
   const [auto, setAuto] = useState(false);
   const [speed, setSpeed] = useState(50);
+  const [loggedIn, setLoggedIn] = useState(false);
 
   // save refs since don't want to work with outdated values
   const topWordRef = useRef();
@@ -327,92 +329,103 @@ function Console() {
     }
   }
 
+  const enterFn = () => {
+    // console.log("calling enter function");
+    setLoggedIn(true);
+  };
+
   window.addEventListener("resize", function (event) {
     // Code to execute when the window is resized
     // console.log("Window has been resized");
     // You can access the new window dimensions using:
     // console.log("New width:", newWidth, "New height:", newHeight);
     const myTextBox = document.getElementById("front-text-box");
-    myTextBox.style.transition = "transform 0ms";
-    resetTransitionCount++;
-    const i = resetTransitionCount;
-    (function close(i) {
-      setTimeout(() => {
-        resetTransition(i);
-      }, 500);
-    })(i);
+    if (myTextBox) {
+      myTextBox.style.transition = "transform 0ms";
+      resetTransitionCount++;
+      const i = resetTransitionCount;
+      (function close(i) {
+        setTimeout(() => {
+          resetTransition(i);
+        }, 500);
+      })(i);
+    }
   });
 
-  return (
-    <>
-      <div className="main">
-        <div className="console">
-          <h2 className="title"> FLIP YA! </h2>
-          <Card
-            topWord={topWord}
-            bottomWord={bottomWord}
-            flipWord={flipWord}
-            config={config}
-            color={cardColor}
-            flipFn={flip}
-          />
-          {!auto ? (
-            <div className="prev-next-row">
-              <button onClick={backOneWord} className="prev-button">
-                PREV
-              </button>
-              <button
-                onClick={nextWord}
-                className="next-button"
-                id="next-button"
-              >
-                NEXT
-              </button>
-            </div>
-          ) : null}
-          {auto ? (
-            <div className="go-row">
-              <button onClick={stopGo} className="stop-button">
-                STOP
-              </button>
-            </div>
-          ) : (
-            <div className="go-row">
-              <button onClick={stopGo} className="go-button">
-                GO
-              </button>
-            </div>
-          )}
-          {!auto ? (
-            <form>
-              <div className="speed-row">
-                <label htmlFor="speed" className="speed-label">
-                  Speed
-                </label>
-                <input
-                  type="range"
-                  className="speed-input"
-                  id="speed"
-                  name="speed"
-                  min="1"
-                  max="100"
-                  value={speed}
-                  onChange={handleSpeedChange}
-                />
+  if (!loggedIn) {
+    return <Login enterFn={enterFn} />;
+  } else {
+    return (
+      <>
+        <div className="main">
+          <div className="console">
+            <h2 className="title"> FLIP YA! </h2>
+            <Card
+              topWord={topWord}
+              bottomWord={bottomWord}
+              flipWord={flipWord}
+              config={config}
+              color={cardColor}
+              flipFn={flip}
+            />
+            {!auto ? (
+              <div className="prev-next-row">
+                <button onClick={backOneWord} className="prev-button">
+                  PREV
+                </button>
+                <button
+                  onClick={nextWord}
+                  className="next-button"
+                  id="next-button"
+                >
+                  NEXT
+                </button>
               </div>
-            </form>
-          ) : (
-            <div style={{ height: "6vw" }}> </div>
-          )}
+            ) : null}
+            {auto ? (
+              <div className="go-row">
+                <button onClick={stopGo} className="stop-button">
+                  STOP
+                </button>
+              </div>
+            ) : (
+              <div className="go-row">
+                <button onClick={stopGo} className="go-button">
+                  GO
+                </button>
+              </div>
+            )}
+            {!auto ? (
+              <form>
+                <div className="speed-row">
+                  <label htmlFor="speed" className="speed-label">
+                    Speed
+                  </label>
+                  <input
+                    type="range"
+                    className="speed-input"
+                    id="speed"
+                    name="speed"
+                    min="1"
+                    max="100"
+                    value={speed}
+                    onChange={handleSpeedChange}
+                  />
+                </div>
+              </form>
+            ) : (
+              <div style={{ height: "6vw" }}> </div>
+            )}
+          </div>
+          <Options
+            newSetFn={newWordSetFunction}
+            flipDeck={flipDeckGeneral}
+            auto={auto}
+          />
         </div>
-        <Options
-          newSetFn={newWordSetFunction}
-          flipDeck={flipDeckGeneral}
-          auto={auto}
-        />
-      </div>
-    </>
-  );
+      </>
+    );
+  }
 }
 
 export default Console;

@@ -32,6 +32,7 @@ class EmailDB {
   }
 
   static async incAttempts(email) {
+    // console.log("inc attemtps for: ", email);
     const query =
       "UPDATE emails SET num_attempts = num_attempts + 1 WHERE email = $1";
     const res = await db.query(query, [email]);

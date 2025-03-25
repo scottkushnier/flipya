@@ -6,6 +6,9 @@ class Word {
   static async pullWord(wordset_id, n) {
     let query = `SELECT * FROM words WHERE wordset_id = $1 OFFSET $2 LIMIT 1`;
     const res = await db.query(query, [wordset_id, n - 1]);
+    if (process.env.NODE_ENV !== "test") {
+      console.log(res.rows[0]);
+    }
     return res.rows;
   }
 

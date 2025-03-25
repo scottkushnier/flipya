@@ -29,7 +29,7 @@ function Verify({ verify, hash }) {
       console.log("email: ", email);
       let key = email.key;
       const pw = key + "-" + verify;
-      console.log("pw: ", pw);
+      // console.log("pw: ", pw);
       bcrypt.compare(pw, hash).then((result) => {
         if (result) {
           setPassed("PASS");

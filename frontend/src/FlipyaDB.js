@@ -32,15 +32,21 @@ import axios from "axios";
 
 // const DB_BASE_URL = "http://192.168.5.129:3001";
 
-const DB_BASE_URL = process.env.REACT_APP_DB_BASE_URL;
+//  const DB_BASE_URL = process.env.REACT_APP_DB_BASE_URL;
+
+const DB_BASE_URL = "http://" + window.location.hostname + ":3001";
+
+// const DB_BASE_URL = "http://localhost:3001";
+
+const DB_TOKEN = process.env.REACT_APP_DB_TOKEN;
 
 class FlipyaDB {
-  static async request(endpoint, method = "get") {
-    // console.log(`url: ${DB_BASE_URL}`);
-    // console.debug("API Call:", endpoint, data, method);
+  static async request(endpoint, method = "get", headers = {}) {
+    console.log(`url: ${DB_BASE_URL}`);
+    console.log("API Call:", endpoint, method);
     const url = `${DB_BASE_URL}/${endpoint}`;
     try {
-      return (await axios({ url, method })).data;
+      return (await axios({ url, method, headers })).data;
     } catch (err) {
       console.error("API Error:", err.response);
       let message = err.response.data.error.message;
@@ -51,11 +57,15 @@ class FlipyaDB {
   // get all wordset data, handy for building selection menu in UI
   static async getWordSets() {
     const res = await this.request("wordset");
+    console.log("get word sets");
+    console.log("return: ", res.wordsets);
     return res.wordsets;
   }
 
   static async getWordSet(n) {
     const res = await this.request(`wordset/${n}`);
+    console.log("get word set: ", n);
+    console.log("return: ", res.wordset);
     return res.wordset;
   }
 
@@ -72,30 +82,38 @@ class FlipyaDB {
   }
 
   static async getAllEmails() {
-    const res = await this.request("email/");
+    const res = await this.request("email/", "GET", { token: DB_TOKEN });
     return res;
   }
 
   static async getEmail(email) {
-    const res = await this.request(`email/${email}`);
+    const res = await this.request(`email/${email}`, "GET", {
+      token: DB_TOKEN,
+    });
     // console.log("get email returning: ", res.email);
     return res.email;
   }
 
   static async addEmail(email, key) {
-    const res = await this.request(`email/${email}/${key}`, "POST");
+    const res = await this.request(`email/${email}/${key}`, "POST", {
+      token: DB_TOKEN,
+    });
     return res;
   }
 
   // mark email address as verified
   static async verifyEmail(email) {
     // console.log("dictapi verify: ", email);
-    const res = await this.request(`email/verify/${email}`, "POST");
+    const res = await this.request(`email/verify/${email}`, "POST", {
+      token: DB_TOKEN,
+    });
     return res;
   }
 
   static async incAttempts(email) {
-    const res = await this.request(`email/inc_attempts/${email}`, "POST");
+    const res = await this.request(`email/inc_attempts/${email}`, "POST", {
+      token: DB_TOKEN,
+    });
     return res;
   }
 

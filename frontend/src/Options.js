@@ -372,6 +372,7 @@ function Options({ newSetFn, flipDeck, auto }) {
                 }
                 type="text"
                 value={practiceSize}
+                disabled={auto}
                 onChange={handleNewPracticeSize}
               />
             ) : null}
@@ -398,7 +399,11 @@ function Options({ newSetFn, flipDeck, auto }) {
             </button>
           </div>
           <div>
-            <button className="restart-button" onClick={restart}>
+            <button
+              className="restart-button"
+              onClick={restart}
+              disabled={auto}
+            >
               START OVER
             </button>
           </div>
