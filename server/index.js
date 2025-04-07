@@ -12,27 +12,27 @@ const app = require("./app");
 app.use(express.static(path.join(__dirname, "..", "client", "dist")));
 
 // parse JSON bodies
-app.use(express.json());
+// app.use(express.json());
 
 ////////////////////
 
 // prefix all API endpoints with `/api`
-app.get("/api/ping", (req, res) => {
-  res.send("Ok");
-});
+// app.get("/api/ping", (req, res) => {
+//   res.send("Ok");
+// });
 
-app.post("/api/greet", (req, res) => {
-  const { name } = req.body;
-  // Users.find(name).then((u) => {
-  // res.send(`Hi there, ${u.email}!`);
-  res.send(`Hi there, ${name}!`);
-  // });
-});
+// app.post("/api/greet", (req, res) => {
+//   const { name } = req.body;
+//   // Users.find(name).then((u) => {
+//   // res.send(`Hi there, ${u.email}!`);
+//   res.send(`Hi there, ${name}!`);
+//   // });
+// });
 
 /** Handle 404 errors -- this matches everything */
-app.use(function (req, res, next) {
-  return next(new NotFoundError());
-});
+// app.use(function (req, res, next) {
+//   return next(new NotFoundError());
+// });
 
 /** Generic error handler; anything unhandled goes here. */
 app.use(function (err, req, res, next) {

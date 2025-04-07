@@ -11,7 +11,7 @@ const emailapiRoutes = require("./routes/email-api"); // API for sending email o
 const userRoutes = require("./routes/users");
 // const { NotFoundError } = require("./expressError");
 
-// const Users = require("./models/users");
+const Users = require("./models/users");
 
 const app = express();
 
@@ -26,17 +26,17 @@ app.use("/email-api", emailapiRoutes);
 app.use("/users", userRoutes);
 
 // prefix all API endpoints with `/api`
-// app.get("/api/ping", (req, res) => {
-//   res.send("Ok");
-// });
+app.get("/api/ping", (req, res) => {
+  res.send("Ok");
+});
 
-// app.post("/api/greet", (req, res) => {
-//   const { name } = req.body;
-//   Users.find(name).then((u) => {
-//     res.send(`Hi there, ${u.email}!`);
-//     // res.send(`Hi there, ${name}!`);
-//   });
-// });
+app.post("/api/greet", (req, res) => {
+  const { name } = req.body;
+  Users.find(name).then((u) => {
+    res.send(`Hi there, ${u.email}!`);
+    // res.send(`Hi there, ${name}!`);
+  });
+});
 
 /** Handle 404 errors -- this matches everything */
 // app.use(function (req, res, next) {
