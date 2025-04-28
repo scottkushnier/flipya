@@ -1,0 +1,253 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Card snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="container"
+    id="myContainer"
+  >
+    <div
+      class="card"
+      data-testid="card"
+      id="myCard"
+      style="transform: rotateY(0deg);"
+    >
+      <div
+        class="showingFront"
+      >
+        <div
+          class="card-top"
+          style="background-color: blue;"
+        />
+        <div
+          class="card-bottom"
+          style="background-color: blue;"
+        >
+          <div
+            class="card-message"
+          >
+             (click card to flip) 
+          </div>
+        </div>
+        <div
+          class="front-text-box text-box"
+          id="front-text-box"
+          style="transform: translateY(0px);"
+        >
+          <div
+            class="top-text"
+          >
+            <div
+              class="latin"
+            >
+              boy
+            </div>
+          </div>
+          <div
+            class="bottom-text"
+          >
+            <div
+              class="latin"
+            >
+              girl
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="back"
+      >
+        <div
+          class="card-top"
+          style="background-color: blue;"
+        />
+        <div
+          class="card-bottom"
+          style="background-color: blue;"
+        />
+        <div
+          class="back-text-box text-box"
+        >
+          <div
+            class="back-text"
+          >
+            <div
+              class="latin"
+            >
+              garcon
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Card snapshot show bottom 1`] = `
+<DocumentFragment>
+  <div
+    class="container"
+    id="myContainer"
+  >
+    <div
+      class="card"
+      data-testid="card"
+      id="myCard"
+      style="transform: rotateY(0deg);"
+    >
+      <div
+        class="showingFront"
+      >
+        <div
+          class="card-top"
+          style="background-color: blue;"
+        />
+        <div
+          class="card-bottom"
+          style="background-color: blue;"
+        >
+          <div
+            class="card-message"
+          >
+             (click card to flip) 
+          </div>
+        </div>
+        <div
+          class="front-text-box text-box"
+          id="front-text-box"
+          style="transform: translateY(-9vw);"
+        >
+          <div
+            class="top-text"
+          >
+            <div
+              class="latin"
+            >
+              boy
+            </div>
+          </div>
+          <div
+            class="bottom-text"
+          >
+            <div
+              class="latin"
+            >
+              girl
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="back"
+      >
+        <div
+          class="card-top"
+          style="background-color: blue;"
+        />
+        <div
+          class="card-bottom"
+          style="background-color: blue;"
+        />
+        <div
+          class="back-text-box text-box"
+        >
+          <div
+            class="back-text"
+          >
+            <div
+              class="latin"
+            >
+              garcon
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Card snapshot show flipped 1`] = `
+<DocumentFragment>
+  <div
+    class="container"
+    id="myContainer"
+  >
+    <div
+      class="card"
+      data-testid="card"
+      id="myCard"
+      style="transform: rotateY(-180deg);"
+    >
+      <div
+        class="showingFront"
+      >
+        <div
+          class="card-top"
+          style="background-color: blue;"
+        />
+        <div
+          class="card-bottom"
+          style="background-color: blue;"
+        >
+          <div
+            class="card-message"
+          >
+             (click card to flip) 
+          </div>
+        </div>
+        <div
+          class="front-text-box text-box"
+          id="front-text-box"
+          style="transform: translateY(-9vw);"
+        >
+          <div
+            class="top-text"
+          >
+            <div
+              class="latin"
+            >
+              boy
+            </div>
+          </div>
+          <div
+            class="bottom-text"
+          >
+            <div
+              class="latin"
+            >
+              girl
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        class="back"
+      >
+        <div
+          class="card-top"
+          style="background-color: blue;"
+        />
+        <div
+          class="card-bottom"
+          style="background-color: blue;"
+        />
+        <div
+          class="back-text-box text-box"
+        >
+          <div
+            class="back-text"
+          >
+            <div
+              class="latin"
+            >
+              garcon
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EmailSession snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="email-row"
+  >
+    <label
+      class="email-label"
+      for="email"
+    >
+      Email
+    </label>
+    <input
+      class="email-input"
+      id="email"
+      type="input"
+      value=""
+    />
+  </div>
+  <div
+    class="email-button-row"
+  >
+    <button
+      class="email-button"
+      id="email-button"
+      style="display: none;"
+    >
+      Email Session
+    </button>
+    <p
+      class="email-msg"
+    >
+       
+    </p>
+  </div>
+</DocumentFragment>
+`;

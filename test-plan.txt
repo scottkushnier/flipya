@@ -1,0 +1,16 @@
+
+Register as new user
+try blank pw
+try w/pw
+Logout
+Login again with wrong pw
+Login correctly
+Next
+Flip
+Next
+Flip
+Prev
+Reverse & next, prev again
+Next set
+Set practice size to 4 & test
+Try Go, Stop
