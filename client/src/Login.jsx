@@ -1,27 +1,27 @@
 import { useState, useEffect } from "react";
 import FlipyaDB from "./FlipyaDB";
 
-let userList = ["foo"];
-
-function usernameIsRegistered(username) {
-  const ret = userList.includes(username);
-  return ret;
-}
-
 function Login({ enterFn }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState(false);
   const [buttonType, setButtonType] = useState("none"); // login or register, depending on if username exists
   const [pwEyeOpen, setPwEyeOpen] = useState(false);
+  const [userList, setUserList] = useState([]);
 
-  // useEffect(() => {
-  //   FlipyaDB.getUsers().then((ret) => {
-  //     // console.log("users: ", ret);
-  //     userList = ret.users.map((user) => user.username);
-  //     // console.log("userlist: ", userList);
-  //   });
-  // }, []);
+  useEffect(() => {
+    FlipyaDB.getUsers().then((ret) => {
+      // console.log("users: ", ret);
+      const list = ret.users.map((user) => user.username);
+      setUserList(list);
+      // console.log("userlist: ", userList);
+    });
+  }, []);
+
+  function usernameIsRegistered(username) {
+    const ret = userList.includes(username);
+    return ret;
+  }
 
   const handleUsernameEdit = (e) => {
     // console.log("username edit");
