@@ -7,7 +7,6 @@ import wordData from "./wordData";
 import { useEffect, useState, useRef } from "react";
 
 // import { act } from "@testing-library/react";
-import { act } from "./act";
 
 const MIN_DIFFICULTY_LEVEL = 1;
 const MAX_DIFFICULTY_LEVEL = 9;
@@ -45,12 +44,10 @@ function Options({ newSetFn, flipDeck, auto, started, username }) {
     const p2 = FlipyaDB.getUser(username);
     p1.then((sets) => {
       // console.log("sets: ", sets);
-      act(() => setWordSets(() => sets));
+      setWordSets(() => sets);
       p2.then((profile) => {
         // console.log("profile: ", profile);
-        act(() => {
-          setUserProfile(() => profile.user);
-        });
+        setUserProfile(() => profile.user);
 
         // console.log("looking for: ", profile.user.wordset_id, " in ", sets);
         let id;
@@ -66,26 +63,20 @@ function Options({ newSetFn, flipDeck, auto, started, username }) {
           setWordSetId(() => +profile.user.wordset_id);
           id = +profile.user.wordset_id;
         }
-        act(() => {
-          setWordSetId(() => id);
-          setWordsetInd(() => ind);
-        });
+        setWordSetId(() => id);
+        setWordsetInd(() => ind);
         FlipyaDB.minMaxForSet(id).then((minMax) => {
           // console.log("min-max: ", minMax, minMax.min, minMax.max);
           // console.log("min-max: ", minMax);
-          act(() => {
-            setMinLevel(() => minMax.min);
-            setMaxLevel(() => minMax.max);
-            setMinForSet(() => minMax.min);
-            setMaxForSet(() => minMax.max);
-          });
+          setMinLevel(() => minMax.min);
+          setMaxLevel(() => minMax.max);
+          setMinForSet(() => minMax.min);
+          setMaxForSet(() => minMax.max);
         });
         let setSize = profile.user.set_size ? +profile.user.set_size : 0;
-        act(() => {
-          setSetSizeInput(() => (setSize ? setSize : DEFAULT_PRACTICE_SIZE));
-          setSetSize(() => setSize);
-          setSizeInputCheck(() => setSize !== 0);
-        });
+        setSetSizeInput(() => (setSize ? setSize : DEFAULT_PRACTICE_SIZE));
+        setSetSize(() => setSize);
+        setSizeInputCheck(() => setSize !== 0);
         newSetFn(id, false, +profile.user.set_size);
       });
     });

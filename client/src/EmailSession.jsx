@@ -1,6 +1,5 @@
 import { useEffect, useState, useRef } from "react";
 // import { act } from "@testing-library/react";
-import { act } from "./act";
 
 import EmailAPI from "./EmailAPI";
 import bcrypt from "bcryptjs";
@@ -31,19 +30,15 @@ function EmailSession({ username, started }) {
   const initEmailList = () => {
     FlipyaDB.getAllEmails().then((list) => {
       //   console.log("emails list: ", list);
-      act(() => {
-        setEmailList(() => list.emails);
-      });
+      setEmailList(() => list.emails);
     });
   };
 
   const setUpEmailForUser = (username) => {
     FlipyaDB.getUser(username).then((profile) => {
       //   console.log("profile: ", profile);
-      act(() => {
-        setUserProfile(profile);
-        setEmail(() => (profile.user.email ? profile.user.email : ""));
-      });
+      setUserProfile(profile);
+      setEmail(() => (profile.user.email ? profile.user.email : ""));
       // handleNewEmail(profile.user.email);
       setTimeout(() => {
         handleNewEmail(profile.user.email);
