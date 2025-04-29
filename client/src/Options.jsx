@@ -6,7 +6,8 @@ import wordData from "./wordData";
 
 import { useEffect, useState, useRef } from "react";
 
-import { act } from "@testing-library/react";
+// import { act } from "@testing-library/react";
+import { act } from "./act";
 
 const MIN_DIFFICULTY_LEVEL = 1;
 const MAX_DIFFICULTY_LEVEL = 9;

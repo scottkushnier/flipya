@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
-import { act } from "@testing-library/react";
+// import { act } from "@testing-library/react";
+import { act } from "./act";
 
 import EmailAPI from "./EmailAPI";
 import bcrypt from "bcryptjs";

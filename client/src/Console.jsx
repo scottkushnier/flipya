@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { act } from "@testing-library/react";
+// import { act } from "@testing-library/react";
+import { act } from "./act";
 import { Card, Config } from "./Card";
 
 import FlipyaDB from "./FlipyaDB";
