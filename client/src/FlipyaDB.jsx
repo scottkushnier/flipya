@@ -39,8 +39,13 @@ import axiosMock from "./axios-mock";
 // const DB_BASE_URL = "http://192.168.5.129:3001";
 //  const DB_BASE_URL = process.env.REACT_APP_DB_BASE_URL;
 // const DB_BASE_URL = "http://localhost:3001";
-// const DB_BASE_URL = "http://" + window.location.hostname + ":3001";
-const DB_BASE_URL = "https://" + window.location.hostname;
+const DB_BASE_URL =
+  import.meta.env.VITE_REACT_APP_DB_BASE_URL ||
+  "https://" + window.location.hostname;
+
+// "http://" + window.location.hostname + ":3001";
+// const DB_BASE_URL =
+// const DB_BASE_URL = "";
 
 let authHeader = null; // stores header with JWT for future API calls
 

@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from "react";
 // import { act } from "@testing-library/react";
-import { act } from "./act";
 import { Card, Config } from "./Card";
 
 import FlipyaDB from "./FlipyaDB";
@@ -130,10 +129,10 @@ function Console() {
           myTextBox.style.transition = "transform 0ms";
         }
         // console.log("setting top word to: ", bottomWordRef.current);
-        act(() => setTopWord(bottomWordRef.current)); // put current word (at bottom) at top position
-        act(() => setConfig(Config.ShowTopWord)); // and -quickly- switch to showing top
+        setTopWord(bottomWordRef.current); // put current word (at bottom) at top position
+        setConfig(Config.ShowTopWord); // and -quickly- switch to showing top
         // console.log("setting bottom word to: ", word.word1);
-        act(() => setBottomWord(word.word1)); // put new word below...
+        setBottomWord(word.word1); // put new word below...
         if (process.env.NODE_ENV !== "test") {
           setTimeout(() => {
             myTextBox.style.transition = saveTransform;
@@ -204,9 +203,7 @@ function Console() {
       setConfig(Config.ShowTopWord);
       // .. but make sure flipped word matches
       wordData.getPreviousWord(wordsetId, reverse).then((word) => {
-        act(() => {
-          setFlipWord(word.word2);
-        });
+        setFlipWord(word.word2);
       });
     }
     if (wordData.noMoreHistory()) {
@@ -325,14 +322,10 @@ function Console() {
     setConfig(Config.ShowBottomWord);
     setBottomWord(INITIAL_WORD);
     setFlipWord(INITIAL_WORD);
-    act(() => {
-      setWordsetId(id);
-      setReverse(reverseVal);
-    });
+    setWordsetId(id);
+    setReverse(reverseVal);
     FlipyaDB.getWordSet(id).then((wordset) => {
-      act(() => {
-        setCardColor(wordset.color);
-      });
+      setCardColor(wordset.color);
     });
   }
 
@@ -414,17 +407,13 @@ function Console() {
 
   const enterFn = (username) => {
     // console.log("calling enter function");
-    act(() => {
-      setUser(username);
-      setSpeed(DEFAULT_SPEED);
-    });
+    setUser(username);
+    setSpeed(DEFAULT_SPEED);
     // console.log("setting user for: ", username);
     FlipyaDB.getUser(username).then((ret) => {
       // console.log("user profile: ", ret.user);
     });
-    act(() => {
-      setLoggedIn(true);
-    });
+    setLoggedIn(true);
   };
 
   const exitFn = () => {
