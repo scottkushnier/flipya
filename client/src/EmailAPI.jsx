@@ -1,10 +1,15 @@
 import axios from "axios";
 import { authHeader } from "./FlipyaDB";
 
-const BASE_URL = "http://" + window.location.hostname + ":3001";
+// const BASE_URL = "http://" + window.location.hostname + ":3001";
 
 // const BASE_URL =
 //   process.env.REACT_APP_DB_BASE_URL || "http://192.168.5.129:3001";
+
+const BASE_URL =
+  process.env.NODE_ENV === "test" || window.location.hostname.includes("render")
+    ? ""
+    : "http://192.168.5.129:3001";
 
 class EmailAPI {
   static async request(endpoint, data, headers) {
