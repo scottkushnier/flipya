@@ -35,6 +35,8 @@ import axios from "axios";
 
 import axiosMock from "./axios-mock";
 
+console.log("hostname: ", window.location.hostname);
+
 // const DB_BASE_URL = process.env.DB_BASE_URL || "http://192.168.5.129:3001";
 const DB_BASE_URL =
   process.env.NODE_ENV === "test" ? "" : "http://192.168.5.129:3001";
@@ -64,7 +66,7 @@ const DB_BASE_URL =
 //     "https://" + window.location.hostname;
 // }
 
-console.log("env: ", process.env.NODE_ENV);
+// console.log("env: ", process.env.NODE_ENV);
 
 let authHeader = null; // stores header with JWT for future API calls
 
