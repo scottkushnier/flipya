@@ -36,32 +36,33 @@ import axios from "axios";
 import axiosMock from "./axios-mock";
 
 // const DB_BASE_URL = process.env.DB_BASE_URL || "http://192.168.5.129:3001";
-// const DB_BASE_URL = "http://192.168.5.129:3001";
+const DB_BASE_URL =
+  process.env.NODE_ENV === "test" ? "" : "http://192.168.5.129:3001";
 //  const DB_BASE_URL = process.env.REACT_APP_DB_BASE_URL;
 // const DB_BASE_URL = "http://localhost:3001";
 // "http://" + window.location.hostname + ":3001";
 // const DB_BASE_URL =
 // const DB_BASE_URL = "";
 
-let DB_BASE_URL;
+// let DB_BASE_URL = "";
 
 // DB_BASE_URL =
 //   process.env.VITE_REACT_APP_DB_BASE_URL ||
 //   "https://" + window.location.hostname;
 
-// const DB_BASE_URL =
+// DB_BASE_URL =
 //   process.env.VITE_REACT_APP_DB_BASE_URL ||
 //   "https://" + window.location.hostname;
 
-if (process.env.NODE_ENV !== "test") {
-  DB_BASE_URL =
-    import.meta.env.VITE_REACT_APP_DB_BASE_URL ||
-    "https://" + window.location.hostname;
-} else {
-  DB_BASE_URL =
-    process.env.VITE_REACT_APP_DB_BASE_URL ||
-    "https://" + window.location.hostname;
-}
+// if (process.env.NODE_ENV !== "test") {
+//   DB_BASE_URL =
+//     import.meta.env.VITE_REACT_APP_DB_BASE_URL ||
+//     "https://" + window.location.hostname;
+// } else {
+//   DB_BASE_URL =
+//     process.env.VITE_REACT_APP_DB_BASE_URL ||
+//     "https://" + window.location.hostname;
+// }
 
 console.log("env: ", process.env.NODE_ENV);
 
