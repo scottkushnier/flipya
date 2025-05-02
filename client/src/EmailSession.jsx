@@ -9,7 +9,14 @@ import wordData from "./wordData";
 // const APP_BASE_URL = process.env.REACT_APP_BASE_URL;
 // const APP_BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
-const APP_BASE_URL = "http://" + window.location.hostname + ":3000";
+// const APP_BASE_URL = "http://" + window.location.hostname + ":3000";
+
+const APP_BASE_URL =
+  process.env.NODE_ENV === "test"
+    ? ""
+    : window.location.hostname.includes("render")
+    ? "https://" + window.location.hostname
+    : "http://192.168.5.129:3001";
 
 function EmailSession({ username, started }) {
   const [userProfile, setUserProfile] = useState(null);
