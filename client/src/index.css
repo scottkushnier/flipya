@@ -367,10 +367,16 @@ body {
   width: 25px;
   align-items: center;
   border: none;
+  /* border: 1px solid red; */
   position: relative;
   top: 11px;
-  left: 5px;
+  left: 8px;
   user-select: none;
+}
+
+.password-eye:-moz-read-only {
+  /* border: 1px solid red; */
+  top: -1px;
 }
 
 .password-eye-closed {
@@ -380,7 +386,11 @@ body {
 .password-eye-open {
   background: url("../password-open-eye.svg") no-repeat;
   top: 12px;
-  left: 6px;
+  left: 9px;
+}
+
+.password-eye-open:-moz-read-only {
+  top: 0px;
 }
 
 .login-message {
