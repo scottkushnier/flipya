@@ -27,26 +27,32 @@ exports[`Console snapshot 1`] = `
       />
     </div>
     <div>
-      <label
-        class="password-label"
-        for="username"
-      >
-        Password:
-      </label>
-      <input
-        autocomplete="off"
-        class="password-input"
-        data-testid="password"
-        id="password"
-        style="background-color: white;"
-        type="password"
-        value=""
-      />
-      <button
-        class="password-eye password-eye-closed"
-        tabindex="-1"
-        type="button"
-      />
+      <span>
+        <label
+          class="password-label"
+          for="username"
+        >
+          Password:
+        </label>
+      </span>
+      <span>
+        <input
+          autocomplete="off"
+          class="password-input"
+          data-testid="password"
+          id="password"
+          style="background-color: white;"
+          type="password"
+          value=""
+        />
+      </span>
+      <span>
+        <button
+          class="password-eye password-eye-closed"
+          tabindex="-1"
+          type="button"
+        />
+      </span>
     </div>
   </form>
 </DocumentFragment>

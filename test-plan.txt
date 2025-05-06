@@ -1,10 +1,9 @@
 
-Register as new user
-try blank pw
-try w/pw
+Register as new user - w/blank password
+Try again with password
 Logout
-Login again with wrong pw
-Login correctly
+Login with wrong password
+Login with correct password
 Next
 Flip
 Next
@@ -13,4 +12,8 @@ Prev
 Reverse & next, prev again
 Next set
 Set practice size to 4 & test
-Try Go, Stop
+Go, stop
+Change speed
+Go, stop
+Email session
+Check if email received.

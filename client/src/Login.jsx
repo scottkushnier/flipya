@@ -96,32 +96,38 @@ function Login({ enterFn }) {
           />
         </div>
         <div>
-          <label className="password-label" htmlFor="username">
-            Password:
-          </label>
-          <input
-            className="password-input"
-            type={pwEyeOpen ? "input" : "password"}
-            id="password"
-            data-testid="password"
-            value={password}
-            onChange={handlePasswordEdit}
-            autoComplete="off"
-            style={{ backgroundColor: passwordError ? "pink" : "white" }}
-          />
-          <button
-            type="button"
-            tabIndex={-1}
-            className={
-              pwEyeOpen
-                ? "password-eye password-eye-open"
-                : "password-eye password-eye-closed"
-            }
-            onKeyPress={(e) => {
-              e.preventDefault();
-            }}
-            onClick={clickEye}
-          ></button>
+          <span>
+            <label className="password-label" htmlFor="username">
+              Password:
+            </label>
+          </span>
+          <span>
+            <input
+              className="password-input"
+              type={pwEyeOpen ? "input" : "password"}
+              id="password"
+              data-testid="password"
+              value={password}
+              onChange={handlePasswordEdit}
+              autoComplete="off"
+              style={{ backgroundColor: passwordError ? "pink" : "white" }}
+            />
+          </span>
+          <span>
+            <button
+              type="button"
+              tabIndex={-1}
+              className={
+                pwEyeOpen
+                  ? "password-eye password-eye-open"
+                  : "password-eye password-eye-closed"
+              }
+              onKeyPress={(e) => {
+                e.preventDefault();
+              }}
+              onClick={clickEye}
+            ></button>
+          </span>
         </div>
         {buttonType === "login" ? (
           <button
