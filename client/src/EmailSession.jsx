@@ -133,7 +133,7 @@ function EmailSession({ username, started }) {
   const clearPollInterval = () => {
     // console.log("clear poll interval called");
     if (pollIntervalRef.current) {
-      console.log("clearing now..", pollIntervalRef.current);
+      // console.log("clearing now..", pollIntervalRef.current);
       clearInterval(pollIntervalRef.current);
       setPollInterval(null);
     }
@@ -177,7 +177,7 @@ function EmailSession({ username, started }) {
         return null;
       } else if (emailUnverified(newEmail)) {
         // waiting on verification - start polling DB
-        console.log("email unverified, starting polling DB");
+        // console.log("email unverified, starting polling DB");
         setTimeout(() => {
           checkEmail(newEmail);
         }, 100);
@@ -185,11 +185,11 @@ function EmailSession({ username, started }) {
           clearPollInterval();
         }
         const myPollInterval = setInterval(() => {
-          console.log("checking email...");
+          // console.log("checking email...");
           checkEmail(newEmail);
         }, 2000);
         setPollInterval(myPollInterval);
-        console.log("new poll interval: ", myPollInterval);
+        // console.log("new poll interval: ", myPollInterval);
         myInput.style.backgroundColor = "#ff9";
         document.getElementById("email-button").innerText = "Try verify again";
         document.getElementById("email-button").style.display = null;
@@ -255,7 +255,7 @@ function EmailSession({ username, started }) {
           "flipya session",
           text
         ).then((ret) => {
-          console.log("email API return: ", ret);
+          // console.log("email API return: ", ret);
           displayEmailMsg("Session sent.");
         });
       });
@@ -298,11 +298,11 @@ function EmailSession({ username, started }) {
             const enc_hash = encodeURIComponent(hash);
             const link =
               `${APP_BASE_URL}/?verify=` + email + "&hash=" + enc_hash;
-            console.log("link: ", link);
+            // console.log("link: ", link);
             const msg =
               "Please click on the following link or point your web browser to it. Thanks. \n\n" +
               link;
-            console.log("msg: ", msg);
+            // console.log("msg: ", msg);
             EmailAPI.sendEmail(
               "scottkushnier@hstreet.com",
               email,

@@ -2,7 +2,7 @@ let count = 0;
 
 class AxiosMock {
   static async request(endpoint, method = "get", data = {}, headers = {}) {
-    console.log(`AxiosMock: ${endpoint}, ${method}, ${data}, ${headers}`);
+    // console.log(`AxiosMock: ${endpoint}, ${method}, ${data}, ${headers}`);
     if (endpoint === "users") {
       return { users: [] };
     } else if (endpoint === "wordset") {
@@ -57,7 +57,7 @@ class AxiosMock {
     } else if (endpoint === "wordset/1/minmax") {
       return [{ min: 1, max: 5 }];
     } else if (endpoint === "users/register") {
-      console.log("registering: ", data.username);
+      // console.log("registering: ", data.username);
       return {
         username: data.username,
         token: "yip",

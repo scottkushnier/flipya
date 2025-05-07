@@ -7,7 +7,7 @@ class Word {
     let query = `SELECT * FROM words WHERE wordset_id = $1 AND LEVEL >= $2 AND LEVEL <= $3 OFFSET $4 LIMIT 1`;
     const res = await db.query(query, [wordset_id, minLevel, maxLevel, n - 1]);
     if (process.env.NODE_ENV !== "test") {
-      console.log(res.rows[0]);
+      console.log("From DB: ", res.rows[0].word1, "-", res.rows[0].word2);
     }
     return res.rows;
   }

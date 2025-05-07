@@ -31,7 +31,7 @@ class EmailAPI {
     const endpoint = "email-api";
     // console.log("auth: ", authHeader);
     const ret = await this.request(endpoint, data, authHeader);
-    console.log("ret @ emailAPI: ", ret);
+    // console.log("ret @ emailAPI: ", ret);
     return ret;
   }
 }
