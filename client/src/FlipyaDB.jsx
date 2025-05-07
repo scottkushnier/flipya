@@ -80,7 +80,7 @@ class FlipyaDB {
       // if (!res) {
       //   process.exit();
       // } else {
-      console.log("mock return: ", res);
+      // console.log("mock return: ", res);
       return res;
       // }
     }
@@ -201,19 +201,19 @@ class FlipyaDB {
   }
 
   static async register(username, password) {
-    console.log("registering: ", username);
+    // console.log("registering: ", username);
     const res = await this.request("users/register", "POST", {
       username,
       password,
     });
     // console.log("res: ", res);
     authHeader = { token: res.token };
-    console.log("authHeader: ", authHeader);
+    // console.log("authHeader: ", authHeader);
     return res;
   }
 
   static async updateEmail(username, email) {
-    console.log("updating email for ", username, " to ", email);
+    // console.log("updating email for ", username, " to ", email);
     const res = await this.request(`users/${username}/email`, "POST", {
       email,
     });

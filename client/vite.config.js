@@ -12,6 +12,7 @@ export default defineConfig({
         changeOrigin: true,
       },
     },
+    allowedHosts: ["www.hstreet.com"],
   },
   browser: {
     open: false,

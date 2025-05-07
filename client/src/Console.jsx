@@ -225,7 +225,7 @@ function Console() {
       return;
     }
     if (!autoRef.current) {
-      console.log("stopped, stopping interval: ", autoIntervalRef.current);
+      // console.log("stopped, stopping interval: ", autoIntervalRef.current);
       stopInterval(autoIntervalRef.current);
       return;
     }
