@@ -4,6 +4,12 @@
 
 ---
 
+Currently running on Render [https://flipya.onrender.com/].
+
+Card size is dependent on horizontal size of browser window. Resize window horizontally to change sizing.
+
+---
+
 _Flipya_ is a web-based application designed to emulate the process of learning through flash cards. Although flash cards can used to aid in many different kinds of memorization tasks, the main intent here was for foreign language (vocabulary) learning.
 
 _Manual mode:_
@@ -13,7 +19,7 @@ _Automatic mode:_
 Automatic mode is controlled with the "Go" and "Stop" buttons. A new card will be presented, pause, flip the card, pause, and flip back. Then the next card is presented and the process is repeated.
 
 _Speed:_
-Controls speed of card flipping, transitions to new and old cards, and pauses when running in automatic mode.
+Controls speed of card flipping, transitions to new and old cards, and length of pauses when running in automatic mode.
 
 _Flip Deck:_
 This option control whether "front" of card is displayed first or "back". For example, for an English to French word set, a word in English would be displayed, flipping the card would show the translation into French. If flip-deck where selected, then the word in French would be shown first. Flipping would show the translation into English. This represents the difference between "production" and "understanding" in language learning.
@@ -32,8 +38,6 @@ The user has the ability to send an email containing all the words seen so far i
 
 _Login & Logout:_
 Users need to register and associate a password with their account for future logins. A user need not associate an email address with their profile; however, this would be necessary in order to have session information sent via email.
-
-Card size is dependent on horizontal size of browser window. Resize window horizontally to change sizing.
 
 ---
 
