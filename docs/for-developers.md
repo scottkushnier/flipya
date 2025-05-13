@@ -12,7 +12,7 @@ The backend relies on a SQL database for word data and user data. The word data 
 
 Postmark is used (via API from server) for sending emails out.
 
-Current running on Render [https://flipya.onrender.com/], with database hosted on Supabase.
+Currently running on Render [https://flipya.onrender.com/], with database hosted on Supabase.
 
 ---
 
@@ -63,8 +63,11 @@ client/src/wordData.jsx - all logic pertaining to choosing words at random, prac
 The following environment variables must be declared for the server side:
 
 DATABASE_URL - reference to supporting DB
+
 JWT_SECRET_KEY - for username/password authentication
+
 PORT - network port for server (maybe not necessary under render.com)
+
 POSTMARK_API_TOKEN - for calling Postmark API to send emails out
 
 ---
