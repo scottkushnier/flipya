@@ -1,7 +1,7 @@
 "use strict";
 
 const express = require("express");
-let cors = require("cors");
+// let cors = require("cors");
 //  const morgan = require("morgan");
 
 const wordsetRoutes = require("./routes/wordsets");
@@ -16,7 +16,7 @@ const Users = require("./models/users");
 const app = express();
 
 app.use(express.json());
-app.use(cors());
+//  app.use(cors());
 //  app.use(morgan());
 
 app.use("/wordset", wordsetRoutes);

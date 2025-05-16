@@ -57,7 +57,7 @@ body {
 
 .hebrew {
   font-size: 6.75vw;
-  font-family: "Frank Ruhl Libre", "David Libre";
+  font-family: "Frank Ruhl Libre", "David Libre", Georgia, Times, serif;
   font-weight: bold;
   font-style: normal;
   margin-top: -0.2vw;
@@ -118,12 +118,20 @@ body {
   height: 19vw;
 }
 
+.front-text-box-down {
+  transform: translateY(-9vw);
+}
+
+.front-text-box-up {
+  transform: translateY(0vw);
+}
+
 .top-text {
   height: 9vw;
   width: 100%;
   padding-top: 0.3vw;
   transition: opacity 500ms ease-in;
-  opacity: 1;
+  /* opacity: 1; */
 }
 
 .bottom-text {
@@ -133,7 +141,7 @@ body {
   top: 10.2vw;
   margin-top: -0.9vw;
   transition: opacity 500ms ease-in;
-  opacity: 1;
+  /* opacity: 1; */
 }
 
 .back-text {

@@ -54,6 +54,11 @@ exports[`Console snapshot 1`] = `
         />
       </span>
     </div>
+    <button
+      class="login-button register-button"
+    >
+      Register
+    </button>
   </form>
 </DocumentFragment>
 `;
