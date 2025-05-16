@@ -38,10 +38,14 @@ import axiosMock from "./axios-mock";
 // console.log("hostname: ", window.location.hostname);
 
 // const DB_BASE_URL = process.env.DB_BASE_URL || "http://192.168.5.129:3001";
-const DB_BASE_URL =
-  process.env.NODE_ENV === "test" || window.location.hostname.includes("render")
-    ? ""
-    : "http://192.168.5.129:3001";
+
+// const DB_BASE_URL =
+//   process.env.NODE_ENV === "test" || window.location.hostname.includes("render")
+//     ? ""
+//     : "http://192.168.5.129:3001";
+
+const DB_BASE_URL = "";
+
 //  const DB_BASE_URL = process.env.REACT_APP_DB_BASE_URL;
 // const DB_BASE_URL = "http://localhost:3001";
 // "http://" + window.location.hostname + ":3001";
@@ -141,7 +145,7 @@ class FlipyaDB {
   }
 
   static async getEmail(email) {
-    const res = await this.request(`email/${email}`, "GET", {});
+    const res = await this.request(`email/${email}`, "GET", {}, authHeader);
     // console.log("get email returning: ", res.email);
     return res.email;
   }
@@ -150,6 +154,27 @@ class FlipyaDB {
     const res = await this.request(
       `email/${email}/${key}`,
       "POST",
+      {},
+      authHeader
+    );
+    return res;
+  }
+
+  static async changeEmailKey(email, key) {
+    const res = await this.request(
+      `email/${email}/${key}`,
+      "PATCH",
+      {},
+      authHeader
+    );
+    return res;
+  }
+
+  static async tryVerifyEmail(email, key) {
+    console.log("try verify: ", email, key);
+    const res = await this.request(
+      `email/tryverify/${email}/${key}`,
+      "GET",
       {},
       authHeader
     );
@@ -175,11 +200,6 @@ class FlipyaDB {
       {},
       authHeader
     );
-    return res;
-  }
-
-  static async getUsers() {
-    const res = await this.request("users");
     return res;
   }
 
@@ -214,25 +234,40 @@ class FlipyaDB {
 
   static async updateEmail(username, email) {
     // console.log("updating email for ", username, " to ", email);
-    const res = await this.request(`users/${username}/email`, "POST", {
-      email,
-    });
+    const res = await this.request(
+      `users/${username}/email`,
+      "POST",
+      {
+        email,
+      },
+      authHeader
+    );
     return res;
   }
 
   static async updateSetSize(username, size) {
     // console.log("updating set-size for ", username, " to ", size);
-    const res = await this.request(`users/${username}/setsize`, "POST", {
-      setsize: size,
-    });
+    const res = await this.request(
+      `users/${username}/setsize`,
+      "POST",
+      {
+        setsize: size,
+      },
+      authHeader
+    );
     return res;
   }
 
   static async updateWordsetId(username, id) {
     // console.log("updating wordset id for ", username, " to ", id);
-    const res = await this.request(`users/${username}/wordsetid`, "POST", {
-      id,
-    });
+    const res = await this.request(
+      `users/${username}/wordsetid`,
+      "POST",
+      {
+        id,
+      },
+      authHeader
+    );
     return res;
   }
 

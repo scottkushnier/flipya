@@ -1,8 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 // import { act } from "@testing-library/react";
 
-import EmailAPI from "./EmailAPI";
-import bcrypt from "bcryptjs";
+import EmailAPI from "./services/emailAPI";
 import FlipyaDB from "./FlipyaDB";
 import wordData from "./wordData";
 
@@ -16,7 +15,7 @@ const APP_BASE_URL =
     ? ""
     : window.location.hostname.includes("render")
     ? "https://" + window.location.hostname
-    : "http://192.168.5.129:3001";
+    : window.location.hostname + ":3001";
 
 function EmailSession({ username, started }) {
   const [userProfile, setUserProfile] = useState(null);
@@ -56,6 +55,10 @@ function EmailSession({ username, started }) {
   useEffect(() => {
     initEmailList();
     setUpEmailForUser(username);
+    return () => {
+      // clear checking-for-email upon unrender
+      clearPollInterval();
+    };
   }, []);
 
   //   initEmailList();
@@ -92,8 +95,8 @@ function EmailSession({ username, started }) {
     }
   };
 
-  const maxEmailVerifyAttempts = 3;
-  // const maxEmailVerifyAttempts = 10;
+  // const maxEmailVerifyAttempts = 3;
+  const maxEmailVerifyAttempts = 10;
 
   const emailIncAttempts = (email) => {
     // console.log("email list: ", emailListRef.current);
@@ -118,11 +121,7 @@ function EmailSession({ username, started }) {
           (item) => item.email === email
         );
         found[0].status = "verified";
-        const myInput = document.getElementById("email");
-        myInput.style.backgroundColor = "#bfb";
-        document.getElementById("email-button").innerText = "Email Session";
         setEmailGood(true);
-        document.getElementById("email-button").style.display = null;
         setEmailStatus("verified");
         FlipyaDB.updateEmail(username, email);
         clearPollInterval();
@@ -140,39 +139,33 @@ function EmailSession({ username, started }) {
   };
 
   const handleNewEmail = (newEmail) => {
+    if (newEmail === "") {
+      setEmailStatus("blank");
+      return null;
+    }
     // console.log("handle new email: ", newEmail);
     const pattern = /.+@.+\..+/;
     let emailSyntaxGood = pattern.test(newEmail);
-    const myInput = document.getElementById("email");
     // empty field - no error, but not verified
     if (!newEmail) {
       clearPollInterval();
-      myInput.style.backgroundColor = "white";
-      document.getElementById("email-button").style.display = "none";
       setEmailStatus(null);
       return null;
       // bad email syntax form, i.e. mark@foo
     } else if (!emailSyntaxGood) {
       clearPollInterval();
-      myInput.style.backgroundColor = "pink";
-      document.getElementById("email-button").style.display = "none";
       setEmailStatus(null);
       return null;
     } else {
       if (emailVerified(newEmail)) {
         // console.log("email is verified");
         clearPollInterval();
-        myInput.style.backgroundColor = "#bfb";
-        document.getElementById("email-button").innerText = "Email Session";
         setEmailGood(true);
-        document.getElementById("email-button").style.display = null;
         setEmailStatus("verified");
         // console.log("email status here: ", emailStatus);
         return "verified";
       } else if (emailBlacklisted(newEmail)) {
         clearPollInterval();
-        myInput.style.backgroundColor = "pink";
-        document.getElementById("email-button").style.display = "none";
         setEmailStatus(null);
         return null;
       } else if (emailUnverified(newEmail)) {
@@ -190,17 +183,11 @@ function EmailSession({ username, started }) {
         }, 2000);
         setPollInterval(myPollInterval);
         // console.log("new poll interval: ", myPollInterval);
-        myInput.style.backgroundColor = "#ff9";
-        document.getElementById("email-button").innerText = "Try verify again";
-        document.getElementById("email-button").style.display = null;
         setEmailStatus("unverified");
         return "unverified";
       } else {
         // email present, valid syntax, user hasn't initiated verification yet...
         clearPollInterval();
-        myInput.style.backgroundColor = "white";
-        document.getElementById("email-button").innerText = "Verify email";
-        document.getElementById("email-button").style.display = null;
         setEmailGood(false);
         setEmailStatus("new");
         return "new";
@@ -271,65 +258,62 @@ function EmailSession({ username, started }) {
           key: key,
           num_attempts: 0,
         });
-        const myInput = document.getElementById("email");
-        myInput.style.backgroundColor = "#ff9";
-        document.getElementById("email-button").innerText = "Try verify again";
-        document.getElementById("email-button").style.display = null;
         setEmailGood(false);
         setEmailStatus("unverified");
       }
       if (!key) {
-        // not new, go get key
-        key = emailListRef.current.filter((item) => item.email === email)[0]
-          .key;
+        // not new, generate another key & try again
+        key = randomWord(10);
+        FlipyaDB.changeEmailKey(email, key);
         // console.log("found key: ", key);
       }
       //   console.log("verify email");
       FlipyaDB.incAttempts(email);
       // console.log("emailList: ", emailListRef.current);
       if (emailIncAttempts(email)) {
-        // if past limit, will return false
-        bcrypt.genSalt(10).then((salt) => {
-          // console.log("salt: ", salt);
-          const pw = key + "-" + email;
-          // console.log("pw: ", pw);
-          bcrypt.hash(pw, salt).then((hash) => {
-            // console.log("hash: ", hash);
-            const enc_hash = encodeURIComponent(hash);
-            const link =
-              `${APP_BASE_URL}/?verify=` + email + "&hash=" + enc_hash;
-            // console.log("link: ", link);
-            const msg =
-              "Please click on the following link or point your web browser to it. Thanks. \n\n" +
-              link;
-            // console.log("msg: ", msg);
-            EmailAPI.sendEmail(
-              "scottkushnier@hstreet.com",
-              email,
-              "verification link",
-              msg
-            );
-            displayEmailMsg("Test message sent.");
+        const link = `${APP_BASE_URL}/?verify=` + email + "&key=" + key;
+        // console.log("link: ", link);
+        const msg =
+          "Please click on the following link or point your web browser to it. Thanks. \n\n" +
+          link;
+        // console.log("msg: ", msg);
+        EmailAPI.sendEmail(
+          "scottkushnier@hstreet.com",
+          email,
+          "verification link",
+          msg
+        );
+        displayEmailMsg("Verification email sent.");
 
-            // console.log("should send msg here: ", msg);
-          });
-        });
+        // console.log("should send msg here: ", msg);
+
         clearPollInterval(); // just to be sure, clear any previously existing
         const myPollInterval = setInterval(() => {
-          //   console.log("checking email 2...");
+          // console.log("checking email 2...");
           checkEmail(email);
         }, 2000);
         setPollInterval(myPollInterval);
         // console.log("new poll interval: ", myPollInterval);
       } else {
         clearPollInterval();
-        const myInput = document.getElementById("email");
-        myInput.style.backgroundColor = "pink";
-        document.getElementById("email-button").style.display = "none";
         setEmailStatus(null);
       }
     }
   }
+
+  const colorFromEmailStatus = (status) => {
+    let color = "pink";
+    if (status) {
+      if (status == "verified") {
+        color = "#bfb";
+      } else if (status == "unverified") {
+        color = "#ff9";
+      } else if (status == "new" || status == "blank") {
+        color = "white";
+      }
+    }
+    return color;
+  };
 
   return (
     <>
@@ -342,6 +326,7 @@ function EmailSession({ username, started }) {
           type="input"
           id="email"
           value={email}
+          style={{ backgroundColor: colorFromEmailStatus(emailStatus) }}
           onChange={handleEmailEdit}
         />
       </div>
@@ -351,9 +336,15 @@ function EmailSession({ username, started }) {
           id="email-button"
           className="email-button"
           disabled={!started && emailGood}
-          style={{ display: "none" }}
+          style={
+            !emailStatus || emailStatus === "blank" ? { display: "none" } : null
+          }
         >
-          Email Session
+          {emailGood
+            ? "Email Session"
+            : emailStatus === "unverified"
+            ? "Try verify again"
+            : "Verify email"}
         </button>
         <p className="email-msg"> {emailMsg}</p>
       </div>

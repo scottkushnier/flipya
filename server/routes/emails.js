@@ -1,32 +1,17 @@
 "use strict";
 
 const express = require("express");
-const jwt = require("jsonwebtoken");
-const { JWT_SECRET_KEY } = require("../config");
+
 const Emails = require("../models/emails");
 
 const router = new express.Router();
 
-// middleware - check Token for protected routes
-
-function checkToken(req, res, next) {
-  if (process.env.NODE_ENV === "test") {
-    // console.log("no token checking during testing...");
-    next();
-  } else {
-    // console.log("checking token...");
-    if (!jwt.verify(req.headers.token, JWT_SECRET_KEY)) {
-      console.error("bad token:", req.headers.token);
-      return res.json({ msg: "bad token" });
-    }
-    next();
-  }
-}
+const checkToken = require("../middleware.js");
 
 //////////////////////////////////////////////////////////////////////////
 
 // get details for particular email address
-router.get("/:email", async function (req, res, next) {
+router.get("/:email", checkToken, async function (req, res, next) {
   try {
     const email = await Emails.find(req.params.email);
     return res.json({ email });
@@ -47,7 +32,20 @@ router.get("/", checkToken, async function (req, res, next) {
   }
 });
 
+router.get("/tryverify/:email/:key", async function (req, res, next) {
+  try {
+    const verdict = await Emails.tryVerifyEmail(
+      req.params.email,
+      req.params.key
+    );
+    return res.json(verdict);
+  } catch (err) {
+    return next(err);
+  }
+});
+
 // mark email as verified
+// no auth token because coming from verification page
 router.post("/verify/:email", async function (req, res, next) {
   try {
     const emails = await Emails.verifyEmail(req.params.email);
@@ -77,6 +75,19 @@ router.post("/:email/:key", checkToken, async function (req, res, next) {
     // console.log("new email: ", req.params.email, req.params.key);
     const emails = await Emails.addEmail(req.params.email, req.params.key);
     return res.json({ msg: "added" });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+router.patch("/:email/:key", checkToken, async function (req, res, next) {
+  try {
+    // console.log("new email: ", req.params.email, req.params.key);
+    const emails = await Emails.changeEmailKey(
+      req.params.email,
+      req.params.key
+    );
+    return res.json({ msg: "changed" });
   } catch (err) {
     return next(err);
   }

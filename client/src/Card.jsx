@@ -2,7 +2,7 @@
 //    State variables record "state" of the card, i.e. flipped, scrolled up, down, etc.
 //    Props sent down from console tell how card -should- appear, so console (UI) directs card motion.
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // Functions to size fonts properly - longer words should use smaller fonts
 //   It's a little tricky, Hebrew vowels don't take extra space
@@ -128,23 +128,62 @@ function showConfig(config) {
   } else return "flipped";
 }
 
+// Code to execute when the window is resized
+//  don't want slow mo transitions
+
+let resetTransitionCount = 0;
+
 // 'Console' sets card props depending on user interaction
 // States store how card is currently configured.
 // On rerender if don't coincide, then card is animated & state variables reset to match props
 //    flipFn passed down so can flip card when click on it, fn is defined in console, as it's part of UI
-function Card({ topWord, bottomWord, flipWord, config, color, flipFn }) {
+function Card({
+  topWord,
+  bottomWord,
+  flipWord,
+  config,
+  color,
+  flipSpeed,
+  scrollSpeed,
+  fadeOut,
+  quickChange,
+  flipFn,
+}) {
   const [showingFront, setShowingFront] = useState(config !== Config.Flipped);
-  const [showingTop, setshowingTop] = useState(config === Config.ShowTopWord);
+  const [showingTop, setShowingTop] = useState(config === Config.ShowTopWord);
   const [cardMessage, setCardMessage] = useState("(click card to flip)");
+  const [abrupt, setAbrupt] = useState(false); // scroll speed - fast for window size change
+
+  // console.log("fadeOut: ", fadeOut);
+
+  const resetTransition = (count) => {
+    if (count === resetTransitionCount) {
+      // console.log("reset transition for real");
+      setAbrupt(false);
+    }
+  };
+
+  // if resize window, we don't want slow scrolling, just change everything quick
+  const wrapWithQuickTransition = () => {
+    setAbrupt(() => true); // removes delays used for smooth scrolling
+    resetTransitionCount++; // then put back after 1/2 sec - from last resize event
+    const i = resetTransitionCount;
+    (function close(i) {
+      setTimeout(() => {
+        resetTransition(i);
+      }, 500);
+    })(i);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", wrapWithQuickTransition);
+    return () => {
+      window.removeEventListener("resize", wrapWithQuickTransition);
+    };
+  }, []);
 
   // animated flip of card is done through CSS transform with transition time
   const flip = () => {
-    const myCard = document.getElementById("myCard");
-    if (showingFront) {
-      myCard.style.transform = "rotateY(-180deg)";
-    } else {
-      myCard.style.transform = null;
-    }
     setShowingFront(!showingFront); // now state matches prop
     // remove instruction to click card to flip once flipped once
     if (cardMessage) {
@@ -156,14 +195,10 @@ function Card({ topWord, bottomWord, flipWord, config, color, flipFn }) {
 
   // similarly animated scroll up or down via CSS
   const slideUp = () => {
-    document.getElementById("front-text-box").style.transform =
-      "translateY(-9vw)";
-    setshowingTop(false);
+    setShowingTop(false);
   };
   const slideDown = () => {
-    document.getElementById("front-text-box").style.transform =
-      "translateY(0px)";
-    setshowingTop(true);
+    setShowingTop(true);
   };
 
   // on each rerender, check if states match props, if not do animation & reset Card states
@@ -186,11 +221,15 @@ function Card({ topWord, bottomWord, flipWord, config, color, flipFn }) {
         className="card"
         id="myCard"
         data-testid="card"
-        style={
-          showingFront
-            ? { transform: "rotateY(0deg)" }
-            : { transform: "rotateY(-180deg)" }
-        }
+        style={{
+          transform: showingFront ? "rotateY(0deg)" : "rotateY(-180deg)",
+          transition: flipSpeed,
+        }}
+        // style={
+        //     transform: {showingFront ? "rotateY(0deg)" : "rotateY(-180deg)"},
+        //   ,
+        //    transition: flipCardTransform(speed)
+        // }
         onClick={flipFn}
       >
         <div className="showingFront">
@@ -199,16 +238,21 @@ function Card({ topWord, bottomWord, flipWord, config, color, flipFn }) {
             {cardMessage && <div className="card-message"> {cardMessage} </div>}
           </div>
           <div
-            className="front-text-box text-box"
-            id="front-text-box"
-            style={
-              showingTop
-                ? { transform: "translateY(0px)" }
-                : { transform: "translateY(-9vw)" }
+            className={
+              "front-text-box text-box " +
+              (showingTop ? "front-text-box-up" : "front-text-box-down")
             }
+            id="front-text-box"
+            style={{
+              transition: abrupt || quickChange ? "transform 0ms" : scrollSpeed,
+            }}
           >
-            <div className="top-text">{decorateWord(topWord)}</div>
-            <div className="bottom-text">{decorateWord(bottomWord)}</div>
+            <div className="top-text" style={{ opacity: fadeOut ? 0 : 1 }}>
+              {decorateWord(topWord)}
+            </div>
+            <div className="bottom-text" style={{ opacity: fadeOut ? 0 : 1 }}>
+              {decorateWord(bottomWord)}
+            </div>
           </div>
         </div>
         <div className="back">

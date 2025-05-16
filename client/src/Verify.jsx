@@ -1,28 +1,22 @@
-import bcrypt from "bcryptjs";
 import { useState, useEffect } from "react";
 import FlipyaDB from "./FlipyaDB";
 
-function Verify({ verify, hash }) {
+function Verify({ verify, key1 }) {
   const [passed, setPassed] = useState("unknown");
 
   useEffect(() => {
     // console.log("verify: ", verify);
-    // console.log("hash: ", hash);
-    FlipyaDB.getEmail(verify).then((email) => {
-      // console.log("email: ", email);
-      let key = email.key;
-      const pw = key + "-" + verify;
-      // console.log("pw: ", pw);
-      bcrypt.compare(pw, hash).then((result) => {
-        if (result) {
-          setPassed("PASS");
-          FlipyaDB.verifyEmail(verify);
-        } else {
-          setPassed("FAIL");
-        }
-      });
+    // console.log("key: ", key1);
+
+    FlipyaDB.tryVerifyEmail(verify, key1).then((verdict) => {
+      if (verdict) {
+        setPassed("PASS");
+        FlipyaDB.verifyEmail(verify);
+      } else {
+        setPassed("FAIL");
+      }
     });
-  }, [verify, hash]);
+  }, [verify, key1]);
 
   if (passed === "PASS") {
     return (

@@ -4,44 +4,46 @@ import FlipyaDB from "./FlipyaDB";
 function Login({ enterFn }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState(false);
-  const [buttonType, setButtonType] = useState("none"); // login or register, depending on if username exists
+  const [loginError, setLoginError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [buttonType, setButtonType] = useState("register"); // login or register, depending on if username exists
   const [pwEyeOpen, setPwEyeOpen] = useState(false);
-  const [userList, setUserList] = useState([]);
 
-  useEffect(() => {
-    FlipyaDB.getUsers().then((ret) => {
-      // console.log("users: ", ret);
-      const list = ret.users.map((user) => user.username);
-      setUserList(list);
-      // console.log("userlist: ", userList);
+  async function sleep(delay) {
+    return new Promise((res) => {
+      setTimeout(() => res(), delay);
     });
-  }, []);
-
-  function usernameIsRegistered(username) {
-    const ret = userList.includes(username);
-    return ret;
   }
 
-  const handleUsernameEdit = (e) => {
+  async function usernameIsRegistered(username) {
+    if (/^\s*$/.test(username)) {
+      return false;
+    }
+    const ret = await FlipyaDB.getUser(username);
+    // console.log("reg: ", username, ret);
+    await sleep(200); // delay for security reasons - put brakes on robots searching for valid usernames
+    return typeof ret == "object";
+  }
+
+  const handleUsernameEdit = async (e) => {
     // console.log("username edit");
     setUsername(e.target.value);
     if (e.target.value !== "") {
-      if (usernameIsRegistered(e.target.value)) {
+      if (await usernameIsRegistered(e.target.value)) {
         setButtonType("login");
       } else {
         setButtonType("register");
       }
     } else {
-      setButtonType("none");
+      setButtonType("register");
     }
-    setPasswordError(false);
+    setLoginError(false);
   };
 
   const handlePasswordEdit = (e) => {
     // console.log("password edit: ", e.target.value);
     setPassword(e.target.value);
-    setPasswordError(false);
+    setLoginError(false);
   };
 
   const handleButton = async (e) => {
@@ -53,12 +55,17 @@ function Login({ enterFn }) {
         // if got profile back, else error
         enterFn(username);
       } else {
-        setPasswordError(true);
+        setLoginError(true);
+        setErrorMessage("Bad Password");
       }
     } else if (buttonType === "register") {
       // console.log("register");
-      if (password === "") {
-        setPasswordError(true);
+      if (/^\s*$/.test(username)) {
+        setLoginError(true);
+        setErrorMessage("Username can't be blank");
+      } else if (/^\s*$/.test(password)) {
+        setLoginError(true);
+        setErrorMessage("Password can't be blank");
       } else {
         await FlipyaDB.register(username, password);
         enterFn(username);
@@ -110,7 +117,7 @@ function Login({ enterFn }) {
               value={password}
               onChange={handlePasswordEdit}
               autoComplete="off"
-              style={{ backgroundColor: passwordError ? "pink" : "white" }}
+              style={{ backgroundColor: loginError ? "pink" : "white" }}
             />
           </span>
           <span>
@@ -147,15 +154,8 @@ function Login({ enterFn }) {
           </button>
         ) : null}
       </form>
-      {passwordError ? (
-        buttonType === "login" ? (
-          <p className="login-message"> * Bad Password * </p>
-        ) : (
-          <p className="login-message">
-            {" "}
-            * Need to enter a password to register *{" "}
-          </p>
-        )
+      {loginError ? (
+        <p className="login-message"> * {errorMessage} * </p>
       ) : null}
     </>
   );

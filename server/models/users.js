@@ -6,17 +6,21 @@ const jwt = require("jsonwebtoken");
 const { BCRYPT_WORK_FACTOR, JWT_SECRET_KEY } = require("../config");
 
 class Users {
-  static async findAll() {
-    let query = `SELECT * FROM users`;
-    const res = await db.query(query);
-    return res.rows;
-  }
+  // static async findAll() {
+  //   let query = `SELECT * FROM users`;
+  //   const res = await db.query(query);
+  //   return res.rows;
+  // }
 
   static async find(username) {
     let query = `SELECT * FROM users WHERE username = $1`;
     // console.log("query: ", query);
     const res = await db.query(query, [username]);
-    return res.rows[0];
+    if (res.rows.length) {
+      return res.rows[0];
+    } else {
+      return null;
+    }
   }
 
   static async register(username, password) {

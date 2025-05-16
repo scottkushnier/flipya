@@ -1,6 +1,11 @@
+import { useState } from "react";
 import { render, fireEvent } from "@testing-library/react";
 import { Card, Config } from "./Card";
 import "@testing-library/jest-dom";
+
+function mockFlipFn() {
+  return;
+}
 
 test("Card smoke test", function () {
   render(
@@ -10,9 +15,7 @@ test("Card smoke test", function () {
       flipWord="encore"
       config={Config.ShowTopWord}
       color="pink"
-      flipFn={() => {
-        return;
-      }}
+      flipFn={mockFlipFn}
     />
   );
 });
@@ -25,9 +28,7 @@ test("Card snapshot", function () {
       flipWord="garcon"
       config={Config.ShowTopWord}
       color="blue"
-      flipFn={() => {
-        return;
-      }}
+      flipFn={mockFlipFn}
     />
   );
   expect(asFragment()).toMatchSnapshot();
@@ -41,9 +42,7 @@ test("Card snapshot show bottom", function () {
       flipWord="garcon"
       config={Config.ShowBottomWord}
       color="blue"
-      flipFn={() => {
-        return;
-      }}
+      flipFn={mockFlipFn}
     />
   );
   expect(asFragment()).toMatchSnapshot();
@@ -57,42 +56,36 @@ test("Card snapshot show flipped", function () {
       flipWord="garcon"
       config={Config.Flipped}
       color="blue"
-      flipFn={() => {
-        return;
-      }}
+      flipFn={mockFlipFn}
     />
   );
   expect(asFragment()).toMatchSnapshot();
 });
 
 test("Card test click", async function () {
-  let word = "boy";
-  let { getByTestId, findByText, rerender } = render(
-    <Card
-      topWord={word}
-      bottomWord="girl"
-      flipWord="garcon"
-      config={Config.ShowBottomWord}
-      flipFn={() => {
-        // console.log("word: ", word);
-        word = "man";
-        // console.log("word: ", word);
-      }}
-    />
-  );
+  function CardWrapper() {
+    const [word, setWord] = useState("boy");
+    return (
+      <Card
+        topWord={word}
+        bottomWord="girl"
+        flipWord="garcon"
+        config={Config.ShowBottomWord}
+        flipFn={() => {
+          setWord("man");
+        }}
+      />
+    );
+  }
+
+  const { getByTestId, findByText } = render(<CardWrapper />);
+
   let foundText = await findByText("boy");
   expect(foundText).toBeInTheDocument();
+
   const card = getByTestId("card");
   fireEvent.click(card);
-  rerender(
-    <Card
-      topWord={word}
-      bottomWord="girl"
-      flipWord="garcon"
-      config={Config.ShowBottomWord}
-      flipFn={() => {}}
-    />
-  );
+
   foundText = await findByText("man");
   expect(foundText).toBeInTheDocument();
 });

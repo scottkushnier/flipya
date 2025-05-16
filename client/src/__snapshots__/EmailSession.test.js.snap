@@ -14,6 +14,7 @@ exports[`EmailSession snapshot 1`] = `
     <input
       class="email-input"
       id="email"
+      style="background-color: pink;"
       type="input"
       value=""
     />
@@ -26,7 +27,7 @@ exports[`EmailSession snapshot 1`] = `
       id="email-button"
       style="display: none;"
     >
-      Email Session
+      Verify email
     </button>
     <p
       class="email-msg"

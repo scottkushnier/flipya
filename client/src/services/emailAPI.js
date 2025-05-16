@@ -1,5 +1,5 @@
 import axios from "axios";
-import { authHeader } from "./FlipyaDB";
+import { authHeader } from "../FlipyaDB";
 
 // const BASE_URL = "http://" + window.location.hostname + ":3001";
 

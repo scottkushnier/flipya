@@ -30,12 +30,12 @@ exports[`Card snapshot 1`] = `
           </div>
         </div>
         <div
-          class="front-text-box text-box"
+          class="front-text-box text-box front-text-box-up"
           id="front-text-box"
-          style="transform: translateY(0px);"
         >
           <div
             class="top-text"
+            style="opacity: 1;"
           >
             <div
               class="latin"
@@ -45,6 +45,7 @@ exports[`Card snapshot 1`] = `
           </div>
           <div
             class="bottom-text"
+            style="opacity: 1;"
           >
             <div
               class="latin"
@@ -114,12 +115,12 @@ exports[`Card snapshot show bottom 1`] = `
           </div>
         </div>
         <div
-          class="front-text-box text-box"
+          class="front-text-box text-box front-text-box-down"
           id="front-text-box"
-          style="transform: translateY(-9vw);"
         >
           <div
             class="top-text"
+            style="opacity: 1;"
           >
             <div
               class="latin"
@@ -129,6 +130,7 @@ exports[`Card snapshot show bottom 1`] = `
           </div>
           <div
             class="bottom-text"
+            style="opacity: 1;"
           >
             <div
               class="latin"
@@ -198,12 +200,12 @@ exports[`Card snapshot show flipped 1`] = `
           </div>
         </div>
         <div
-          class="front-text-box text-box"
+          class="front-text-box text-box front-text-box-down"
           id="front-text-box"
-          style="transform: translateY(-9vw);"
         >
           <div
             class="top-text"
+            style="opacity: 1;"
           >
             <div
               class="latin"
@@ -213,6 +215,7 @@ exports[`Card snapshot show flipped 1`] = `
           </div>
           <div
             class="bottom-text"
+            style="opacity: 1;"
           >
             <div
               class="latin"

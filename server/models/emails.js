@@ -1,6 +1,7 @@
 "use strict";
 
 const db = require("../db");
+const bcrypt = require("bcryptjs");
 
 class EmailDB {
   static async findAll() {
@@ -18,10 +19,44 @@ class EmailDB {
   }
 
   static async addEmail(email, key) {
-    const query =
-      "INSERT INTO emails (email, status, key) VALUES ($1, 'unverified', $2)";
-    const res = await db.query(query, [email, key]);
-    return res;
+    bcrypt.genSalt(10).then((salt) => {
+      const pw = key + "-" + email;
+      bcrypt.hash(pw, salt).then(async (hash) => {
+        const query =
+          "INSERT INTO emails (email, status, key) VALUES ($1, 'unverified', $2)";
+        await db.query(query, [email, hash]);
+      });
+    });
+    return "ok";
+  }
+
+  static async changeEmailKey(email, key) {
+    bcrypt.genSalt(10).then((salt) => {
+      const pw = key + "-" + email;
+      bcrypt.hash(pw, salt).then(async (hash) => {
+        const query = "UPDATE emails SET key = $2 WHERE email = $1";
+        await db.query(query, [email, hash]);
+      });
+    });
+    return "ok";
+  }
+
+  // console.log("email: ", email);
+  // let key = email.key;
+  // const pw = key + "-" + verify;
+  // console.log("pw: ", pw);
+  // bcrypt.compare(pw, hash).then((result) => {
+
+  static async tryVerifyEmail(email, key) {
+    // console.log("model: try verify: ", email, key);
+    const query = "SELECT * FROM emails WHERE email = $1";
+    const res = await db.query(query, [email]);
+    const hash = res.rows[0].key;
+    // console.log("res: ", res.rows[0]);
+    // console.log("hash: ", hash);
+    const pw = key + "-" + email;
+    const verdict = await bcrypt.compare(pw, hash);
+    return verdict;
   }
 
   static async verifyEmail(email) {

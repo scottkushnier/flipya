@@ -68,6 +68,8 @@ function Console() {
   const [autoInterval, setAutoInterval] = useState(null);
   const [runId, setRunId] = useState(0);
   const [speed, setSpeed] = useState(DEFAULT_SPEED);
+  const [quickChange, setQuickChange] = useState(false);
+  const [fadeOut, setFadeOut] = useState(false);
 
   // options
   const [loggedIn, setLoggedIn] = useState(false);
@@ -121,13 +123,7 @@ function Console() {
     if (currentConfig === Config.ShowBottomWord) {
       // console.log("showing bottom word");
       wordData.getNextWord(wordsetId, reverse).then((word) => {
-        const myTextBox = document.getElementById("front-text-box");
-        // console.log("my text box: ", myTextBox);
-        let saveTransform;
-        if (process.env.NODE_ENV !== "test") {
-          saveTransform = myTextBox.style.transition;
-          myTextBox.style.transition = "transform 0ms";
-        }
+        setQuickChange(() => true);
         // console.log("setting top word to: ", bottomWordRef.current);
         setTopWord(bottomWordRef.current); // put current word (at bottom) at top position
         setConfig(Config.ShowTopWord); // and -quickly- switch to showing top
@@ -135,7 +131,8 @@ function Console() {
         setBottomWord(word.word1); // put new word below...
         if (process.env.NODE_ENV !== "test") {
           setTimeout(() => {
-            myTextBox.style.transition = saveTransform;
+            setQuickChange(() => false);
+            // myTextBox.style.transition = saveTransform;
             setConfig(Config.ShowBottomWord); // then -slowly- scroll up to show new word
           }, 50);
         } else {
@@ -180,15 +177,13 @@ function Console() {
     // prev when showing top word, need to do fancy footwork here to make smooth scroll -downward-
     if (currentConfig === Config.ShowTopWord) {
       wordData.getPreviousWord(wordsetId, reverse).then((word) => {
-        const myTextBox = document.getElementById("front-text-box");
-        const saveTransform = myTextBox.style.transition;
-        myTextBox.style.transition = "transform 0ms";
+        setQuickChange(() => true);
         setBottomWord(topWord); // put current word (at top) at bottom position
         setConfig(Config.ShowBottomWord); // then -quickly- switch to showing bottom
         setTopWord(word.word1);
         if (process.env.NODE_ENV !== "test") {
           setTimeout(() => {
-            myTextBox.style.transition = saveTransform; // then -slowly- scroll to show previous word @ top
+            setQuickChange(() => false);
             setConfig(Config.ShowTopWord);
           }, 50);
         } else {
@@ -333,20 +328,14 @@ function Console() {
   // need special logic depending if showing top or bottom word
 
   function flipDeckBottom() {
-    let myBottomText = document.getElementsByClassName("bottom-text")[0];
-    // console.log("bottom text: ", myBottomText);
-    myBottomText.transition = "opacity 500ms ease-out";
-    myBottomText.style.opacity = 0;
-    myBottomText.transition = "opacity 0ms";
-    setTimeout(() => {
-      myBottomText.transition = "opacity 500ms ease-in";
-    }, 25);
+    console.log("flip deck bottom");
+    setFadeOut(() => true);
     setTimeout(() => {
       setConfig(Config.ShowBottomWord);
       let saveBottom = bottomWord;
       setBottomWord(flipWord);
       setFlipWord(saveBottom);
-      myBottomText.style.opacity = 1;
+      setFadeOut(() => false);
     }, 550);
     // console.log("top word: ", topWordRef.current);
     wordData.getPreviousWord(wordsetId, reverse).then((word) => {
@@ -360,20 +349,13 @@ function Console() {
   }
 
   function flipDeckTop() {
-    let myTopText = document.getElementsByClassName("top-text")[0];
-    // console.log("top text: ", myTopText);
-    myTopText.transition = "opacity 500ms ease-out";
-    myTopText.style.opacity = 0;
-    myTopText.transition = "opacity 0ms";
-    setTimeout(() => {
-      myTopText.transition = "opacity 500ms ease-in";
-    }, 25);
+    setFadeOut(() => true);
     setTimeout(() => {
       setConfig(Config.ShowTopWord);
       let saveTop = topWord;
       setTopWord(flipWord);
       setFlipWord(saveTop);
-      myTopText.style.opacity = 1;
+      setFadeOut(() => false);
     }, 550);
     wordData.getNextWord(wordsetId, reverse).then((word) => {
       // console.log("next word: ", word);
@@ -422,45 +404,11 @@ function Console() {
 
   /////////////////////////////////////////////////////////////////////////
 
-  // Code to execute when the window is resized
-  //  don't want slow mo transitions
-
-  let resetTransitionCount = 0;
-
-  function resetTransition(count) {
-    // console.log("reset transition", count);
-    if (count === resetTransitionCount) {
-      // console.log("reset transition for real");
-      const myTextBox = document.getElementById("front-text-box");
-      myTextBox.style.transition = newWordTransform(speedRef.current);
-    }
-  }
-
-  window.addEventListener("resize", function (event) {
-    const myTextBox = document.getElementById("front-text-box");
-    if (myTextBox) {
-      myTextBox.style.transition = "transform 0ms";
-      resetTransitionCount++;
-      const i = resetTransitionCount;
-      (function close(i) {
-        setTimeout(() => {
-          resetTransition(i);
-        }, 500);
-      })(i);
-    }
-  });
-
-  ////////////////////////////////////////////////////////////////////
-
   const handleSpeedChange = (e) => {
     e.preventDefault();
     // console.log("speed: ", e.target.value);
     const speed = e.target.value;
     setSpeed(() => speed);
-    let myCard = document.getElementById("myCard");
-    myCard.style.transition = flipCardTransform(speed);
-    const myTextBox = document.getElementById("front-text-box");
-    myTextBox.style.transition = newWordTransform(speed);
   };
 
   //////////////////////////////////////////////////////////////////////
@@ -488,6 +436,10 @@ function Console() {
               flipWord={flipWord}
               config={config}
               color={cardColor}
+              flipSpeed={flipCardTransform(speed)}
+              scrollSpeed={newWordTransform(speed)}
+              fadeOut={fadeOut}
+              quickChange={quickChange}
               flipFn={flip}
             />
             {!auto && (
