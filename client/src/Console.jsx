@@ -328,7 +328,7 @@ function Console() {
   // need special logic depending if showing top or bottom word
 
   function flipDeckBottom() {
-    console.log("flip deck bottom");
+    // console.log("flip deck bottom");
     setFadeOut(() => true);
     setTimeout(() => {
       setConfig(Config.ShowBottomWord);

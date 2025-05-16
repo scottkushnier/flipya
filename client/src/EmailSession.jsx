@@ -139,7 +139,8 @@ function EmailSession({ username, started }) {
   };
 
   const handleNewEmail = (newEmail) => {
-    if (newEmail === "") {
+    // console.log("handleNewEmail: ", newEmail);
+    if (!newEmail || newEmail === "") {
       setEmailStatus("blank");
       return null;
     }
