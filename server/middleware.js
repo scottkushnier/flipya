@@ -13,6 +13,13 @@ function checkToken(req, res, next) {
       console.error("bad token:", req.headers.token);
       return res.json({ msg: "bad token" });
     }
+    const userFromJwt = jwt.decode(req.headers.token).username;
+    console.log("from jwt: ", userFromJwt);
+    console.log("from req (path): ", req.path);
+    if (req.params.username && userFromJwt != req.params.username) {
+      console.error("wrong username in token:", req.headers.token);
+      return res.json({ msg: "wrong username in token" });
+    }
     next();
   }
 }

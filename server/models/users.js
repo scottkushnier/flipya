@@ -17,7 +17,9 @@ class Users {
     // console.log("query: ", query);
     const res = await db.query(query, [username]);
     if (res.rows.length) {
-      return res.rows[0];
+      const user = res.rows[0];
+      delete user.password; // caller doesn't need this
+      return user;
     } else {
       return null;
     }
