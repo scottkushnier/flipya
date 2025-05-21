@@ -6,6 +6,8 @@
 
 Currently running on Render [https://flipya.onrender.com/].
 
+For those who prefer not to register, use username: 'test' with password 'test'.
+
 Card size is dependent on horizontal size of browser window. Resize window horizontally to change sizing.
 
 ---
