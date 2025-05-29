@@ -74,8 +74,6 @@ const DB_BASE_URL = "";
 
 // console.log("env: ", process.env.NODE_ENV);
 
-let authHeader = null; // stores header with JWT for future API calls
-
 class FlipyaDB {
   static async request(endpoint, method = "get", data = {}, headers = {}) {
     if (process.env.NODE_ENV === "test") {
@@ -102,14 +100,14 @@ class FlipyaDB {
 
   // get all wordset data, handy for building selection menu in UI
   static async getWordSets() {
-    const res = await this.request("wordset");
+    const res = await this.request("api/wordset");
     // console.log("get word sets");
     // console.log("return: ", res.wordsets);
     return res.wordsets;
   }
 
   static async getWordSet(n) {
-    const res = await this.request(`wordset/${n}`);
+    const res = await this.request(`api/wordset/${n}`);
     // console.log("get word set: ", n);
     // console.log("return: ", res.wordset);
     return res.wordset;
@@ -119,14 +117,14 @@ class FlipyaDB {
   // restrict to difficulty range selected
   static async numWordsInSet(set_id, minLevel, maxLevel) {
     const res = await this.request(
-      `wordset/${set_id}/count?minLevel=${minLevel}&maxLevel=${maxLevel}`
+      `api/wordset/${set_id}/count?minLevel=${minLevel}&maxLevel=${maxLevel}`
     );
     return res.count;
   }
 
   // find difficulty range for particular wordset
   static async minMaxForSet(set_id) {
-    const res = await this.request(`wordset/${set_id}/minmax`);
+    const res = await this.request(`api/wordset/${set_id}/minmax`);
     // console.log("res: ", res);
     return res[0];
   }
@@ -134,49 +132,38 @@ class FlipyaDB {
   // get nth word from one of wordsets
   static async getWord(wordset_id, n, minLevel, maxLevel) {
     const res = await this.request(
-      `word/${wordset_id}/${n}?minLevel=${minLevel}&maxLevel=${maxLevel}`
+      `api/word/${wordset_id}/${n}?minLevel=${minLevel}&maxLevel=${maxLevel}`
     );
     return res.word[0];
   }
 
   static async getAllEmails() {
-    const res = await this.request("email", "GET", {}, authHeader);
+    const res = await this.request("api/email", "GET", {});
     return res;
   }
 
   static async getEmail(email) {
-    const res = await this.request(`email/${email}`, "GET", {}, authHeader);
+    const res = await this.request(`api/email/${email}`, "GET", {});
     // console.log("get email returning: ", res.email);
     return res.email;
   }
 
   static async addEmail(email, key) {
-    const res = await this.request(
-      `email/${email}/${key}`,
-      "POST",
-      {},
-      authHeader
-    );
+    const res = await this.request(`api/email/${email}/${key}`, "POST", {});
     return res;
   }
 
   static async changeEmailKey(email, key) {
-    const res = await this.request(
-      `email/${email}/${key}`,
-      "PATCH",
-      {},
-      authHeader
-    );
+    const res = await this.request(`api/email/${email}/${key}`, "PATCH", {});
     return res;
   }
 
   static async tryVerifyEmail(email, key) {
     console.log("try verify: ", email, key);
     const res = await this.request(
-      `email/tryverify/${email}/${key}`,
+      `api/email/tryverify/${email}/${key}`,
       "GET",
-      {},
-      authHeader
+      {}
     );
     return res;
   }
@@ -184,90 +171,78 @@ class FlipyaDB {
   // mark email address as verified
   static async verifyEmail(email) {
     // console.log("dictapi verify: ", email);
-    const res = await this.request(
-      `email/verify/${email}`,
-      "POST",
-      {},
-      authHeader
-    );
+    const res = await this.request(`api/email/verify/${email}`, "POST", {});
     return res;
   }
 
   static async incAttempts(email) {
     const res = await this.request(
-      `email/inc_attempts/${email}`,
+      `api/email/inc_attempts/${email}`,
       "POST",
-      {},
-      authHeader
+      {}
     );
     return res;
   }
 
   static async getUser(username) {
-    const res = await this.request(`users/${username}`);
+    const res = await this.request(`api/users/${username}`);
     return res;
   }
 
   static async login(username, password) {
-    const res = await this.request("users/login", "POST", {
+    const res = await this.request("api/users/login", "POST", {
       username,
       password,
     });
     // console.log("login res: ", res);
-    if (typeof res === "object") {
-      authHeader = { token: res.user.token }; // save JWT
-    }
     return res;
   }
 
   static async register(username, password) {
     // console.log("registering: ", username);
-    const res = await this.request("users/register", "POST", {
+    const res = await this.request("api/users/register", "POST", {
       username,
       password,
     });
     // console.log("res: ", res);
-    authHeader = { token: res.token };
-    // console.log("authHeader: ", authHeader);
+    return res;
+  }
+
+  static async restoreSession(username) {
+    const res = await this.request("api/users/restore-session", "POST", {
+      username,
+    });
+    return res;
+  }
+
+  static async logout(username) {
+    const res = await this.request("api/users/logout", "POST", {
+      username,
+    });
     return res;
   }
 
   static async updateEmail(username, email) {
     // console.log("updating email for ", username, " to ", email);
-    const res = await this.request(
-      `users/${username}/email`,
-      "POST",
-      {
-        email,
-      },
-      authHeader
-    );
+    const res = await this.request(`api/users/${username}/email`, "POST", {
+      email,
+    });
     return res;
   }
 
   static async updateSetSize(username, size) {
     // console.log("updating set-size for ", username, " to ", size);
-    const res = await this.request(
-      `users/${username}/setsize`,
-      "POST",
-      {
-        setsize: size,
-      },
-      authHeader
-    );
+    const res = await this.request(`api/users/${username}/setsize`, "POST", {
+      setsize: size,
+    });
     return res;
   }
 
   static async updateWordsetId(username, id) {
     // console.log("updating wordset id for ", username, " to ", id);
-    const res = await this.request(
-      `users/${username}/wordsetid`,
-      "POST",
-      {
-        id,
-      },
-      authHeader
-    );
+    const res = await this.request(`api/users/${username}/wordsetid`, "POST", {
+      id,
+    });
     return res;
   }
 
@@ -280,5 +255,3 @@ class FlipyaDB {
 }
 
 export default FlipyaDB;
-
-export { authHeader };

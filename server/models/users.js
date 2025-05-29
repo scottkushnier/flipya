@@ -31,9 +31,11 @@ class Users {
     const hashedPassword = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
     try {
       // console.log("query: ", query);
-      const res = await db.query(query, [username, hashedPassword]);
-      const user = { user: username };
-      const token = jwt.sign(user, JWT_SECRET_KEY);
+      const insertRes = await db.query(query, [username, hashedPassword]);
+      query = "SELECT * FROM users WHERE username = $1";
+      const lookupRes = await db.query(query, [username]);
+      const user = lookupRes.rows[0];
+      const token = jwt.sign({ username: user.username }, JWT_SECRET_KEY);
       user.token = token;
       return user;
     } catch (e) {
@@ -68,6 +70,27 @@ class Users {
       }
     } catch (e) {}
   }
+
+  static async restoreSession(username) {
+    let query = "SELECT * FROM users WHERE username = $1";
+    // console.log("query: ", query);
+    try {
+      const res = await db.query(query, [username]);
+      if (res.rows.length) {
+        // console.log("found user --: ", res.rows[0]);
+        const user = res.rows[0];
+        delete user.password;
+        // const token = jwt.sign({ username }, JWT_SECRET_KEY);
+        // user.token = token;
+        return user;
+      } else {
+        console.log("no such user");
+        return "no such user";
+      }
+    } catch (e) {}
+  }
+
+  static async logout(username) {}
 
   static async updateEmail(username, email) {
     try {

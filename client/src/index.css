@@ -367,7 +367,7 @@ body {
 }
 
 .register-button {
-  background-color: rgb(175, 235, 175);
+  /* background-color: rgb(175, 235, 175); */
 }
 
 .password-eye {
@@ -405,4 +405,71 @@ body {
   color: #800;
   margin-left: 10px;
   font-style: bold;
+}
+
+.navbar {
+  background-color: #555;
+  height: 30px;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.navbar-ul {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.navbar-li > a {
+  display: inline;
+  text-align: left;
+  text-decoration: none;
+  padding: 15px;
+  color: white;
+  position: relative;
+  top: 7px;
+}
+
+.highlight {
+  color: #ff4;
+}
+
+.navbar-li :hover {
+  color: #aaa;
+}
+
+.navbar-li .highlight:hover {
+  color: #ff4;
+}
+
+.navbar-button {
+  display: inline;
+  text-align: left;
+  text-decoration: none;
+  padding: 15px;
+  color: white;
+  position: relative;
+  top: 7px;
+  user-select: none;
+  cursor: pointer;
+}
+
+.directions {
+  color: #444;
+}
+
+.directions-section {
+  padding: 10px;
+}
+
+h4 + p {
+  position: relative;
+  top: -8px;
+  color: #444;
+}
+
+h4 {
+  margin-top: -5px;
+  margin-bottom: -5px;
 }

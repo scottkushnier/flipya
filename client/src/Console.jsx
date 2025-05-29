@@ -1,12 +1,13 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
+import { useParams, Navigate } from "react-router-dom";
 // import { act } from "@testing-library/react";
 import { Card, Config } from "./Card";
-
 import FlipyaDB from "./FlipyaDB";
 import wordData from "./wordData";
 import Options from "./Options";
 import EmailSession from "./EmailSession";
-import Login from "./Login";
+import Navbar from "./Navbar";
+import { retrieveUser } from "./localStorage";
 
 const DEFAULT_SPEED = 60;
 
@@ -47,6 +48,9 @@ function Console() {
 
   // console.log("Rendering console here.");
 
+  const user = useParams().username;
+  // console.log("console for ", username);
+
   // card config controlled by console UI
   const [topWord, setTopWord] = useState("");
   const [bottomWord, setBottomWord] = useState(INITIAL_WORD);
@@ -70,10 +74,6 @@ function Console() {
   const [speed, setSpeed] = useState(DEFAULT_SPEED);
   const [quickChange, setQuickChange] = useState(false);
   const [fadeOut, setFadeOut] = useState(false);
-
-  // options
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
 
   // save some refs since don't want to work with outdated values
   const topWordRef = useRef();
@@ -387,21 +387,6 @@ function Console() {
     }
   }
 
-  const enterFn = (username) => {
-    // console.log("calling enter function");
-    setUser(username);
-    setSpeed(DEFAULT_SPEED);
-    // console.log("setting user for: ", username);
-    FlipyaDB.getUser(username).then((ret) => {
-      // console.log("user profile: ", ret.user);
-    });
-    setLoggedIn(true);
-  };
-
-  const exitFn = () => {
-    setLoggedIn(false);
-  };
-
   /////////////////////////////////////////////////////////////////////////
 
   const handleSpeedChange = (e) => {
@@ -413,20 +398,51 @@ function Console() {
 
   //////////////////////////////////////////////////////////////////////
 
-  const logout = (e) => {
-    e.preventDefault();
-    stopInterval(autoIntervalRef.current); // just in case interval still running
-    // console.log("logout");
-    exitFn();
-  };
+  // const logout = (e) => {
+  //   e.preventDefault();
+  //   stopInterval(autoIntervalRef.current); // just in case interval still running
+  //   // console.log("logout");
+  //   FlipyaDB.logout(user);
+  //   clearUser();
+  //   exitFn();
+  // };
 
   ////////////////////////////////////////////////////////////////////
 
-  if (!loggedIn) {
-    return <Login enterFn={enterFn} />;
-  } else {
+  // const savedUser = retrieveUser();
+
+  // const loginSavedUser = async (username) => {
+  //   const loginRes = await FlipyaDB.restoreSession(username);
+  //   // console.log("login result: ", loginRes);
+  //   if (typeof loginRes == "object") {
+  //     // if got profile back, else error
+  //     enterFn(username);
+  //   }
+  // };
+
+  // if (onRefresh) {
+  //   setOnRefresh(false);
+  //   if (savedUser) {
+  //     console.log("saved user: ", savedUser);
+  //     loginSavedUser(savedUser);
+  //   }
+  // }
+
+  // const loginSavedUser = async (username) => {
+  //   const loginRes = await FlipyaDB.restoreSession(username);
+  //   // console.log("login result: ", loginRes);
+  //   if (typeof loginRes == "object") {
+  //     // if got profile back, else error
+  //     enterFn(username);
+  //   }
+  // };
+
+  ////////////////////////////////////////////////////////////////////
+
+  if (retrieveUser()) {
     return (
       <>
+        <Navbar user={user} page="console" />
         <div className="main">
           <div className="console">
             <h2 className="title"> FLIP YA, {user.toUpperCase()}! </h2>
@@ -504,19 +520,12 @@ function Console() {
               username={user}
             />
             <EmailSession username={user} started={started} />
-            <div>
-              <button
-                className="logout-button"
-                onClick={logout}
-                disabled={auto}
-              >
-                Logout
-              </button>
-            </div>
           </div>
         </div>
       </>
     );
+  } else {
+    return <Navigate to="/login" />;
   }
 }
 

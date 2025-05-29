@@ -1,5 +1,4 @@
 import axios from "axios";
-import { authHeader } from "../FlipyaDB";
 
 // const BASE_URL = "http://" + window.location.hostname + ":3001";
 
@@ -28,9 +27,8 @@ class EmailAPI {
 
   static async sendEmail(from, to, subject, body) {
     const data = { From: from, To: to, Subject: subject, TextBody: body };
-    const endpoint = "email-api";
-    // console.log("auth: ", authHeader);
-    const ret = await this.request(endpoint, data, authHeader);
+    const endpoint = "api/email-api";
+    const ret = await this.request(endpoint, data);
     // console.log("ret @ emailAPI: ", ret);
     return ret;
   }
