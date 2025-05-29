@@ -4,17 +4,19 @@ import FlipyaDB from "./FlipyaDB";
 import { saveUser, saveUserField, retrieveUserField } from "./localStorage";
 import Navbar from "./Navbar";
 
-function Login() {
+function Register() {
   const [username, setUsername] = useState(retrieveUserField() || "");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState(false);
-  const [buttonEnabled, setButtonEnabled] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [buttonEnabled, setButtonEnabled] = useState(false);
   const [pwEyeOpen, setPwEyeOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   const checkUser = async (u) => {
     if (u !== "") {
-      if (await usernameIsRegistered(u)) {
+      if (await usernameIsAvailable(u)) {
         setButtonEnabled(true);
       } else {
         setButtonEnabled(false);
@@ -25,11 +27,9 @@ function Login() {
   };
 
   useEffect(() => {
-    console.log("login effect here: ", username);
+    console.log("reg effect here: ", username);
     checkUser(username);
   }, []);
-
-  const navigate = useNavigate();
 
   async function sleep(delay) {
     return new Promise((res) => {
@@ -37,14 +37,14 @@ function Login() {
     });
   }
 
-  async function usernameIsRegistered(username) {
+  async function usernameIsAvailable(username) {
     if (/^\s*$/.test(username)) {
       return false;
     }
     const ret = await FlipyaDB.getUser(username);
     // console.log("reg: ", username, ret);
     await sleep(200); // delay for security reasons - put brakes on robots searching for valid usernames
-    return typeof ret == "object";
+    return typeof ret != "object";
   }
 
   const handleUsernameEdit = async (e) => {
@@ -52,7 +52,7 @@ function Login() {
     setUsername(e.target.value);
     saveUserField(e.target.value);
     if (e.target.value !== "") {
-      if (await usernameIsRegistered(e.target.value)) {
+      if (await usernameIsAvailable(e.target.value)) {
         setButtonEnabled(true);
       } else {
         setButtonEnabled(false);
@@ -69,6 +69,19 @@ function Login() {
     setLoginError(false);
   };
 
+  const handleButton = async (e) => {
+    e.preventDefault();
+    // console.log("register");
+    if (/^\s*$/.test(username)) {
+      setLoginError(true);
+      setErrorMessage("Username can't be blank");
+    } else {
+      await FlipyaDB.register(username, password);
+      saveUser(username);
+      navigate(`/console/${username}`);
+    }
+  };
+
   const clickEye = (e) => {
     e.preventDefault();
     if (e.key === "Enter") {
@@ -80,23 +93,9 @@ function Login() {
     // console.log(pwEyeOpen);
   };
 
-  const handleButton = async (e) => {
-    e.preventDefault();
-    const loginRes = await FlipyaDB.login(username, password);
-    // console.log("login result: ", loginRes);
-    if (typeof loginRes == "object") {
-      // if got profile back, else error
-      saveUser(username);
-      navigate(`/console/${username}`);
-    } else {
-      setLoginError(true);
-      setErrorMessage("Bad Password");
-    }
-  };
-
   return (
     <>
-      <Navbar page="login" />
+      <Navbar page="register" />
       <h2 className="title"> FLIP YA! </h2>
       <form>
         <div className="username-row">
@@ -147,18 +146,20 @@ function Login() {
             ></button>
           </span>
         </div>
+
         <button
-          data-testid="login-button"
-          className="login-button"
-          disabled={!buttonEnabled}
+          className="login-button register-button"
           onClick={handleButton}
+          disabled={!buttonEnabled}
         >
-          Login
+          Register
         </button>
       </form>
-      {loginError && <p className="login-message"> * {errorMessage} * </p>}
+      {loginError ? (
+        <p className="login-message"> * {errorMessage} * </p>
+      ) : null}
     </>
   );
 }
 
-export default Login;
+export default Register;

@@ -17,4 +17,5 @@ export default defineConfig({
   browser: {
     open: false,
   },
+  base: "./",
 });
