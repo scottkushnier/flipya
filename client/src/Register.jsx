@@ -30,7 +30,7 @@ function Register() {
   };
 
   useEffect(() => {
-    console.log("reg effect here: ", username);
+    // console.log("reg effect here: ", username);
     checkUser(username);
   }, []);
 
@@ -74,9 +74,9 @@ function Register() {
   const handleButton = async (e) => {
     e.preventDefault();
     // console.log("register");
-    if (/^\s*$/.test(username)) {
+    if (/^\s*$/.test(password)) {
       setLoginError(true);
-      setErrorMessage("Username can't be blank");
+      setErrorMessage("Password can't be blank");
     } else {
       await FlipyaDB.register(username, password);
       saveUser(username);

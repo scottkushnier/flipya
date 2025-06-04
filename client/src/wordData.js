@@ -168,8 +168,8 @@ class wordData {
 
   static fillWordInfo(a, i) {
     currentWordIndex = 0;
-    console.log("fill: ", a);
-    console.log("index: ", i);
+    // console.log("fill: ", a);
+    // console.log("index: ", i);
     if (a) {
       currentNumWords = wordArray.length;
       wordArray = a;

@@ -85,7 +85,7 @@ function Options({ newSetFn, flipDeck, auto, started, username }) {
           setMaxForSet(() => minMax.max);
         });
         if (levels) {
-          console.log("setting levels: ", levels);
+          // console.log("setting levels: ", levels);
           setMinLevel(() => levels[0]);
           setMaxLevel(() => levels[1]);
         }
@@ -93,7 +93,7 @@ function Options({ newSetFn, flipDeck, auto, started, username }) {
         setSetSizeInput(() => (setSize ? setSize : DEFAULT_PRACTICE_SIZE));
         setSetSize(() => setSize);
         setSizeInputCheck(() => setSize !== 0);
-        console.log("reverse for newfn: ", rev);
+        // console.log("reverse for newfn: ", rev);
         newSetFn(id, rev, +profile.user.set_size);
       });
     });
@@ -102,9 +102,9 @@ function Options({ newSetFn, flipDeck, auto, started, username }) {
   const setSavedOptions = () => {
     const options = {};
     const savedReverse = getReverseFromLS();
-    console.log("saved rev: ", savedReverse);
+    // console.log("saved rev: ", savedReverse);
     if (savedReverse) {
-      console.log("here in savedReverse cond");
+      // console.log("here in savedReverse cond");
       setReverse(true);
       // flipDeck();
       options.rev = true;
@@ -113,7 +113,7 @@ function Options({ newSetFn, flipDeck, auto, started, username }) {
     if (levels) {
       options.levels = levels;
     }
-    console.log("options: ", options);
+    // console.log("options: ", options);
     return options;
   };
 

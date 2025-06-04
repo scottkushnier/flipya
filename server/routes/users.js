@@ -35,7 +35,7 @@ router.get("/:username", async function (req, res, next) {
 router.post("/register", async function (req, res, next) {
   try {
     const user = await Users.register(req.body.username, req.body.password);
-    console.log("user after reg: ", user);
+    // console.log("user after reg: ", user);
     res.cookie("username", req.body.username);
     res.cookie("token", user.token);
     return res.json(user);
@@ -55,7 +55,7 @@ router.post("/login", async function (req, res, next) {
     } else {
       res.cookie("username", user.username);
       res.cookie("token", user.token);
-      console.log("user: ", user);
+      // console.log("user: ", user);
       return res.json({ user });
     }
   } catch (err) {
@@ -64,7 +64,7 @@ router.post("/login", async function (req, res, next) {
 });
 
 router.post("/logout", async function (req, res, next) {
-  console.log("here in logout route");
+  // console.log("here in logout route");
   // delete user cookies
   res.cookie("username", "", { maxAge: 0 });
   res.cookie("token", "", { maxAge: 0 });

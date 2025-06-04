@@ -20,18 +20,18 @@ function checkToken(req, res, next) {
     next();
   } else {
     const token = getCookie("token", req.headers.cookie);
-    console.log("checking token...: ", token);
+    // console.log("checking token...: ", token);
     if (!jwt.verify(token, JWT_SECRET_KEY)) {
       console.error("bad token:", token);
       return res.json({ msg: "bad token" });
     }
     const userFromJwt = jwt.decode(token).username;
-    console.log("from jwt: ", userFromJwt);
-    console.log("from req (path): ", req.path);
+    // console.log("from jwt: ", userFromJwt);
+    // console.log("from req (path): ", req.path);
     if (req.params.username && userFromJwt != req.params.username) {
       console.error("wrong username in token:", token);
-      console.log("fromJWT: ", userFromJwt);
-      console.log("from params: ", req.params.username);
+      // console.log("fromJWT: ", userFromJwt);
+      // console.log("from params: ", req.params.username);
       return res.json({ msg: "wrong username in token" });
     }
     next();

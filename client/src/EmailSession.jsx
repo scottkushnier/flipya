@@ -318,12 +318,12 @@ function EmailSession({ username, started }) {
   };
 
   const handleEnterInfo = () => {
-    console.log("mouse enter");
+    // console.log("mouse enter");
     setOverInfo(true);
   };
 
   const handleLeaveInfo = () => {
-    console.log("mouse leave");
+    // console.log("mouse leave");
     setOverInfo(false);
   };
 

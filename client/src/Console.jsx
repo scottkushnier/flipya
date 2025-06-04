@@ -103,7 +103,7 @@ function Console() {
   const refillWordData = () => {
     const rev = getReverseFromLS();
 
-    console.log("refill: reverse: ", rev);
+    // console.log("refill: reverse: ", rev);
     const wordArray = getWordArrayFromLS();
     let index = getWordIndexFromLS();
     if (wordArray && index >= wordArray.length) {
@@ -132,7 +132,7 @@ function Console() {
   };
 
   useEffect(() => {
-    console.log("console use effect here");
+    // console.log("console use effect here");
     const savedSpeed = getSpeedFromLS();
     if (savedSpeed) {
       setSpeed(savedSpeed);
@@ -157,7 +157,7 @@ function Console() {
 
   const nextWord = () => {
     let currentConfig = configRef.current;
-    console.log("reverse: ", reverse);
+    // console.log("reverse: ", reverse);
     // console.log("currentConfig: ", currentConfig);
     // if doing next when card is flipped, then flip back & then do right
     if (currentConfig === Config.Flipped) {
@@ -352,12 +352,12 @@ function Console() {
 
   // clear & get ready for new word set
   function newWordSetFunction(id, reverseVal, practiceSize, clear = false) {
-    console.log(
-      "new word set, practice size: ",
-      practiceSize,
-      "reverse: ",
-      reverseVal
-    );
+    // console.log(
+    //   "new word set, practice size: ",
+    //   practiceSize,
+    //   "reverse: ",
+    //   reverseVal
+    // );
     if (!id) {
       // console.log("no id in newWordSetFunction");
       return;
@@ -383,8 +383,8 @@ function Console() {
   // need special logic depending if showing top or bottom word
 
   function flipDeckBottom() {
-    console.log("flip deck bottom");
-    console.log("reverse: ", reverse);
+    // console.log("flip deck bottom");
+    // console.log("reverse: ", reverse);
     setFadeOut(() => true);
     setTimeout(() => {
       setConfig(Config.ShowBottomWord);
@@ -422,7 +422,7 @@ function Console() {
   }
 
   function flipDeck() {
-    console.log("config:flip: ");
+    // console.log("config:flip: ");
     if (configRef.current === Config.ShowBottomWord) {
       flipDeckBottom();
     } else {
