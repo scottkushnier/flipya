@@ -5,6 +5,12 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { BCRYPT_WORK_FACTOR, JWT_SECRET_KEY } = require("../config");
 
+async function sleep(delay) {
+  return new Promise((res) => {
+    setTimeout(() => res(), delay);
+  });
+}
+
 class Users {
   // static async findAll() {
   //   let query = `SELECT * FROM users`;
@@ -21,6 +27,7 @@ class Users {
       delete user.password; // caller doesn't need this
       return user;
     } else {
+      await sleep(200);
       return null;
     }
   }

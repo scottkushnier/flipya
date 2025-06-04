@@ -27,6 +27,8 @@ app.use("/api/email", emailRoutes);
 app.use("/api/email-api", emailapiRoutes);
 app.use("/api/users", userRoutes);
 
+app.use(express.static(path.join(__dirname, "..", "client", "dist")));
+
 // app.use(express.static(path.join(__dirname, "build")));
 
 // prefix all API endpoints with `/api`
@@ -50,12 +52,18 @@ app.use("/api/users", userRoutes);
 //   res.render("index.html");
 // });
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "client", "index.html"));
-});
-
 // app.get("/*", function (req, res) {
 //   res.sendFile("/home/kushnier/share/springboard/flipya/client/index.html");
+// });
+
+// Catch-All for any request that doesn't match a route
+// falls back to index.html
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "client", "dist", "index.html"));
+});
+
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "..", "client", "dist", "index.html"));
 // });
 
 module.exports = app;

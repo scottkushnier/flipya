@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import FlipyaDB from "./FlipyaDB";
 import { saveUser, saveUserField, retrieveUserField } from "./localStorage";
@@ -11,6 +11,10 @@ function Login() {
   const [buttonEnabled, setButtonEnabled] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [pwEyeOpen, setPwEyeOpen] = useState(false);
+  const [checkCount, setCheckCount] = useState(0);
+
+  const checkCountRef = useRef();
+  checkCountRef.current = checkCount;
 
   const checkUser = async (u) => {
     if (u !== "") {
@@ -31,31 +35,38 @@ function Login() {
 
   const navigate = useNavigate();
 
-  async function sleep(delay) {
-    return new Promise((res) => {
-      setTimeout(() => res(), delay);
-    });
-  }
-
   async function usernameIsRegistered(username) {
     if (/^\s*$/.test(username)) {
       return false;
     }
     const ret = await FlipyaDB.getUser(username);
     // console.log("reg: ", username, ret);
-    await sleep(200); // delay for security reasons - put brakes on robots searching for valid usernames
     return typeof ret == "object";
   }
 
   const handleUsernameEdit = async (e) => {
-    // console.log("username edit");
+    console.log("username edit");
     setUsername(e.target.value);
     saveUserField(e.target.value);
+    console.log(checkCountRef.current, " increasing by 1");
+    setCheckCount(checkCountRef.current + 1);
+    let saveCount = checkCountRef.current + 1;
     if (e.target.value !== "") {
       if (await usernameIsRegistered(e.target.value)) {
-        setButtonEnabled(true);
+        console.log(
+          "reg: check: ",
+          checkCountRef.current,
+          " save: ",
+          saveCount
+        );
+        if (checkCountRef.current == saveCount) {
+          setButtonEnabled(true);
+        }
       } else {
-        setButtonEnabled(false);
+        console.log("not: check: ", checkCount, " save: ", saveCount);
+        if (checkCountRef.current == saveCount) {
+          setButtonEnabled(false);
+        }
       }
     } else {
       setButtonEnabled(false);

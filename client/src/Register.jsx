@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import FlipyaDB from "./FlipyaDB";
 import { saveUser, saveUserField, retrieveUserField } from "./localStorage";
@@ -11,7 +11,10 @@ function Register() {
   const [errorMessage, setErrorMessage] = useState("");
   const [buttonEnabled, setButtonEnabled] = useState(false);
   const [pwEyeOpen, setPwEyeOpen] = useState(false);
+  const [checkCount, setCheckCount] = useState(0);
 
+  const checkCountRef = useRef();
+  checkCountRef.current = checkCount;
   const navigate = useNavigate();
 
   const checkUser = async (u) => {
@@ -31,19 +34,12 @@ function Register() {
     checkUser(username);
   }, []);
 
-  async function sleep(delay) {
-    return new Promise((res) => {
-      setTimeout(() => res(), delay);
-    });
-  }
-
   async function usernameIsAvailable(username) {
     if (/^\s*$/.test(username)) {
       return false;
     }
     const ret = await FlipyaDB.getUser(username);
     // console.log("reg: ", username, ret);
-    await sleep(200); // delay for security reasons - put brakes on robots searching for valid usernames
     return typeof ret != "object";
   }
 
@@ -51,11 +47,17 @@ function Register() {
     // console.log("username edit");
     setUsername(e.target.value);
     saveUserField(e.target.value);
+    setCheckCount(checkCountRef.current + 1);
+    let saveCount = checkCountRef.current + 1;
     if (e.target.value !== "") {
       if (await usernameIsAvailable(e.target.value)) {
-        setButtonEnabled(true);
+        if (checkCountRef.current == saveCount) {
+          setButtonEnabled(true);
+        }
       } else {
-        setButtonEnabled(false);
+        if (checkCountRef.current == saveCount) {
+          setButtonEnabled(false);
+        }
       }
     } else {
       setButtonEnabled(false);
