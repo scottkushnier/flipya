@@ -25,6 +25,7 @@ function EmailSession({ username, started }) {
   const [emailGood, setEmailGood] = useState(false);
   const [emailMsg, setEmailMsg] = useState("");
   const [pollInterval, setPollInterval] = useState(null);
+  const [overInfo, setOverInfo] = useState(false);
 
   const emailRef = useRef();
   emailRef.current = email;
@@ -215,7 +216,7 @@ function EmailSession({ username, started }) {
     setEmailMsg(() => msg);
     setTimeout(() => {
       setEmailMsg(() => "");
-    }, 3000);
+    }, 5000);
   }
 
   function randomWord(n) {
@@ -316,6 +317,16 @@ function EmailSession({ username, started }) {
     return color;
   };
 
+  const handleEnterInfo = () => {
+    console.log("mouse enter");
+    setOverInfo(true);
+  };
+
+  const handleLeaveInfo = () => {
+    console.log("mouse leave");
+    setOverInfo(false);
+  };
+
   return (
     <>
       <div className="email-row">
@@ -329,6 +340,12 @@ function EmailSession({ username, started }) {
           value={email}
           style={{ backgroundColor: colorFromEmailStatus(emailStatus) }}
           onChange={handleEmailEdit}
+        />
+        <button
+          type="button"
+          className="info-icon"
+          onMouseEnter={handleEnterInfo}
+          onMouseLeave={handleLeaveInfo}
         />
       </div>
       <div className="email-button-row">
@@ -348,6 +365,14 @@ function EmailSession({ username, started }) {
             : "Verify email"}
         </button>
         <p className="email-msg"> {emailMsg}</p>
+        {overInfo && (
+          <div class="email-info">
+            <p>
+              Sessions (including words & translations) can be sent to an email
+              address of choice once it's been verified.
+            </p>
+          </div>
+        )}
       </div>
     </>
   );

@@ -1,5 +1,10 @@
 import { Link, useNavigate } from "react-router-dom";
-import { clearUser, clearUserField } from "./localStorage";
+import {
+  clearUser,
+  clearUserField,
+  clearSettings,
+  clearWordInfo,
+} from "./localStorage";
 import FlipyaDB from "./FlipyaDB";
 
 function Navbar({ user, page }) {
@@ -7,13 +12,15 @@ function Navbar({ user, page }) {
     console.log("logout");
     clearUser();
     clearUserField();
+    clearSettings();
+    clearWordInfo();
     FlipyaDB.logout(user);
     navigate("/login");
   };
 
   const navigate = useNavigate();
 
-  console.log("page: ", page);
+  // console.log("page: ", page);
 
   return (
     <div class="navbar">

@@ -2,6 +2,8 @@
 
 import FlipyaDB from "./FlipyaDB";
 
+import { saveWordArrayInLS, saveWordIndexInLS } from "./localStorage";
+
 // pick a random integer between 'from' and 'to', inclusive
 function randomInt(from, to) {
   const decimal = Math.random();
@@ -12,7 +14,6 @@ function randomInt(from, to) {
 // limits sample sets of words in order to drill extensively with n words
 // set to 0 or null for no limit
 let practiceSetSize = 0;
-let practiceWordArray = [];
 
 // save info regarding current word set
 let currentWordsetId = null;
@@ -43,17 +44,13 @@ async function chooseNextWord() {
     return word;
   }
   // console.log("practicesize: ", practiceSize);
-  // console.log("practiceWordArray: ", practiceWordArray);
-  if (practiceSetSize && practiceWordArray.length === practiceSetSize) {
+  if (practiceSetSize && wordArray && wordArray.length >= practiceSetSize) {
     const pick = randomInt(1, practiceSetSize);
-    word = practiceWordArray[pick - 1];
+    word = wordArray[pick - 1];
   } else {
     const pick = randomInt(1, currentNumWords);
     // console.log("get word: ", currentWordsetId, pick, minLevel, maxLevel);
     word = await FlipyaDB.getWord(currentWordsetId, pick, minLevel, maxLevel);
-    if (practiceSetSize) {
-      practiceWordArray.push(word);
-    }
   }
   return word;
 }
@@ -131,12 +128,14 @@ class wordData {
     } else {
       currentWordIndex++;
     }
+    saveWordIndexInLS(currentWordIndex);
     if (currentWordIndex < wordArray.length) {
       const word = wordArray[currentWordIndex];
       return checkReverse(word, reverse);
     } else {
       const word = await this.getAnotherWord(wordsetId);
       wordArray.push(word);
+      saveWordArrayInLS(wordArray);
       return checkReverse(word, reverse);
     }
   }
@@ -145,6 +144,7 @@ class wordData {
   static async getPreviousWord(wordsetId, reverse) {
     if (currentWordIndex > 0) {
       currentWordIndex--;
+      saveWordIndexInLS(currentWordIndex);
       const word = wordArray[currentWordIndex];
       return checkReverse(word, reverse);
     } else {
@@ -160,11 +160,24 @@ class wordData {
   // starting over, clear all cached data
   static clearWordInfo() {
     practiceSetSize = 0;
-    practiceWordArray = [];
     currentWordsetId = null;
     currentNumWords = null;
     currentWordIndex = null;
     wordArray = [];
+  }
+
+  static fillWordInfo(a, i) {
+    currentWordIndex = 0;
+    console.log("fill: ", a);
+    console.log("index: ", i);
+    if (a) {
+      currentNumWords = wordArray.length;
+      wordArray = a;
+      currentWordIndex = i;
+    } else {
+      wordArray = [];
+      currentNumWords = 0;
+    }
   }
 
   // safe setting of practice size, don't allow < 3 in set, unless 0 (no limit)
@@ -193,7 +206,7 @@ class wordData {
       acc += wordSet.language1 + ", " + wordSet.language2 + "\n\n";
       if (practiceSetSize) {
         acc += "(Practice Set Size: " + practiceSetSize + ")\n\n";
-        practiceWordArray.forEach((word) => {
+        wordArray.slice(0, practiceSetSize).forEach((word) => {
           acc += word.word1 + ", " + word.word2 + "\n";
         });
       } else {

@@ -6,6 +6,15 @@ import wordData from "./wordData";
 
 import { useEffect, useState, useRef } from "react";
 
+import {
+  saveReverseInLS,
+  getReverseFromLS,
+  saveLevelsInLS,
+  getLevelsFromLS,
+  clearLevels,
+  clearWordInfo,
+} from "./localStorage";
+
 // import { act } from "@testing-library/react";
 
 const MIN_DIFFICULTY_LEVEL = 1;
@@ -38,7 +47,7 @@ function Options({ newSetFn, flipDeck, auto, started, username }) {
   const delayCountRef = useRef();
   delayCountRef.current = delayCount;
 
-  const setUpForUser = (username) => {
+  const setUpForUser = (username, rev, levels) => {
     // kick off two requests in parallel, then do stuff once both are done
     const p1 = FlipyaDB.getWordSets();
     const p2 = FlipyaDB.getUser(username);
@@ -68,28 +77,56 @@ function Options({ newSetFn, flipDeck, auto, started, username }) {
         FlipyaDB.minMaxForSet(id).then((minMax) => {
           // console.log("min-max: ", minMax, minMax.min, minMax.max);
           // console.log("min-max: ", minMax);
-          setMinLevel(() => minMax.min);
-          setMaxLevel(() => minMax.max);
+          if (!levels) {
+            setMinLevel(() => minMax.min);
+            setMaxLevel(() => minMax.max);
+          }
           setMinForSet(() => minMax.min);
           setMaxForSet(() => minMax.max);
         });
+        if (levels) {
+          console.log("setting levels: ", levels);
+          setMinLevel(() => levels[0]);
+          setMaxLevel(() => levels[1]);
+        }
         let setSize = profile.user.set_size ? +profile.user.set_size : 0;
         setSetSizeInput(() => (setSize ? setSize : DEFAULT_PRACTICE_SIZE));
         setSetSize(() => setSize);
         setSizeInputCheck(() => setSize !== 0);
-        newSetFn(id, false, +profile.user.set_size);
+        console.log("reverse for newfn: ", rev);
+        newSetFn(id, rev, +profile.user.set_size);
       });
     });
   };
 
+  const setSavedOptions = () => {
+    const options = {};
+    const savedReverse = getReverseFromLS();
+    console.log("saved rev: ", savedReverse);
+    if (savedReverse) {
+      console.log("here in savedReverse cond");
+      setReverse(true);
+      // flipDeck();
+      options.rev = true;
+    }
+    const levels = getLevelsFromLS();
+    if (levels) {
+      options.levels = levels;
+    }
+    console.log("options: ", options);
+    return options;
+  };
+
   useEffect(() => {
-    setUpForUser(username);
+    const { rev, levels } = setSavedOptions();
+    setUpForUser(username, rev, levels);
   }, []);
 
   const handleWordSetChange = (event) => {
     setWordsetInd(() => event.target.value);
     setWordSetId(wordSets[event.target.value].id);
     FlipyaDB.updateWordsetId(username, wordSets[event.target.value].id);
+    clearLevels();
     FlipyaDB.minMaxForSet(wordSets[event.target.value].id).then((minMax) => {
       // console.log("min-max: ", minMax, minMax.min, minMax.max);
       setMinLevel(() => minMax.min);
@@ -97,10 +134,12 @@ function Options({ newSetFn, flipDeck, auto, started, username }) {
       setMaxLevel(() => minMax.max);
       setMaxForSet(() => minMax.max);
     });
-    newSetFn(wordSets[event.target.value].id, reverse, setSize);
+    newSetFn(wordSets[event.target.value].id, reverse, setSize, true);
+    clearWordInfo();
   };
 
   const handleReverse = () => {
+    saveReverseInLS(!reverse);
     setReverse(() => !reverse);
     flipDeck();
   };
@@ -118,7 +157,7 @@ function Options({ newSetFn, flipDeck, auto, started, username }) {
   const updateSetSizeOnDelay = (size) => {
     setTimeout(() => {
       triggerSetSizeChange(size, delayCount + 1);
-    }, 3000);
+    }, 1000);
     setDelayCount(() => delayCount + 1);
   };
 
@@ -135,7 +174,7 @@ function Options({ newSetFn, flipDeck, auto, started, username }) {
     // console.log("practice size: ", newSize);
     setSizeInputCheck(() => !sizeInputCheck);
     updateSetSizeOnDelay(newSize);
-    newSetFn(wordSetId, reverse, newSize);
+    newSetFn(wordSetId, reverse, newSize, true);
   };
 
   const handleNewPracticeSize = (e) => {
@@ -144,11 +183,12 @@ function Options({ newSetFn, flipDeck, auto, started, username }) {
     setSetSizeInput(newSize);
     // console.log("practice size: ", newSize);
     updateSetSizeOnDelay(newSize);
-    newSetFn(wordSetId, reverse, newSize);
+    newSetFn(wordSetId, reverse, newSize, true);
   };
 
   const handleNewSet = (e) => {
-    newSetFn(wordSetId, reverse, setSize);
+    newSetFn(wordSetId, reverse, setSize, true);
+    clearWordInfo();
   };
 
   const handleMinLevelChange = (e) => {
@@ -162,8 +202,10 @@ function Options({ newSetFn, flipDeck, auto, started, username }) {
       // but if trying to set higher than max, then move max up too
       setMaxLevel(e.target.value);
       wordData.modWordLevels(e.target.value, e.target.value);
+      saveLevelsInLS(e.target.value, e.target.value);
     } else {
       wordData.modWordLevels(e.target.value, maxLevel); // all good, set new min
+      saveLevelsInLS(e.target.value, maxLevel);
     }
   };
 
@@ -177,8 +219,10 @@ function Options({ newSetFn, flipDeck, auto, started, username }) {
       // but if trying to set lower than min, then move min down too
       setMinLevel(e.target.value);
       wordData.modWordLevels(e.target.value, e.target.value);
+      saveLevelsInLS(e.target.value, e.target.value);
     } else {
       wordData.modWordLevels(minLevel, e.target.value); // all good, set new max
+      saveLevelsInLS(minLevel, e.target.value);
     }
   };
 
@@ -214,7 +258,7 @@ function Options({ newSetFn, flipDeck, auto, started, username }) {
                 type="checkbox"
                 id="reverse"
                 onChange={handleReverse}
-                value={reverse}
+                checked={reverse}
                 disabled={auto}
                 data-testid="reverse-checkbox"
               />

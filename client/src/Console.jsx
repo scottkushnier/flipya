@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useParams, Navigate } from "react-router-dom";
 // import { act } from "@testing-library/react";
 import { Card, Config } from "./Card";
@@ -7,7 +7,14 @@ import wordData from "./wordData";
 import Options from "./Options";
 import EmailSession from "./EmailSession";
 import Navbar from "./Navbar";
-import { retrieveUser } from "./localStorage";
+import {
+  retrieveUser,
+  saveSpeedInLS,
+  getSpeedFromLS,
+  getWordArrayFromLS,
+  getWordIndexFromLS,
+  getReverseFromLS,
+} from "./localStorage";
 
 const DEFAULT_SPEED = 60;
 
@@ -93,6 +100,46 @@ function Console() {
   const saveFrontConfigRef = useRef();
   saveFrontConfigRef.current = saveFrontConfig;
 
+  const refillWordData = () => {
+    const rev = getReverseFromLS();
+
+    console.log("refill: reverse: ", rev);
+    const wordArray = getWordArrayFromLS();
+    let index = getWordIndexFromLS();
+    if (wordArray && index >= wordArray.length) {
+      index--;
+    }
+    wordData.fillWordInfo(wordArray, index);
+    if (wordArray && wordArray.length) {
+      // console.log("index: ", index);
+      // console.log("set bottom word: ", wordArray[index].word1);
+      if (rev) {
+        setBottomWord(wordArray[index].word2);
+        setFlipWord(wordArray[index].word1);
+        if (index > 0) {
+          setTopWord(wordArray[index - 1].word2);
+        }
+      } else {
+        setBottomWord(wordArray[index].word1);
+        setFlipWord(wordArray[index].word2);
+        if (index > 0) {
+          setTopWord(wordArray[index - 1].word1);
+        }
+      }
+      setAtFirstWord(index == 0);
+      setStarted(true);
+    }
+  };
+
+  useEffect(() => {
+    console.log("console use effect here");
+    const savedSpeed = getSpeedFromLS();
+    if (savedSpeed) {
+      setSpeed(savedSpeed);
+    }
+    refillWordData();
+  }, []);
+
   const flip = () => {
     // console.log(
     //   "FLIP: config-current: ",
@@ -110,6 +157,7 @@ function Console() {
 
   const nextWord = () => {
     let currentConfig = configRef.current;
+    console.log("reverse: ", reverse);
     // console.log("currentConfig: ", currentConfig);
     // if doing next when card is flipped, then flip back & then do right
     if (currentConfig === Config.Flipped) {
@@ -303,20 +351,27 @@ function Console() {
   };
 
   // clear & get ready for new word set
-  function newWordSetFunction(id, reverseVal, practiceSize) {
-    // console.log("new word set, practice size: ", practiceSize);
+  function newWordSetFunction(id, reverseVal, practiceSize, clear = false) {
+    console.log(
+      "new word set, practice size: ",
+      practiceSize,
+      "reverse: ",
+      reverseVal
+    );
     if (!id) {
       // console.log("no id in newWordSetFunction");
       return;
     }
-    setStarted(false);
-    setAtFirstWord(true);
-    wordData.clearWordInfo();
+    if (clear) {
+      setStarted(false);
+      setAtFirstWord(true);
+      wordData.clearWordInfo();
+      setConfig(Config.ShowBottomWord);
+      setBottomWord(INITIAL_WORD);
+      setFlipWord(INITIAL_WORD);
+    }
     wordData.setPracticeSize(+practiceSize);
     // console.log("new set function: ", id, reverseVal);
-    setConfig(Config.ShowBottomWord);
-    setBottomWord(INITIAL_WORD);
-    setFlipWord(INITIAL_WORD);
     setWordsetId(id);
     setReverse(reverseVal);
     FlipyaDB.getWordSet(id).then((wordset) => {
@@ -328,7 +383,8 @@ function Console() {
   // need special logic depending if showing top or bottom word
 
   function flipDeckBottom() {
-    // console.log("flip deck bottom");
+    console.log("flip deck bottom");
+    console.log("reverse: ", reverse);
     setFadeOut(() => true);
     setTimeout(() => {
       setConfig(Config.ShowBottomWord);
@@ -345,7 +401,7 @@ function Console() {
         wordData.getNextWord(wordsetId, reverse);
       }
     });
-    setReverse(!reverse);
+    setReverse(() => !reverse);
   }
 
   function flipDeckTop() {
@@ -362,11 +418,11 @@ function Console() {
       setBottomWord(word.word2);
       wordData.getPreviousWord(wordsetId, reverse);
     });
-    setReverse(!reverse);
+    setReverse(() => !reverse);
   }
 
   function flipDeck() {
-    // console.log("config:flip: ", showConfig(configRef.current));
+    console.log("config:flip: ");
     if (configRef.current === Config.ShowBottomWord) {
       flipDeckBottom();
     } else {
@@ -393,6 +449,7 @@ function Console() {
     e.preventDefault();
     // console.log("speed: ", e.target.value);
     const speed = e.target.value;
+    saveSpeedInLS(speed);
     setSpeed(() => speed);
   };
 
