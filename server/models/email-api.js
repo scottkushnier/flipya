@@ -32,11 +32,11 @@ class EmailAPI {
     const endpoint = "email";
     this.request(endpoint, data, headers)
       .then((ret) => {
-        console.log("ret @ server: ", ret);
+        // console.log("ret @ server: ", ret);
         return ret;
       })
       .catch((err) => {
-        console.log("err @ server: ", err);
+        // console.log("err @ server: ", err);
         return err;
       });
   }

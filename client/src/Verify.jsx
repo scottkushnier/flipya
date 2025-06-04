@@ -11,7 +11,6 @@ function Verify({ verify, key1 }) {
     FlipyaDB.tryVerifyEmail(verify, key1).then((verdict) => {
       if (verdict) {
         setPassed("PASS");
-        FlipyaDB.verifyEmail(verify);
       } else {
         setPassed("FAIL");
       }

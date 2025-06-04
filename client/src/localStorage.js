@@ -1,6 +1,6 @@
 function saveUser(user) {
   localStorage.setItem("user", JSON.stringify(user));
-  console.log("user saved");
+  // console.log("user saved");
 }
 
 function retrieveUser() {
@@ -11,7 +11,7 @@ function retrieveUser() {
 
 function clearUser() {
   localStorage.removeItem("user");
-  console.log("user cleared");
+  // console.log("user cleared");
 }
 
 function saveUserField(text) {

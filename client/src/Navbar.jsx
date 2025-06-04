@@ -9,7 +9,7 @@ import FlipyaDB from "./FlipyaDB";
 
 function Navbar({ user, page }) {
   const doLogout = () => {
-    console.log("logout");
+    // console.log("logout");
     clearUser();
     clearUserField();
     clearSettings();

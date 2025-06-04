@@ -56,14 +56,12 @@ class EmailDB {
     // console.log("hash: ", hash);
     const pw = key + "-" + email;
     const verdict = await bcrypt.compare(pw, hash);
+    if (verdict) {
+      const query = "UPDATE emails SET status = 'verified' WHERE email = $1";
+      // console.log("query: ", query);
+      const res = await db.query(query, [email]);
+    }
     return verdict;
-  }
-
-  static async verifyEmail(email) {
-    const query = "UPDATE emails SET status = 'verified' WHERE email = $1";
-    // console.log("query: ", query);
-    const res = await db.query(query, [email]);
-    return res;
   }
 
   static async incAttempts(email) {

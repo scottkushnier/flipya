@@ -29,7 +29,7 @@ function Login() {
   };
 
   useEffect(() => {
-    console.log("login effect here: ", username);
+    // console.log("login effect here: ", username);
     checkUser(username);
   }, []);
 
@@ -45,25 +45,25 @@ function Login() {
   }
 
   const handleUsernameEdit = async (e) => {
-    console.log("username edit");
+    // console.log("username edit");
     setUsername(e.target.value);
     saveUserField(e.target.value);
-    console.log(checkCountRef.current, " increasing by 1");
+    // console.log(checkCountRef.current, " increasing by 1");
     setCheckCount(checkCountRef.current + 1);
     let saveCount = checkCountRef.current + 1;
     if (e.target.value !== "") {
       if (await usernameIsRegistered(e.target.value)) {
-        console.log(
-          "reg: check: ",
-          checkCountRef.current,
-          " save: ",
-          saveCount
-        );
+        // console.log(
+        //   "reg: check: ",
+        //   checkCountRef.current,
+        //   " save: ",
+        //   saveCount
+        // );
         if (checkCountRef.current == saveCount) {
           setButtonEnabled(true);
         }
       } else {
-        console.log("not: check: ", checkCount, " save: ", saveCount);
+        // console.log("not: check: ", checkCount, " save: ", saveCount);
         if (checkCountRef.current == saveCount) {
           setButtonEnabled(false);
         }

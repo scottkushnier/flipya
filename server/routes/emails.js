@@ -32,7 +32,7 @@ router.get("/", checkToken, async function (req, res, next) {
   }
 });
 
-router.get("/tryverify/:email/:key", async function (req, res, next) {
+router.get("/verify/:email/:key", async function (req, res, next) {
   try {
     const verdict = await Emails.tryVerifyEmail(
       req.params.email,

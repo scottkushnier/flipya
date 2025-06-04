@@ -46,7 +46,7 @@ class Users {
       user.token = token;
       return user;
     } catch (e) {
-      console.log("db error: ", e);
+      // console.log("db error: ", e);
       return null;
     }
   }
@@ -72,7 +72,7 @@ class Users {
           return "bad password";
         }
       } else {
-        console.log("no such user");
+        // console.log("no such user");
         return "no such user";
       }
     } catch (e) {}
@@ -91,7 +91,7 @@ class Users {
         // user.token = token;
         return user;
       } else {
-        console.log("no such user");
+        // console.log("no such user");
         return "no such user";
       }
     } catch (e) {}
