@@ -76,15 +76,16 @@ const DB_BASE_URL = "";
 
 class FlipyaDB {
   static async request(endpoint, method = "get", data = {}, headers = {}) {
+    // console.log("NODE-ENV: ", process.env.NODE_ENV);
     if (process.env.NODE_ENV === "test") {
       // console.log("calling axios from within test: ", endpoint);
       const res = await axiosMock.request(endpoint, method, data, headers);
-      // if (!res) {
-      //   process.exit();
-      // } else {
-      // console.log("mock return: ", res);
-      return res;
-      // }
+      if (!res) {
+        process.exit();
+      } else {
+        // console.log("mock return: ", res);
+        return res;
+      }
     }
     // console.log(`url: ${DB_BASE_URL}`);
     // console.log("API Call:", endpoint, method, data);
@@ -119,7 +120,7 @@ class FlipyaDB {
     const res = await this.request(
       `api/wordset/${set_id}/count?minLevel=${minLevel}&maxLevel=${maxLevel}`
     );
-    return res.count;
+    return +res.count;
   }
 
   // find difficulty range for particular wordset

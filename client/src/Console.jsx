@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { useParams, Navigate } from "react-router-dom";
+import { useParams, Navigate } from "react-router";
 // import { act } from "@testing-library/react";
 import { Card, Config } from "./Card";
 import FlipyaDB from "./FlipyaDB";
@@ -11,9 +11,9 @@ import {
   retrieveUser,
   saveSpeedInLS,
   getSpeedFromLS,
-  getWordArrayFromLS,
-  getWordIndexFromLS,
   getReverseFromLS,
+  saveCardMsgInLS,
+  getCardMsgFromLS,
 } from "./localStorage";
 
 const DEFAULT_SPEED = 60;
@@ -63,6 +63,9 @@ function Console() {
   const [bottomWord, setBottomWord] = useState(INITIAL_WORD);
   const [flipWord, setFlipWord] = useState(INITIAL_WORD);
   const [config, setConfig] = useState(Config.ShowBottomWord);
+  const [cardMessage, setCardMessage] = useState("click card to flip");
+  const [totCards, setTotCards] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const [wordsetId, setWordsetId] = useState(0);
   // show native language on front or back (reverse)
@@ -102,32 +105,30 @@ function Console() {
 
   const refillWordData = () => {
     const rev = getReverseFromLS();
+    const refillData = wordData.refillWordData();
+    // console.log("refill data: ", refillData);
 
-    // console.log("refill: reverse: ", rev);
-    const wordArray = getWordArrayFromLS();
-    let index = getWordIndexFromLS();
-    if (wordArray && index >= wordArray.length) {
-      index--;
-    }
-    wordData.fillWordInfo(wordArray, index);
-    if (wordArray && wordArray.length) {
-      // console.log("index: ", index);
-      // console.log("set bottom word: ", wordArray[index].word1);
+    if (refillData) {
+      const word = refillData.word;
+      const lastWord = refillData.lastWord;
+
       if (rev) {
-        setBottomWord(wordArray[index].word2);
-        setFlipWord(wordArray[index].word1);
-        if (index > 0) {
-          setTopWord(wordArray[index - 1].word2);
+        setBottomWord(word.word2);
+        setFlipWord(word.word1);
+        if (lastWord) {
+          setTopWord(lastWord.word2);
         }
       } else {
-        setBottomWord(wordArray[index].word1);
-        setFlipWord(wordArray[index].word2);
-        if (index > 0) {
-          setTopWord(wordArray[index - 1].word1);
+        setBottomWord(word.word1);
+        setFlipWord(word.word2);
+        if (lastWord) {
+          setTopWord(lastWord.word1);
         }
       }
-      setAtFirstWord(index == 0);
+      setAtFirstWord(!lastWord);
       setStarted(true);
+      setTotCards(word.totWords);
+      setCurrentIndex(word.cardIndex);
     }
   };
 
@@ -136,6 +137,11 @@ function Console() {
     const savedSpeed = getSpeedFromLS();
     if (savedSpeed) {
       setSpeed(savedSpeed);
+    }
+    const cardMsg = getCardMsgFromLS();
+    // console.log("typeof: ", typeof cardMsg, "msg: ", cardMsg);
+    if (typeof cardMsg == "string") {
+      setCardMessage(cardMsg);
     }
     refillWordData();
   }, []);
@@ -151,6 +157,8 @@ function Console() {
       setConfig(() => saveFrontConfigRef.current);
     } else {
       setSaveFrontConfig(configRef.current);
+      setCardMessage("");
+      saveCardMsgInLS("");
       setConfig(() => Config.Flipped);
     }
   };
@@ -177,6 +185,9 @@ function Console() {
         setConfig(Config.ShowTopWord); // and -quickly- switch to showing top
         // console.log("setting bottom word to: ", word.word1);
         setBottomWord(word.word1); // put new word below...
+        // console.log("next word: ", word);
+        setTotCards(word.totWords);
+        setCurrentIndex(word.cardIndex);
         if (process.env.NODE_ENV !== "test") {
           setTimeout(() => {
             setQuickChange(() => false);
@@ -201,6 +212,9 @@ function Console() {
       // ... but make sure word on reverse is for correct word
       wordData.getNextWord(wordsetId, reverse).then((word) => {
         setFlipWord(word.word2);
+        // console.log("next word: ", word);
+        setTotCards(word.totWords);
+        setCurrentIndex(word.cardIndex);
       });
     }
     if (!wordData.noMoreHistory()) {
@@ -225,10 +239,12 @@ function Console() {
     // prev when showing top word, need to do fancy footwork here to make smooth scroll -downward-
     if (currentConfig === Config.ShowTopWord) {
       wordData.getPreviousWord(wordsetId, reverse).then((word) => {
+        // console.log("prev word: ", word);
         setQuickChange(() => true);
         setBottomWord(topWord); // put current word (at top) at bottom position
         setConfig(Config.ShowBottomWord); // then -quickly- switch to showing bottom
         setTopWord(word.word1);
+        setCurrentIndex(word.cardIndex);
         if (process.env.NODE_ENV !== "test") {
           setTimeout(() => {
             setQuickChange(() => false);
@@ -246,6 +262,8 @@ function Console() {
       setConfig(Config.ShowTopWord);
       // .. but make sure flipped word matches
       wordData.getPreviousWord(wordsetId, reverse).then((word) => {
+        // console.log("prev word: ", word);
+        setCurrentIndex(word.cardIndex);
         setFlipWord(word.word2);
       });
     }
@@ -369,6 +387,8 @@ function Console() {
       setConfig(Config.ShowBottomWord);
       setBottomWord(INITIAL_WORD);
       setFlipWord(INITIAL_WORD);
+      setTotCards(0);
+      setCurrentIndex(0);
     }
     wordData.setPracticeSize(+practiceSize);
     // console.log("new set function: ", id, reverseVal);
@@ -509,6 +529,8 @@ function Console() {
               flipWord={flipWord}
               config={config}
               color={cardColor}
+              cardMessage={cardMessage}
+              cardIndex={totCards ? currentIndex + "/" + totCards : ""}
               flipSpeed={flipCardTransform(speed)}
               scrollSpeed={newWordTransform(speed)}
               fadeOut={fadeOut}

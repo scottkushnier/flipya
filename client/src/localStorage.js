@@ -15,6 +15,7 @@ function clearUser() {
 }
 
 function saveUserField(text) {
+  // console.log("save user: ", text);
   localStorage.setItem("userfield", JSON.stringify(text));
 }
 
@@ -25,6 +26,19 @@ function retrieveUserField(text) {
 
 function clearUserField() {
   localStorage.removeItem("userfield");
+}
+
+function saveCardMsgInLS(text) {
+  localStorage.setItem("message", JSON.stringify(text));
+}
+
+function getCardMsgFromLS(text) {
+  const user = JSON.parse(localStorage.getItem("message"));
+  return user;
+}
+
+function clearCardMsg() {
+  localStorage.removeItem("message");
 }
 
 function saveSpeedInLS(speed) {
@@ -123,5 +137,8 @@ export {
   saveWordIndexInLS,
   getWordIndexFromLS,
   clearWordInfo,
+  saveCardMsgInLS,
+  getCardMsgFromLS,
+  clearCardMsg,
   clearSettings,
 };
