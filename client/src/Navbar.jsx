@@ -1,18 +1,22 @@
 import { Link, useNavigate } from "react-router-dom";
+import wordData from "./wordData";
 import {
   clearUser,
   clearUserField,
   clearSettings,
   clearWordInfo,
+  clearCardMsg,
 } from "./localStorage";
 import FlipyaDB from "./FlipyaDB";
 
 function Navbar({ user, page }) {
   const doLogout = () => {
     // console.log("logout");
+    wordData.clearWordInfo();
     clearUser();
     clearUserField();
     clearSettings();
+    clearCardMsg();
     clearWordInfo();
     FlipyaDB.logout(user);
     navigate("/login");

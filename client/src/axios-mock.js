@@ -2,10 +2,10 @@ let count = 0;
 
 class AxiosMock {
   static async request(endpoint, method = "get", data = {}, headers = {}) {
-    // console.log(`AxiosMock: ${endpoint}, ${method}, ${data}, ${headers}`);
-    if (endpoint === "users") {
+    console.log(`AxiosMock: ${endpoint}, ${method}, ${data}, ${headers}`);
+    if (endpoint === "api/users") {
       return { users: [] };
-    } else if (endpoint === "wordset") {
+    } else if (endpoint === "api/wordset") {
       return {
         wordsets: [
           {
@@ -16,7 +16,7 @@ class AxiosMock {
           },
         ],
       };
-    } else if (endpoint === "wordset/1") {
+    } else if (endpoint === "api/wordset/1") {
       return {
         wordset: {
           id: 1,
@@ -54,9 +54,9 @@ class AxiosMock {
           ],
         };
       }
-    } else if (endpoint === "wordset/1/minmax") {
+    } else if (endpoint === "api/wordset/1/minmax") {
       return [{ min: 1, max: 5 }];
-    } else if (endpoint === "users/register") {
+    } else if (endpoint === "api/users/register") {
       // console.log("registering: ", data.username);
       return {
         username: data.username,
@@ -64,9 +64,9 @@ class AxiosMock {
         wordset_id: 0,
         set_size: 0,
       };
-    } else if (endpoint === "email") {
+    } else if (endpoint === "api/email") {
       return { emails: [] };
-    } else if (endpoint === "users/test") {
+    } else if (endpoint === "api/users/test") {
       return {
         user: {
           username: "test",
@@ -74,7 +74,7 @@ class AxiosMock {
           set_size: 0,
         },
       };
-    } else if (endpoint === "users/test/wordsetid") {
+    } else if (endpoint === "api/users/test/wordsetid") {
       return 1;
     }
   }

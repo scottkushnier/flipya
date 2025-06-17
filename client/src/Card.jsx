@@ -143,6 +143,8 @@ function Card({
   flipWord,
   config,
   color,
+  cardMessage,
+  cardIndex,
   flipSpeed,
   scrollSpeed,
   fadeOut,
@@ -151,7 +153,6 @@ function Card({
 }) {
   const [showingFront, setShowingFront] = useState(config !== Config.Flipped);
   const [showingTop, setShowingTop] = useState(config === Config.ShowTopWord);
-  const [cardMessage, setCardMessage] = useState("(click card to flip)");
   const [abrupt, setAbrupt] = useState(false); // scroll speed - fast for window size change
 
   // console.log("fadeOut: ", fadeOut);
@@ -185,12 +186,6 @@ function Card({
   // animated flip of card is done through CSS transform with transition time
   const flip = () => {
     setShowingFront(!showingFront); // now state matches prop
-    // remove instruction to click card to flip once flipped once
-    if (cardMessage) {
-      setTimeout(() => {
-        setCardMessage("");
-      }, 100);
-    }
   };
 
   // similarly animated scroll up or down via CSS
@@ -232,10 +227,11 @@ function Card({
         // }
         onClick={flipFn}
       >
-        <div className="showingFront">
+        <div className="front">
           <div className="card-top" style={{ backgroundColor: color }}></div>
           <div className="card-bottom" style={{ backgroundColor: color }}>
             {cardMessage && <div className="card-message"> {cardMessage} </div>}
+            <div className="card-index">{cardIndex}</div>
           </div>
           <div
             className={
@@ -257,7 +253,9 @@ function Card({
         </div>
         <div className="back">
           <div className="card-top" style={{ backgroundColor: color }}></div>
-          <div className="card-bottom" style={{ backgroundColor: color }}></div>
+          <div className="card-bottom" style={{ backgroundColor: color }}>
+            <div className="card-index">{cardIndex}</div>
+          </div>
           <div className="back-text-box text-box">
             <div className="back-text">{decorateWord(flipWord)}</div>
           </div>
