@@ -4,11 +4,13 @@ import FlipyaDB from "./FlipyaDB";
 import { saveUser, saveUserField, retrieveUserField } from "./localStorage";
 import Navbar from "./Navbar";
 
+const SMART_BUTTON = false;
+
 function Login() {
   const [username, setUsername] = useState(retrieveUserField() || "");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState(false);
-  const [buttonEnabled, setButtonEnabled] = useState(false);
+  const [buttonEnabled, setButtonEnabled] = useState(!SMART_BUTTON); // only enable when button is 'not' smart
   const [errorMessage, setErrorMessage] = useState("");
   const [pwEyeOpen, setPwEyeOpen] = useState(false);
   const [checkCount, setCheckCount] = useState(0);
@@ -30,7 +32,9 @@ function Login() {
 
   useEffect(() => {
     // console.log("login effect here: ", username);
-    checkUser(username);
+    if (SMART_BUTTON) {
+      checkUser(username);
+    }
   }, []);
 
   const navigate = useNavigate();
@@ -48,6 +52,11 @@ function Login() {
     // console.log("username edit");
     setUsername(e.target.value);
     saveUserField(e.target.value);
+    setLoginError(false);
+    if (!SMART_BUTTON) {
+      // if button not smart, we're done here
+      return;
+    }
     // console.log(checkCountRef.current, " increasing by 1");
     setCheckCount(checkCountRef.current + 1);
     let saveCount = checkCountRef.current + 1;
@@ -71,7 +80,6 @@ function Login() {
     } else {
       setButtonEnabled(false);
     }
-    setLoginError(false);
   };
 
   const handlePasswordEdit = (e) => {
@@ -101,7 +109,11 @@ function Login() {
       navigate(`/console/${username}`);
     } else {
       setLoginError(true);
-      setErrorMessage("Bad Password");
+      if (SMART_BUTTON) {
+        setErrorMessage("Bad Password");
+      } else {
+        setErrorMessage("Bad Username or Password");
+      }
     }
   };
 
