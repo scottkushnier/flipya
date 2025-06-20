@@ -4,18 +4,29 @@ import FlipyaDB from "./FlipyaDB";
 import { saveUser, saveUserField, retrieveUserField } from "./localStorage";
 import Navbar from "./Navbar";
 
+const SMART_BUTTON = false;
+
 function Register() {
   const [username, setUsername] = useState(retrieveUserField() || "");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [buttonEnabled, setButtonEnabled] = useState(false);
+  const [buttonEnabled, setButtonEnabled] = useState(!SMART_BUTTON);
   const [pwEyeOpen, setPwEyeOpen] = useState(false);
   const [checkCount, setCheckCount] = useState(0);
 
   const checkCountRef = useRef();
   checkCountRef.current = checkCount;
   const navigate = useNavigate();
+
+  async function usernameIsRegistered(username) {
+    if (/^\s*$/.test(username)) {
+      return false;
+    }
+    const ret = await FlipyaDB.getUser(username);
+    // console.log("reg: ", username, ret);
+    return typeof ret == "object";
+  }
 
   const checkUser = async (u) => {
     if (u !== "") {
@@ -31,7 +42,9 @@ function Register() {
 
   useEffect(() => {
     // console.log("reg effect here: ", username);
-    checkUser(username);
+    if (SMART_BUTTON) {
+      checkUser(username);
+    }
   }, []);
 
   async function usernameIsAvailable(username) {
@@ -47,6 +60,10 @@ function Register() {
     // console.log("username edit");
     setUsername(e.target.value);
     saveUserField(e.target.value);
+    setLoginError(false);
+    if (!SMART_BUTTON) {
+      return;
+    }
     setCheckCount(checkCountRef.current + 1);
     let saveCount = checkCountRef.current + 1;
     if (e.target.value !== "") {
@@ -62,7 +79,6 @@ function Register() {
     } else {
       setButtonEnabled(false);
     }
-    setLoginError(false);
   };
 
   const handlePasswordEdit = (e) => {
@@ -74,9 +90,20 @@ function Register() {
   const handleButton = async (e) => {
     e.preventDefault();
     // console.log("register");
+    if (/^\s*$/.test(username)) {
+      setLoginError(true);
+      setErrorMessage("Username can't be blank");
+      return;
+    }
+    if (await usernameIsRegistered(username)) {
+      setLoginError(true);
+      setErrorMessage("Username is already registered. Try another.");
+      return;
+    }
     if (/^\s*$/.test(password)) {
       setLoginError(true);
       setErrorMessage("Password can't be blank");
+      return;
     } else {
       await FlipyaDB.register(username, password);
       saveUser(username);
