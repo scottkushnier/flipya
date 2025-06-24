@@ -107,7 +107,7 @@ function Register() {
     } else {
       await FlipyaDB.register(username, password);
       saveUser(username);
-      navigate(`/console/${username}`);
+      navigate(`/console`);
     }
   };
 

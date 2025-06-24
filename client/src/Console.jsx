@@ -1,5 +1,9 @@
+// import { TextEncoder, TextDecoder } from "util";
+// global.TextEncoder = TextEncoder;
+// global.TextDecoder = { prototype: TextDecoder };
+
 import { useState, useRef, useEffect } from "react";
-import { useParams, Navigate } from "react-router";
+import { Navigate } from "react-router";
 // import { act } from "@testing-library/react";
 import { Card, Config } from "./Card";
 import FlipyaDB from "./FlipyaDB";
@@ -55,10 +59,11 @@ function Console() {
 
   // console.log("Rendering console here.");
 
-  const user = useParams().username;
+  // const user = useParams().username;
   // console.log("console for ", username);
 
   // card config controlled by console UI
+  const [user, setUser] = useState(retrieveUser());
   const [topWord, setTopWord] = useState("");
   const [bottomWord, setBottomWord] = useState(INITIAL_WORD);
   const [flipWord, setFlipWord] = useState(INITIAL_WORD);
@@ -473,56 +478,13 @@ function Console() {
     setSpeed(() => speed);
   };
 
-  //////////////////////////////////////////////////////////////////////
-
-  // const logout = (e) => {
-  //   e.preventDefault();
-  //   stopInterval(autoIntervalRef.current); // just in case interval still running
-  //   // console.log("logout");
-  //   FlipyaDB.logout(user);
-  //   clearUser();
-  //   exitFn();
-  // };
-
-  ////////////////////////////////////////////////////////////////////
-
-  // const savedUser = retrieveUser();
-
-  // const loginSavedUser = async (username) => {
-  //   const loginRes = await FlipyaDB.restoreSession(username);
-  //   // console.log("login result: ", loginRes);
-  //   if (typeof loginRes == "object") {
-  //     // if got profile back, else error
-  //     enterFn(username);
-  //   }
-  // };
-
-  // if (onRefresh) {
-  //   setOnRefresh(false);
-  //   if (savedUser) {
-  //     console.log("saved user: ", savedUser);
-  //     loginSavedUser(savedUser);
-  //   }
-  // }
-
-  // const loginSavedUser = async (username) => {
-  //   const loginRes = await FlipyaDB.restoreSession(username);
-  //   // console.log("login result: ", loginRes);
-  //   if (typeof loginRes == "object") {
-  //     // if got profile back, else error
-  //     enterFn(username);
-  //   }
-  // };
-
-  ////////////////////////////////////////////////////////////////////
-
-  if (retrieveUser()) {
+  if (user) {
     return (
       <>
         <Navbar user={user} page="console" />
         <div className="main">
           <div className="console">
-            <h2 className="title"> FLIP YA, {user.toUpperCase()}! </h2>
+            <h2 className="title">FLIP YA, {user.toUpperCase()}</h2>
             <Card
               topWord={topWord}
               bottomWord={bottomWord}
