@@ -6,16 +6,17 @@ import FlipyaDB from "./FlipyaDB";
 import wordData from "./wordData";
 
 // const APP_BASE_URL = process.env.REACT_APP_BASE_URL;
-// const APP_BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
+
+const APP_BASE_URL = import.meta.env.VITE_REACT_APP_BASE_URL;
 
 // const APP_BASE_URL = "http://" + window.location.hostname + ":3000";
 
-const APP_BASE_URL =
-  process.env.NODE_ENV === "test"
-    ? ""
-    : window.location.hostname.includes("render")
-    ? "https://" + window.location.hostname
-    : window.location.hostname + ":3001";
+// const APP_BASE_URL =
+//   process.env.NODE_ENV === "test"
+//     ? ""
+//     : window.location.hostname.includes("render")
+//     ? "https://" + window.location.hostname
+//     : window.location.hostname + ":3001";
 
 function EmailSession({ username, started }) {
   const [userProfile, setUserProfile] = useState(null);
@@ -273,7 +274,8 @@ function EmailSession({ username, started }) {
       FlipyaDB.incAttempts(email);
       // console.log("emailList: ", emailListRef.current);
       if (emailIncAttempts(email)) {
-        const link = `${APP_BASE_URL}/?verify=` + email + "&key=" + key;
+        const link =
+          APP_BASE_URL + "/" + encodeURI("?verify=" + email + "&key=" + key);
         // console.log("link: ", link);
         const msg =
           "Please click on the following link or point your web browser to it. Thanks. \n\n" +

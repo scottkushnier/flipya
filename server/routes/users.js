@@ -8,16 +8,6 @@ const checkToken = require("../middleware.js");
 
 const router = new express.Router();
 
-// list of all usernames
-// router.get("/", async function (req, res, next) {
-//   try {
-//     const users = await Users.findAll();
-//     return res.json({ users });
-//   } catch (err) {
-//     return next(err);
-//   }
-// });
-
 // get details for a particular user
 router.get("/:username", async function (req, res, next) {
   try {

@@ -106,7 +106,8 @@ function Login() {
     if (typeof loginRes == "object") {
       // if got profile back, else error
       saveUser(username);
-      navigate(`/console/${username}`);
+      // console.log("navigating to console");
+      navigate(`/console`);
     } else {
       setLoginError(true);
       if (SMART_BUTTON) {

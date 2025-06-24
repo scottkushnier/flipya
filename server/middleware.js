@@ -4,6 +4,9 @@ const jwt = require("jsonwebtoken");
 const { JWT_SECRET_KEY } = require("./config");
 
 function getCookie(name, cookieString) {
+  if (!cookieString) {
+    return null;
+  }
   const cookies = cookieString.split(";");
   for (let i = 0; i < cookies.length; i++) {
     let cookie = cookies[i].trim();
@@ -20,6 +23,9 @@ function checkToken(req, res, next) {
     next();
   } else {
     const token = getCookie("token", req.headers.cookie);
+    if (!token) {
+      return res.json({ msg: "access denied" });
+    }
     // console.log("checking token...: ", token);
     if (!jwt.verify(token, JWT_SECRET_KEY)) {
       console.error("bad token:", token);

@@ -41,12 +41,6 @@ class EmailDB {
     return "ok";
   }
 
-  // console.log("email: ", email);
-  // let key = email.key;
-  // const pw = key + "-" + verify;
-  // console.log("pw: ", pw);
-  // bcrypt.compare(pw, hash).then((result) => {
-
   static async tryVerifyEmail(email, key) {
     // console.log("model: try verify: ", email, key);
     const query = "SELECT * FROM emails WHERE email = $1";

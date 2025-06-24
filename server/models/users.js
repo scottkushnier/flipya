@@ -12,12 +12,6 @@ async function sleep(delay) {
 }
 
 class Users {
-  // static async findAll() {
-  //   let query = `SELECT * FROM users`;
-  //   const res = await db.query(query);
-  //   return res.rows;
-  // }
-
   static async find(username) {
     let query = `SELECT * FROM users WHERE username = $1`;
     // console.log("query: ", query);

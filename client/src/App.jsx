@@ -22,7 +22,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/console/:username" element={<Console />} />
+            <Route path="/console" element={<Console />} />
             <Route path="/directions" element={<Directions />} />
             <Route path="*" element={<Navigate to="/" />} />
             {/* <Route path="*" element={<Home />} /> */}
