@@ -20,12 +20,12 @@ router.get("/:email", checkToken, async function (req, res, next) {
   }
 });
 
-// get list of all email addresses
-router.get("/", checkToken, async function (req, res, next) {
+// get list of all email addresses for -username-
+router.get("/list/:username", checkToken, async function (req, res, next) {
   try {
     // console.log("all emails req h: ", req.headers);
     // console.log("expecting token: ", DB_TOKEN);
-    const emails = await Emails.findAll();
+    const emails = await Emails.findAll(req.params.username);
     return res.json({ emails });
   } catch (err) {
     return next(err);
@@ -70,15 +70,23 @@ router.post(
 );
 
 // add new email to DB & save random key too
-router.post("/:email/:key", checkToken, async function (req, res, next) {
-  try {
-    // console.log("new email: ", req.params.email, req.params.key);
-    const emails = await Emails.addEmail(req.params.email, req.params.key);
-    return res.json({ msg: "added" });
-  } catch (err) {
-    return next(err);
+router.post(
+  "/:email/:username/:key",
+  checkToken,
+  async function (req, res, next) {
+    try {
+      // console.log("new email: ", req.params.email, req.params.key);
+      const emails = await Emails.addEmail(
+        req.params.email,
+        req.params.username,
+        req.params.key
+      );
+      return res.json({ msg: "added" });
+    } catch (err) {
+      return next(err);
+    }
   }
-});
+);
 
 router.patch("/:email/:key", checkToken, async function (req, res, next) {
   try {

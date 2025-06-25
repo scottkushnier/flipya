@@ -4,10 +4,10 @@ const db = require("../db");
 const bcrypt = require("bcryptjs");
 
 class EmailDB {
-  static async findAll() {
-    let query = `SELECT * FROM emails`;
-    // console.log("query: ", query);
-    const res = await db.query(query, []);
+  static async findAll(username) {
+    let query = `SELECT * FROM emails WHERE username = $1`;
+    // console.log("find all query: ", query);
+    const res = await db.query(query, [username]);
     return res.rows;
   }
 
@@ -18,13 +18,14 @@ class EmailDB {
     return res.rows[0];
   }
 
-  static async addEmail(email, key) {
+  static async addEmail(email, username, key) {
+    // console.log("add email: ", email, username, key);
     bcrypt.genSalt(10).then((salt) => {
       const pw = key + "-" + email;
       bcrypt.hash(pw, salt).then(async (hash) => {
         const query =
-          "INSERT INTO emails (email, status, key) VALUES ($1, 'unverified', $2)";
-        await db.query(query, [email, hash]);
+          "INSERT INTO emails (email, status, username, key) VALUES ($1, 'unverified', $2, $3)";
+        await db.query(query, [email, username, hash]);
       });
     });
     return "ok";
