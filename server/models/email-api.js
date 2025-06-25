@@ -3,6 +3,7 @@ const axios = require("axios");
 // Using Postmark email API
 const BASE_URL = process.env.EMAIL_URL || "https://api.postmarkapp.com";
 const POSTMARK_TOKEN = process.env.POSTMARK_API_TOKEN;
+const APP_BASE_URL = process.env.APP_BASE_URL;
 
 class EmailAPI {
   static async request(endpoint, data, headers) {
@@ -27,8 +28,9 @@ class EmailAPI {
       Accept: "application/json",
       "X-Postmark-Server-Token": POSTMARK_TOKEN,
     };
+    const newBody = body.replace("$APP_BASE_URL$", APP_BASE_URL);
     // console.log("token :", POSTMARK_TOKEN);
-    const data = { From: from, To: to, Subject: subject, TextBody: body };
+    const data = { From: from, To: to, Subject: subject, TextBody: newBody };
     const endpoint = "email";
     this.request(endpoint, data, headers)
       .then((ret) => {

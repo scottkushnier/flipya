@@ -5,15 +5,15 @@ import axios from "axios";
 // const BASE_URL =
 //   process.env.REACT_APP_DB_BASE_URL || "http://192.168.5.129:3001";
 
-const BASE_URL =
-  process.env.NODE_ENV === "test" || window.location.hostname.includes("render")
-    ? ""
-    : "http://192.168.5.129:3001";
+// const BASE_URL =
+//   process.env.NODE_ENV === "test" || window.location.hostname.includes("render")
+//     ? ""
+//     : "http://192.168.5.130:3001";
 
 class EmailAPI {
   static async request(endpoint, data, headers) {
     console.debug("EMAIL API Call here:", endpoint, data);
-    const url = `${BASE_URL}/${endpoint}`;
+    const url = `/${endpoint}`;
     try {
       const ret = await axios.post(url, data, { headers: headers });
       console.debug("ret: ", ret);

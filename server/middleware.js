@@ -36,8 +36,8 @@ function checkToken(req, res, next) {
     // console.log("from req (path): ", req.path);
     if (req.params.username && userFromJwt != req.params.username) {
       console.error("wrong username in token:", token);
-      // console.log("fromJWT: ", userFromJwt);
-      // console.log("from params: ", req.params.username);
+      console.log("fromJWT: ", userFromJwt);
+      console.log("from params: ", req.params.username);
       return res.json({ msg: "wrong username in token" });
     }
     next();

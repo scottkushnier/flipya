@@ -36,7 +36,8 @@ function EmailSession({ username, started }) {
   pollIntervalRef.current = pollInterval;
 
   const initEmailList = () => {
-    FlipyaDB.getAllEmails().then((list) => {
+    // console.log("get all emails for: ", username);
+    FlipyaDB.getAllEmails(username).then((list) => {
       //   console.log("emails list: ", list);
       setEmailList(() => list.emails);
     });
@@ -254,7 +255,7 @@ function EmailSession({ username, started }) {
       let key = null;
       if (emailStatus === "new") {
         key = randomWord(10);
-        FlipyaDB.addEmail(email, key);
+        FlipyaDB.addEmail(email, username, key);
         emailListRef.current.push({
           email: email,
           status: "unverified",
@@ -275,7 +276,9 @@ function EmailSession({ username, started }) {
       // console.log("emailList: ", emailListRef.current);
       if (emailIncAttempts(email)) {
         const link =
-          APP_BASE_URL + "/" + encodeURI("?verify=" + email + "&key=" + key);
+          "$APP_BASE_URL$" +
+          "/" +
+          encodeURI("?verify=" + email + "&key=" + key);
         // console.log("link: ", link);
         const msg =
           "Please click on the following link or point your web browser to it. Thanks. \n\n" +

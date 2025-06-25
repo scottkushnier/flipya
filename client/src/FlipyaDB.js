@@ -37,43 +37,6 @@ import axiosMock from "./axios-mock";
 
 // console.log("hostname: ", window.location.hostname);
 
-// const DB_BASE_URL = process.env.DB_BASE_URL || "http://192.168.5.129:3001";
-
-// const DB_BASE_URL =
-//   process.env.NODE_ENV === "test" || window.location.hostname.includes("render")
-//     ? ""
-//     : "http://192.168.5.129:3001";
-
-const DB_BASE_URL = "";
-
-//  const DB_BASE_URL = process.env.REACT_APP_DB_BASE_URL;
-// const DB_BASE_URL = "http://localhost:3001";
-// "http://" + window.location.hostname + ":3001";
-// const DB_BASE_URL =
-// const DB_BASE_URL = "";
-
-// let DB_BASE_URL = "";
-
-// DB_BASE_URL =
-//   process.env.VITE_REACT_APP_DB_BASE_URL ||
-//   "https://" + window.location.hostname;
-
-// DB_BASE_URL =
-//   process.env.VITE_REACT_APP_DB_BASE_URL ||
-//   "https://" + window.location.hostname;
-
-// if (process.env.NODE_ENV !== "test") {
-//   DB_BASE_URL =
-//     import.meta.env.VITE_REACT_APP_DB_BASE_URL ||
-//     "https://" + window.location.hostname;
-// } else {
-//   DB_BASE_URL =
-//     process.env.VITE_REACT_APP_DB_BASE_URL ||
-//     "https://" + window.location.hostname;
-// }
-
-// console.log("env: ", process.env.NODE_ENV);
-
 class FlipyaDB {
   static async request(endpoint, method = "get", data = {}, headers = {}) {
     // console.log("NODE-ENV: ", process.env.NODE_ENV);
@@ -87,9 +50,8 @@ class FlipyaDB {
         return res;
       }
     }
-    // console.log(`url: ${DB_BASE_URL}`);
     // console.log("API Call:", endpoint, method, data);
-    const url = `${DB_BASE_URL}/${endpoint}`;
+    const url = `/${endpoint}`;
     try {
       return (await axios({ url, method, data, headers })).data;
     } catch (err) {
@@ -138,8 +100,9 @@ class FlipyaDB {
     return res.word[0];
   }
 
-  static async getAllEmails() {
-    const res = await this.request("api/email", "GET", {});
+  static async getAllEmails(username) {
+    // console.log("get emails for: ", username);
+    const res = await this.request(`api/email/list/${username}`, "GET", {});
     return res;
   }
 
@@ -149,8 +112,12 @@ class FlipyaDB {
     return res.email;
   }
 
-  static async addEmail(email, key) {
-    const res = await this.request(`api/email/${email}/${key}`, "POST", {});
+  static async addEmail(email, username, key) {
+    const res = await this.request(
+      `api/email/${email}/${username}/${key}`,
+      "POST",
+      {}
+    );
     return res;
   }
 
