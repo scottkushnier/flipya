@@ -277,8 +277,10 @@ function EmailSession({ username, started }) {
       if (emailIncAttempts(email)) {
         const link =
           "$APP_BASE_URL$" +
-          "/" +
-          encodeURI("?verify=" + email + "&key=" + key);
+          "/?verify=" +
+          encodeURIComponent(email) +
+          "&key=" +
+          key;
         // console.log("link: ", link);
         const msg =
           "Please click on the following link or point your web browser to it. Thanks. \n\n" +
