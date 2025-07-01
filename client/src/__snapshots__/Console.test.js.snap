@@ -1,0 +1,64 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Console snapshot 1`] = `
+<DocumentFragment>
+  <h2
+    class="title"
+  >
+     FLIP YA! 
+  </h2>
+  <form>
+    <div
+      class="username-row"
+    >
+      <label
+        class="username-label"
+        for="username"
+      >
+        Username:
+      </label>
+      <input
+        autocomplete="off"
+        class="username-input"
+        data-testid="username"
+        id="username"
+        type="input"
+        value=""
+      />
+    </div>
+    <div>
+      <span>
+        <label
+          class="password-label"
+          for="username"
+        >
+          Password:
+        </label>
+      </span>
+      <span>
+        <input
+          autocomplete="off"
+          class="password-input"
+          data-testid="password"
+          id="password"
+          style="background-color: white;"
+          type="password"
+          value=""
+        />
+      </span>
+      <span>
+        <button
+          class="password-eye password-eye-closed"
+          tabindex="-1"
+          type="button"
+        />
+      </span>
+    </div>
+    <button
+      class="login-button register-button"
+    >
+      Register
+    </button>
+  </form>
+</DocumentFragment>
+`;
