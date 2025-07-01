@@ -1,0 +1,19 @@
+
+Register as new user - w/blank password
+Try again with password
+Logout
+Login with wrong password
+Login with correct password
+Next
+Flip
+Next
+Flip
+Prev
+Reverse & next, prev again
+Next set
+Set practice size to 4 & test
+Go, stop
+Change speed
+Go, stop
+Email session
+Check if email received.
