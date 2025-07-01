@@ -88,11 +88,11 @@ async function chooseNextWord() {
     // have our practice pool, pick from pool
     if (!permuteList.length) {
       permuteList = permute_n(practiceSetSize);
-      console.log("p-list: ", permuteList);
+      // console.log("p-list: ", permuteList);
     }
     const pick = permuteList.pop();
     savePermuteChoice = pick;
-    console.log("p-list now: ", permuteList);
+    // console.log("p-list now: ", permuteList);
     // const pick = randomInt(1, practiceSetSize);
     word = wordArray[pick];
     // console.log(
