@@ -100,50 +100,60 @@ class FlipyaDB {
     return res.word[0];
   }
 
-  static async getAllEmails(username) {
-    // console.log("get emails for: ", username);
-    const res = await this.request(`api/email/list/${username}`, "GET", {});
+  ////////////////////////////////////////////////////////////////////////////////////////
+
+  static async getAllEmails() {
+    // console.log("get emails");
+    const res = await this.request("api/email/list", "GET", {});
+    // console.log("emails: ", res);
     return res;
   }
 
+  // use POST to "get" so that can store email address in "data", not route
   static async getEmail(email) {
-    const res = await this.request(`api/email/${email}`, "GET", {});
+    const res = await this.request(`api/email`, "POST", { email });
     // console.log("get email returning: ", res.email);
     return res.email;
   }
 
-  static async addEmail(email, username, key) {
-    const res = await this.request(
-      `api/email/${email}/${username}/${key}`,
-      "POST",
-      {}
-    );
+  static async addEmail(email) {
+    const res = await this.request("api/email/add", "POST", { email });
     return res;
   }
 
-  static async changeEmailKey(email, key) {
-    const res = await this.request(`api/email/${email}/${key}`, "PATCH", {});
+  static async sendVerify(email) {
+    // console.log("email: ", email);
+    const res = await this.request("api/email/sendverify", "POST", { email });
     return res;
   }
 
   static async tryVerifyEmail(email, key) {
     // console.log("try verify: ", email, key);
     const res = await this.request(
-      `api/email/verify/${email}/${key}`,
+      `api/email/tryverify/${email}/${key}`,
       "GET",
       {}
     );
     return res;
   }
 
-  static async incAttempts(email) {
-    const res = await this.request(
-      `api/email/inc_attempts/${email}`,
-      "POST",
-      {}
-    );
-    return res;
-  }
+  ////////////////////////////////////////////////////////////////////////
+
+  // static async changeEmailKey(email, key) {
+  //   const res = await this.request(`api/email/${email}/${key}`, "PATCH", {});
+  //   return res;
+  // }
+
+  // static async incAttempts(email) {
+  //   const res = await this.request(
+  //     `api/email/inc_attempts/${email}`,
+  //     "POST",
+  //     {}
+  //   );
+  //   return res;
+  // }
+
+  /////////////////////////////////////////////////////////////////////
 
   static async getUser(username) {
     const res = await this.request(`api/users/${username}`);

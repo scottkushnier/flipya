@@ -2,7 +2,7 @@ const express = require("express");
 
 const EmailAPI = require("../models/email-api");
 
-const checkToken = require("../middleware.js");
+const { checkToken } = require("../middleware.js");
 
 const router = new express.Router();
 

@@ -181,6 +181,7 @@ function Options({ newSetFn, flipDeck, auto, started, username }) {
     e.preventDefault();
     const newSize = e.target.value;
     setSetSizeInput(newSize);
+    setSetSize(newSize);
     // console.log("practice size: ", newSize);
     updateSetSizeOnDelay(newSize);
     newSetFn(wordSetId, reverse, newSize, true);
