@@ -73,7 +73,7 @@ class EmailDB {
     // console.log("query: ", query);
     const res = await db.query(query, [email, username]);
     if (!res || !res.rows.length) {
-      return 1000;
+      return 0; // must be wasn't entered into DB yet, surely verification wasn't attempted yet
     }
     return res.rows[0].num_attempts;
   }
