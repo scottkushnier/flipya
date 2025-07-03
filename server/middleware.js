@@ -17,6 +17,11 @@ function getCookie(name, cookieString) {
   return null;
 }
 
+function getUsernameFromCookie(req) {
+  const username = getCookie("username", req.headers.cookie);
+  return username;
+}
+
 function checkToken(req, res, next) {
   if (process.env.NODE_ENV === "test") {
     // console.log("no token checking during testing...");
@@ -44,4 +49,4 @@ function checkToken(req, res, next) {
   }
 }
 
-module.exports = checkToken;
+module.exports = { checkToken, getUsernameFromCookie };
