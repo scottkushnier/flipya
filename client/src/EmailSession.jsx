@@ -160,6 +160,8 @@ function EmailSession({ username, started }) {
       } else if (emailIsUnverified(newEmail)) {
         // waiting on verification - start polling DB
         // console.log("email unverified, starting polling DB");
+        setEmailGood(false);
+        setEmailStatus("unverified");
         setTimeout(() => {
           checkEmail(newEmail);
         }, 100);
@@ -206,6 +208,30 @@ function EmailSession({ username, started }) {
     }, 5000);
   }
 
+  function handleVerifyResult(result) {
+    if (result.status == "ok") {
+      // console.log("send-result (ok): ", result);
+    } else {
+      displayEmailMsg(result.message);
+      // console.log("send-result: (bad)", result);
+    }
+    if (result.status == "ok") {
+      displayEmailMsg("Verification email sent.");
+      // console.log("should send msg here: ", msg);
+      clearPollInterval(); // just to be sure, clear any previously existing
+      const myPollInterval = setInterval(() => {
+        // console.log("checking email 2...");
+        checkEmail(email);
+      }, 2000);
+      setPollInterval(myPollInterval);
+      // console.log("new poll interval: ", myPollInterval);
+    } else {
+      displayEmailMsg(result.message);
+      clearPollInterval();
+      // setEmailStatus(null);
+    }
+  }
+
   // button will send session of email address is verified, initiate verification if not
   function handleEmailButton() {
     // console.log("email");
@@ -227,42 +253,26 @@ function EmailSession({ username, started }) {
     } else if (emailStatus === "unverified" || emailStatus === "new") {
       // initiate verification process
       if (emailStatus === "new") {
-        FlipyaDB.addEmail(email);
-        emailListRef.current.push({
-          email: email,
-          status: "unverified",
-          num_attempts: 0,
+        FlipyaDB.addEmail(email).then((res) => {
+          // only do rest once email has been added
+          emailListRef.current.push({
+            email: email,
+            status: "unverified",
+            num_attempts: 0,
+          });
+          setEmailGood(false);
+          setEmailStatus("unverified");
+          FlipyaDB.sendVerify(email, username).then((sendResult) => {
+            handleVerifyResult(sendResult);
+          });
         });
-        setEmailGood(false);
-        setEmailStatus("unverified");
+      } else {
+        // console.log("verify email");
+        // console.log("emailList: ", emailListRef.current);
+        FlipyaDB.sendVerify(email, username).then((sendResult) => {
+          handleVerifyResult(sendResult);
+        });
       }
-
-      //   console.log("verify email");
-      // console.log("emailList: ", emailListRef.current);
-
-      FlipyaDB.sendVerify(email, username).then((sendResult) => {
-        if (sendResult.status == "ok") {
-          // console.log("send-result (ok): ", sendResult);
-        } else {
-          displayEmailMsg(sendResult.message);
-          // console.log("send-result: (bad)", sendResult);
-        }
-        if (sendResult.status == "ok") {
-          displayEmailMsg("Verification email sent.");
-          // console.log("should send msg here: ", msg);
-          clearPollInterval(); // just to be sure, clear any previously existing
-          const myPollInterval = setInterval(() => {
-            // console.log("checking email 2...");
-            checkEmail(email);
-          }, 2000);
-          setPollInterval(myPollInterval);
-          // console.log("new poll interval: ", myPollInterval);
-        } else {
-          displayEmailMsg(sendResult.message);
-          clearPollInterval();
-          // setEmailStatus(null);
-        }
-      });
     }
   }
 
