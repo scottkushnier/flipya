@@ -17,6 +17,28 @@ function randomInt(from, to) {
   return ret;
 }
 
+function permute(a) {
+  let tmp;
+  for (let i = 0; i < a.length - 1; i++) {
+    const j = randomInt(i, a.length - 1);
+    if (i != j) {
+      tmp = a[i];
+      a[i] = a[j];
+      a[j] = tmp;
+    }
+  }
+  return a;
+}
+
+function permute_n(n) {
+  let a = [];
+  for (let i = 0; i < n; i++) {
+    a.push(i);
+  }
+  const res = permute(a);
+  return res;
+}
+
 // limits sample sets of words in order to drill extensively with n words
 // set to null for no limit
 let practiceSetSize = null;
@@ -53,6 +75,9 @@ async function chooseNextWordNoRandom() {
   return word;
 }
 
+let permuteList = [];
+let savePermuteChoice;
+
 // get next word for new card, if have full practice size, pick from that set, ow get a random word
 async function chooseNextWord() {
   if (noRandom) {
@@ -61,8 +86,15 @@ async function chooseNextWord() {
   let word;
   if (practiceSetSize && wordArray && wordArray.length >= practiceSetSize) {
     // have our practice pool, pick from pool
-    const pick = randomInt(1, practiceSetSize);
-    word = wordArray[pick - 1];
+    if (!permuteList.length) {
+      permuteList = permute_n(practiceSetSize);
+      // console.log("p-list: ", permuteList);
+    }
+    const pick = permuteList.pop();
+    savePermuteChoice = pick;
+    // console.log("p-list now: ", permuteList);
+    // const pick = randomInt(1, practiceSetSize);
+    word = wordArray[pick];
     // console.log(
     //   "choosing from practice set: size: ",
     //   practiceSetSize,
@@ -106,6 +138,7 @@ async function chooseNextWordNoRepeats() {
       lastWordId = pickWord.id;
       return pickWord;
     }
+    permuteList.unshift(savePermuteChoice);
     count++;
   }
   return pickWord;
@@ -213,6 +246,7 @@ class wordData {
     wordsetPoolSize = null;
     currentWordIndex = null;
     wordArray = [];
+    permuteList = [];
     saveWordArrayInLS(null);
     saveWordIndexInLS(null);
   }

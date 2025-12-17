@@ -4,7 +4,7 @@ const express = require("express");
 
 const { BadRequestError } = require("../expressError");
 const Users = require("../models/users");
-const checkToken = require("../middleware.js");
+const { checkToken } = require("../middleware.js");
 
 const router = new express.Router();
 
