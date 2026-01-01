@@ -13,11 +13,11 @@ class Word {
   }
 
   // used to fill DB
-  static async addWord(word1, word2, wordset_id) {
+  static async addWord(word1, word2, wordset_id, level) {
     // console.log("add word: ", word1, word2, wordset_id);
     const query =
-      "INSERT INTO words (word1, word2, wordset_id) VALUES ($1, $2, $3)";
-    const res = await db.query(query, [word1, word2, wordset_id]);
+      "INSERT INTO words (word1, word2, wordset_id, level) VALUES ($1, $2, $3, $4)";
+    const res = await db.query(query, [word1, word2, wordset_id, level]);
     return res;
   }
 

@@ -34,7 +34,7 @@ class Wordset {
   // for setting up DB
   static async addWordSet(id, lang1, lang2, theme, color) {
     const query =
-      "INSERT INTO wordsets (id, language1, language2, theme, color) VALUES ($1, $2, $3, $4, $5)";
+      "INSERT INTO wordsets (id, language1, language2, theme, color, enabled) VALUES ($1, $2, $3, $4, $5, true)";
     const res = await db.query(query, [id, lang1, lang2, theme, color]);
     return res;
   }
