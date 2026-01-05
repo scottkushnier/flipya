@@ -1,1 +1,26 @@
+
+Clone the repo
+    git clone ...
+
+Set up database
+    apt install postgresql
+    sudo -u postgres createuser -s <username> ; createdb <username>
+    psql <db>.sql
+    sudo -u postgres psql
+       ALTER USER <username> PASSWORD '<password>'; 
+
+Install nodejs
+    apt install nodejs npm
+
+Install, build the app:
+    npm install
+    npm run build
+
+Edit .env file
+
+Run the application:
+    npm start
+
+==============================================
+
 npm run build && npm start
