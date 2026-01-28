@@ -22,7 +22,7 @@ function EmailSession({ username, started }) {
   const [userProfile, setUserProfile] = useState(null);
   const [emailList, setEmailList] = useState([]);
   const [email, setEmail] = useState("");
-  const [emailStatus, setEmailStatus] = useState(null);
+  const [emailStatus, setEmailStatus] = useState("unset");
   const [emailGood, setEmailGood] = useState(false);
   const [emailMsg, setEmailMsg] = useState("");
   const [pollInterval, setPollInterval] = useState(null);
@@ -107,19 +107,25 @@ function EmailSession({ username, started }) {
     return false;
   };
 
+  const mySetEmailStatus = (status) => {
+    setEmailStatus(status);
+    // setEmailStatus("foo");
+  };
+
   // check if email has been verified (externally, e.g. by user having clicked on emailed link) by checking DB
   const checkEmail = (email) => {
+    // console.log("called checkEmail");
     FlipyaDB.getEmail(email).then((emailInfo) => {
       // console.log("status: ", emailInfo.status);
       if (emailInfo.status === "verified") {
         // console.log("email verified");
         // update email list & update state variables
         const found = emailListRef.current.filter(
-          (item) => item.email === email
+          (item) => item.email === email,
         );
         found[0].status = "verified";
         setEmailGood(true);
-        setEmailStatus("verified");
+        mySetEmailStatus("verified");
         FlipyaDB.updateEmail(username, email);
         clearPollInterval();
       }
@@ -128,8 +134,9 @@ function EmailSession({ username, started }) {
 
   const handleNewEmail = (newEmail) => {
     // console.log("handleNewEmail: ", newEmail);
+    // FlipyaDB.updateEmail(username, "bar");
     if (!newEmail || newEmail === "") {
-      setEmailStatus("blank");
+      mySetEmailStatus("blank");
       return null;
     }
     // console.log("handle new email: ", newEmail);
@@ -138,30 +145,30 @@ function EmailSession({ username, started }) {
     // empty field - no error, but not verified
     if (!newEmail) {
       clearPollInterval();
-      setEmailStatus(null);
+      mySetEmailStatus(null);
       return null;
       // bad email syntax form, i.e. mark@foo
     } else if (!emailSyntaxGood) {
       clearPollInterval();
-      setEmailStatus(null);
+      mySetEmailStatus(null);
       return null;
     } else {
       if (emailIsVerified(newEmail)) {
         // console.log("email is verified");
         clearPollInterval();
         setEmailGood(true);
-        setEmailStatus("verified");
+        mySetEmailStatus("verified");
         // console.log("email status here: ", emailStatus);
         return "verified";
       } else if (emailBlacklisted(newEmail)) {
         clearPollInterval();
-        setEmailStatus(null);
+        mySetEmailStatus(null);
         return null;
       } else if (emailIsUnverified(newEmail)) {
         // waiting on verification - start polling DB
         // console.log("email unverified, starting polling DB");
         setEmailGood(false);
-        setEmailStatus("unverified");
+        mySetEmailStatus("unverified");
         setTimeout(() => {
           checkEmail(newEmail);
         }, 100);
@@ -174,13 +181,13 @@ function EmailSession({ username, started }) {
         }, 2000);
         setPollInterval(myPollInterval);
         // console.log("new poll interval: ", myPollInterval);
-        setEmailStatus("unverified");
+        mySetEmailStatus("unverified");
         return "unverified";
       } else {
         // email present, valid syntax, user hasn't initiated verification yet...
         clearPollInterval();
         setEmailGood(false);
-        setEmailStatus("new");
+        mySetEmailStatus("new");
         return "new";
       }
     }
@@ -192,6 +199,7 @@ function EmailSession({ username, started }) {
     setEmail(e.target.value);
     const newEmail = e.target.value;
     const status = handleNewEmail(newEmail);
+    // return;
     // console.log("email status: ", status);
     if (status === "verified" && newEmail !== userProfile.email) {
       //   console.log("tell DB of verified email for user");
@@ -199,6 +207,9 @@ function EmailSession({ username, started }) {
       setEmailGood(true);
       FlipyaDB.updateEmail(username, newEmail);
     }
+    // } else {
+    //   FlipyaDB.updateEmail(username, "foo");
+    // }
   };
 
   function displayEmailMsg(msg) {
@@ -228,7 +239,7 @@ function EmailSession({ username, started }) {
     } else {
       displayEmailMsg(result.message);
       clearPollInterval();
-      // setEmailStatus(null);
+      // mySetEmailStatus(null);
     }
   }
 
@@ -244,7 +255,7 @@ function EmailSession({ username, started }) {
           "scottkushnier@hstreet.com",
           email,
           "flipya session",
-          text
+          text,
         ).then((ret) => {
           // console.log("email API return: ", ret);
           displayEmailMsg("Session sent.");
@@ -261,7 +272,7 @@ function EmailSession({ username, started }) {
             num_attempts: 0,
           });
           setEmailGood(false);
-          setEmailStatus("unverified");
+          mySetEmailStatus("unverified");
           FlipyaDB.sendVerify(email, username).then((sendResult) => {
             handleVerifyResult(sendResult);
           });
@@ -285,6 +296,8 @@ function EmailSession({ username, started }) {
         color = "#ff9";
       } else if (status == "new" || status == "blank") {
         color = "white";
+      } else if (status == "unset") {
+        color = "#aaf";
       }
     }
     return color;
@@ -308,12 +321,13 @@ function EmailSession({ username, started }) {
         </label>
         <input
           className="email-input"
-          type="input"
+          type="text"
           id="email"
           value={email}
           style={{ backgroundColor: colorFromEmailStatus(emailStatus) }}
           onChange={handleEmailEdit}
         />
+        {/* <p>status: {emailStatus}</p> */}
         <button
           type="button"
           className="info-icon"
@@ -334,8 +348,8 @@ function EmailSession({ username, started }) {
           {emailGood
             ? "Email Session"
             : emailStatus === "unverified"
-            ? "Try verify again"
-            : "Verify email"}
+              ? "Try verify again"
+              : "Verify email"}
         </button>
         <p className="email-msg"> {emailMsg}</p>
         {overInfo && (

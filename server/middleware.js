@@ -23,13 +23,15 @@ function getUsernameFromCookie(req) {
 }
 
 function checkToken(req, res, next) {
+  console.log("checking token...");
   if (process.env.NODE_ENV === "test") {
     // console.log("no token checking during testing...");
     next();
   } else {
     const token = getCookie("token", req.headers.cookie);
     if (!token) {
-      return res.json({ msg: "access denied" });
+      console.error("no token");
+      return res.json({ msg: "token expired" }); // most likely cause
     }
     // console.log("checking token...: ", token);
     if (!jwt.verify(token, JWT_SECRET_KEY)) {

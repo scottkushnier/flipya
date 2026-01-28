@@ -35,9 +35,32 @@ import axios from "axios";
 
 import axiosMock from "./axios-mock";
 
+import wordData from "./wordData";
+import {
+  clearUser,
+  clearUserField,
+  clearSettings,
+  clearWordInfo,
+  clearCardMsg,
+  logoutConsole,
+  setLoginMessage,
+} from "./localStorage";
+
 // console.log("hostname: ", window.location.hostname);
 
 class FlipyaDB {
+  static handleTokenExpiry() {
+    // console.log("handling token expiry");
+    wordData.clearWordInfo();
+    clearUser();
+    clearUserField();
+    clearSettings();
+    clearCardMsg();
+    clearWordInfo();
+    logoutConsole();
+    setLoginMessage("session expired, please log in again");
+  }
+
   static async request(endpoint, method = "get", data = {}, headers = {}) {
     // console.log("NODE-ENV: ", process.env.NODE_ENV);
     if (process.env.NODE_ENV === "test") {
@@ -53,7 +76,13 @@ class FlipyaDB {
     // console.log("API Call:", endpoint, method, data);
     const url = `/${endpoint}`;
     try {
-      return (await axios({ url, method, data, headers })).data;
+      const ret = await axios({ url, method, data, headers });
+      if (ret.data && ret.data.msg && ret.data.msg === "token expired") {
+        // console.log("expired strings matched");
+        // console.log("TOKEN EXPIRED!");
+        this.handleTokenExpiry();
+      }
+      return ret.data;
     } catch (err) {
       console.error("API Error:", err.response);
       let message = err.response.data.error.message;
@@ -80,7 +109,7 @@ class FlipyaDB {
   // restrict to difficulty range selected
   static async numWordsInSet(set_id, minLevel, maxLevel) {
     const res = await this.request(
-      `api/wordset/${set_id}/count?minLevel=${minLevel}&maxLevel=${maxLevel}`
+      `api/wordset/${set_id}/count?minLevel=${minLevel}&maxLevel=${maxLevel}`,
     );
     return +res.count;
   }
@@ -95,7 +124,7 @@ class FlipyaDB {
   // get nth word from one of wordsets
   static async getWord(wordset_id, n, minLevel, maxLevel) {
     const res = await this.request(
-      `api/word/${wordset_id}/${n}?minLevel=${minLevel}&maxLevel=${maxLevel}`
+      `api/word/${wordset_id}/${n}?minLevel=${minLevel}&maxLevel=${maxLevel}`,
     );
     return res.word[0];
   }
@@ -132,7 +161,7 @@ class FlipyaDB {
     const res = await this.request(
       `api/email/tryverify/${email}/${key}`,
       "GET",
-      {}
+      {},
     );
     return res;
   }

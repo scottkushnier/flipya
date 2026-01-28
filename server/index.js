@@ -19,6 +19,20 @@ app.use(function (err, req, res, next) {
   });
 });
 
+// const fs = require("fs");
+// const https = require("https");
+
+// const options = {
+//   key: fs.readFileSync("./key.pem"),
+//   cert: fs.readFileSync("./cert.pem"),
+// };
+
+// https.createServer(options, app).listen(PORT, () => {
+//   console.log(`HTTPS server running on https://localhost:${PORT}`);
+// });
+
+app.set("trust proxy", true);
+
 app.listen(PORT, () => {
   console.log(`Example app listening at http://localhost:${PORT}`);
 });

@@ -61,7 +61,7 @@ function Options({ newSetFn, flipDeck, auto, started, username }) {
         // console.log("looking for: ", profile.user.wordset_id, " in ", sets);
         let id;
         let ind = sets.findIndex(
-          (element) => +element.id === +profile.user.wordset_id
+          (element) => +element.id === +profile.user.wordset_id,
         );
         if (ind === -1) {
           // console.log("no wordset, just pick first");
@@ -150,7 +150,14 @@ function Options({ newSetFn, flipDeck, auto, started, username }) {
     // console.log("current counter: ", delayCountRef.current);
     if (counter === delayCountRef.current) {
       // console.log("calling now with: ", size);
-      FlipyaDB.updateSetSize(username, size);
+      FlipyaDB.updateSetSize(username, size).then((ret) => {
+        console.log("update set size ret:", ret);
+        if (ret.msg == "token expired") {
+          console.log("TOKEN EXPIRED - at setsizechange!", username);
+          // FlipyaDB.logout(username);
+          // navigate("/login");
+        }
+      });
     }
   };
 

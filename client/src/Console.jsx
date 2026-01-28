@@ -18,6 +18,7 @@ import {
   getReverseFromLS,
   saveCardMsgInLS,
   getCardMsgFromLS,
+  registerLogoutHandler,
 } from "./localStorage";
 
 const DEFAULT_SPEED = 60;
@@ -71,6 +72,7 @@ function Console() {
   const [cardMessage, setCardMessage] = useState("click card to flip");
   const [totCards, setTotCards] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [logoutReason, setLogoutReason] = useState(null);
 
   const [wordsetId, setWordsetId] = useState(0);
   // show native language on front or back (reverse)
@@ -136,6 +138,13 @@ function Console() {
       setCurrentIndex(word.cardIndex);
     }
   };
+
+  useEffect(() => {
+    registerLogoutHandler(() => {
+      setLogoutReason("expired");
+      setUser(null);
+    });
+  }, []);
 
   useEffect(() => {
     // console.log("console use effect here");
@@ -305,15 +314,18 @@ function Console() {
         }
       }
     }, roundTiming(speedRef.current));
-    setTimeout(() => {
-      if (runIdForRound === runIdRef.current) {
-        if (autoRef.current) {
-          nextWord();
-        } else {
-          stopInterval(autoIntervalRef.current);
+    setTimeout(
+      () => {
+        if (runIdForRound === runIdRef.current) {
+          if (autoRef.current) {
+            nextWord();
+          } else {
+            stopInterval(autoIntervalRef.current);
+          }
         }
-      }
-    }, roundTiming(speedRef.current) * 1.5);
+      },
+      roundTiming(speedRef.current) * 1.5,
+    );
   };
 
   const newInterval = (interval) => {
@@ -352,9 +364,12 @@ function Console() {
     setRunId(newId);
     setTimeout(() => {
       doRound(newId);
-      const myInterval = setInterval(() => {
-        doRound(newId);
-      }, roundTiming(speedRef.current) * 2.5);
+      const myInterval = setInterval(
+        () => {
+          doRound(newId);
+        },
+        roundTiming(speedRef.current) * 2.5,
+      );
       // console.log("starting interval: ", myInterval);
       newInterval(myInterval);
     }, delayBeforeFullRound);
@@ -566,7 +581,7 @@ function Console() {
       </>
     );
   } else {
-    return <Navigate to="/login" />;
+    return <Navigate to="/login" state={{ reason: logoutReason }} replace />;
   }
 }
 

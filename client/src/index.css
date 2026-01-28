@@ -1,5 +1,6 @@
 body {
-  background-color: cornsilk;
+  background-color: rgb(200, 250, 247);
+  /* background-color: cornsilk; */
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -56,10 +57,10 @@ body {
 }
 
 .hebrew {
-/*  font-size: 6.75vw; */
+  /*  font-size: 6.75vw; */
   font-size: 6.75vw;
-/*  font-family: "Frank Ruhl Libre", "David Libre", Georgia, Times, serif; */
-  font-family: Georgia, Times, serif; 
+  /*  font-family: "Frank Ruhl Libre", "David Libre", Georgia, Times, serif; */
+  font-family: Georgia, Times, serif;
   font-weight: bold;
   font-style: normal;
   margin-top: -0.2vw;

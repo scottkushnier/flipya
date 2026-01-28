@@ -1,5 +1,6 @@
 {
-  "name": "node-react-render-starter",
+  "name": "node-react-flipya",
+  "homepage": "/flipya",
   "version": "1.0.0",
   "main": "index.js",
   "engines": {

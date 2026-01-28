@@ -118,6 +118,31 @@ function clearSettings() {
   localStorage.removeItem("settings");
 }
 
+let logoutHandler = null;
+
+function registerLogoutHandler(fn) {
+  logoutHandler = fn;
+}
+
+function logoutConsole() {
+  if (logoutHandler) {
+    logoutHandler();
+  }
+}
+
+let loginMessageHandler = null;
+
+function registerLoginMessageHandler(fn) {
+  loginMessageHandler = fn;
+}
+
+function setLoginMessage(msg) {
+  // console.log("setting message: ", msg);
+  if (loginMessageHandler) {
+    loginMessageHandler(msg);
+  }
+}
+
 export {
   saveUser,
   retrieveUser,
@@ -141,4 +166,8 @@ export {
   getCardMsgFromLS,
   clearCardMsg,
   clearSettings,
+  registerLogoutHandler,
+  logoutConsole,
+  registerLoginMessageHandler,
+  setLoginMessage,
 };

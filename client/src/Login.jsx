@@ -1,22 +1,44 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import FlipyaDB from "./FlipyaDB";
-import { saveUser, saveUserField, retrieveUserField } from "./localStorage";
+import {
+  saveUser,
+  saveUserField,
+  retrieveUserField,
+  registerLoginMessageHandler,
+} from "./localStorage";
 import Navbar from "./Navbar";
 
 const SMART_BUTTON = false;
 
 function Login() {
+  const location = useLocation();
+  const reason = location.state?.reason;
+  const message =
+    reason === "expired" ? "Session expired. Please log in again." : null;
+  // const message = "my message";
+
+  // console.log("Login location:", location);
+  // console.log("message: ", message);
+
   const [username, setUsername] = useState(retrieveUserField() || "");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState(false);
   const [buttonEnabled, setButtonEnabled] = useState(!SMART_BUTTON); // only enable when button is 'not' smart
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState(message);
   const [pwEyeOpen, setPwEyeOpen] = useState(false);
   const [checkCount, setCheckCount] = useState(0);
 
   const checkCountRef = useRef();
   checkCountRef.current = checkCount;
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (location.state?.reason) {
+      navigate("/login", { replace: true, state: {} });
+    }
+  }, [location.state, navigate]);
 
   const checkUser = async (u) => {
     if (u !== "") {
@@ -37,7 +59,12 @@ function Login() {
     }
   }, []);
 
-  const navigate = useNavigate();
+  // useEffect(() => {
+  //   registerLoginMessageHandler((msg) => {
+  //     console.log("in useEffect, msg: ", msg);
+  //     setErrorMessage(msg);
+  //   });
+  // }, []);
 
   async function usernameIsRegistered(username) {
     if (/^\s*$/.test(username)) {
@@ -180,7 +207,7 @@ function Login() {
           Login
         </button>
       </form>
-      {loginError && <p className="login-message"> * {errorMessage} * </p>}
+      {errorMessage && <p className="login-message"> * {errorMessage} * </p>}
     </>
   );
 }
