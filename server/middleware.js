@@ -23,7 +23,7 @@ function getUsernameFromCookie(req) {
 }
 
 function checkToken(req, res, next) {
-  console.log("checking token...");
+  // console.log("checking token...");
   if (process.env.NODE_ENV === "test") {
     // console.log("no token checking during testing...");
     next();
@@ -43,8 +43,8 @@ function checkToken(req, res, next) {
     // console.log("from req (path): ", req.path);
     if (req.params.username && userFromJwt != req.params.username) {
       console.error("wrong username in token:", token);
-      console.log("fromJWT: ", userFromJwt);
-      console.log("from params: ", req.params.username);
+      // console.log("fromJWT: ", userFromJwt);
+      // console.log("from params: ", req.params.username);
       return res.json({ msg: "wrong username in token" });
     }
     next();

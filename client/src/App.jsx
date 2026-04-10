@@ -9,11 +9,12 @@ import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 function App() {
   const queryParameters = new URLSearchParams(window.location.search);
   // console.log("params: ", queryParameters);
+  const username = queryParameters.get("name");
   const verify = queryParameters.get("verify");
   const key = queryParameters.get("key");
   // console.log(verify, key);
   if (verify) {
-    return <Verify verify={verify} key1={key} />;
+    return <Verify username={username} verify={verify} key1={key} />;
   } else {
     return (
       <>

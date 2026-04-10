@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
 import FlipyaDB from "./FlipyaDB";
 
-function Verify({ verify, key1 }) {
+function Verify({ username, verify, key1 }) {
   const [passed, setPassed] = useState("unknown");
 
   useEffect(() => {
+    // console.log("username: ", username);
     // console.log("verify: ", verify);
     // console.log("key: ", key1);
 
-    FlipyaDB.tryVerifyEmail(verify, key1).then((verdict) => {
+    FlipyaDB.tryVerifyEmail(username, verify, key1).then((verdict) => {
       if (verdict) {
         setPassed("PASS");
       } else {

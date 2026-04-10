@@ -151,9 +151,9 @@ function Options({ newSetFn, flipDeck, auto, started, username }) {
     if (counter === delayCountRef.current) {
       // console.log("calling now with: ", size);
       FlipyaDB.updateSetSize(username, size).then((ret) => {
-        console.log("update set size ret:", ret);
+        // console.log("update set size ret:", ret);
         if (ret.msg == "token expired") {
-          console.log("TOKEN EXPIRED - at setsizechange!", username);
+          // console.log("TOKEN EXPIRED - at setsizechange!", username);
           // FlipyaDB.logout(username);
           // navigate("/login");
         }

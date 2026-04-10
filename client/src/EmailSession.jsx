@@ -243,6 +243,24 @@ function EmailSession({ username, started }) {
     }
   }
 
+  function decodeEmailReturn(ret) {
+    let result;
+    // console.log("need to decode: ", ret);
+    if (ret.data == "sent") {
+      result = "Session sent.";
+    } else if (ret.data == "declined") {
+      result = "Email was declined.";
+    } else if (ret.data == "unauthorized") {
+      result = "Authorization failed.";
+    } else if (ret.data == "unavailable") {
+      result = "Email service unreponsive.";
+    } else {
+      result = "Unknown error occurred.";
+      console.log("ret: ", ret);
+    }
+    return result;
+  }
+
   // button will send session of email address is verified, initiate verification if not
   function handleEmailButton() {
     // console.log("email");
@@ -252,13 +270,14 @@ function EmailSession({ username, started }) {
       wordData.generateEmailTextForSession().then((text) => {
         // console.log(text);
         EmailAPI.sendEmail(
-          "scottkushnier@hstreet.com",
+          "flipya@hstreet.com",
           email,
           "flipya session",
           text,
         ).then((ret) => {
           // console.log("email API return: ", ret);
-          displayEmailMsg("Session sent.");
+          const msg = decodeEmailReturn(ret);
+          displayEmailMsg(msg);
         });
       });
     } else if (emailStatus === "unverified" || emailStatus === "new") {
@@ -273,7 +292,7 @@ function EmailSession({ username, started }) {
           });
           setEmailGood(false);
           mySetEmailStatus("unverified");
-          FlipyaDB.sendVerify(email, username).then((sendResult) => {
+          FlipyaDB.sendVerify(email).then((sendResult) => {
             handleVerifyResult(sendResult);
           });
         });

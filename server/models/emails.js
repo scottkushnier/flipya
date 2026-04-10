@@ -2,7 +2,7 @@
 
 const db = require("../db");
 const bcrypt = require("bcryptjs");
-const EmailAPI = require("./email-api");
+const EmailAPI = require("./flipmail-api");
 
 function randomWord(n) {
   let acc = "";
@@ -93,6 +93,8 @@ class EmailDB {
       "$APP_BASE_URL$" +
       "/?verify=" +
       encodeURIComponent(email) +
+      "&name=" +
+      username +
       "&key=" +
       key;
     const msg =
@@ -100,22 +102,22 @@ class EmailDB {
       link;
     // console.log("msg: ", msg);
     const sendResult = EmailAPI.sendEmail(
-      "scottkushnier@hstreet.com",
+      "flipya@hstreet.com",
       email,
       "verification link",
-      msg
+      msg,
     );
     await EmailDB.incAttempts(email, username);
     return { status: "ok" };
   }
 
-  static async tryVerifyEmail(email, key) {
+  static async tryVerifyEmail(name, email, key) {
     // console.log("model: try verify: ", email, key);
     if (!email || !key) {
       return false;
     }
-    const query = "SELECT * FROM emails WHERE email = $1";
-    const res = await db.query(query, [email]);
+    const query = "SELECT * FROM emails WHERE email = $1 AND username = $2";
+    const res = await db.query(query, [email, name]);
     if (!res.rows.length) {
       return false;
     }

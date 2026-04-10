@@ -1,6 +1,6 @@
 const express = require("express");
 
-const EmailAPI = require("../models/email-api");
+const EmailAPI = require("../models/flipmail-api");
 
 const { checkToken } = require("../middleware.js");
 
@@ -11,11 +11,11 @@ router.post("/", checkToken, async function (req, res, next) {
   try {
     // console.log("here trying to send email from flipya server");
     // console.log("req body: ", req.body);
-    const ret = EmailAPI.sendEmail(
+    const ret = await EmailAPI.sendEmail(
       req.body.From,
       req.body.To,
       req.body.Subject,
-      req.body.TextBody
+      req.body.TextBody,
     );
     // console.log("ret from models: ", ret);
     return res.json(ret);

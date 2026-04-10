@@ -152,14 +152,16 @@ class FlipyaDB {
 
   static async sendVerify(email) {
     // console.log("email: ", email);
-    const res = await this.request("api/email/sendverify", "POST", { email });
+    const res = await this.request("api/email/sendverify", "POST", {
+      email,
+    });
     return res;
   }
 
-  static async tryVerifyEmail(email, key) {
-    // console.log("try verify: ", email, key);
+  static async tryVerifyEmail(name, email, key) {
+    // console.log("try verify: ", name, email, key);
     const res = await this.request(
-      `api/email/tryverify/${email}/${key}`,
+      `api/email/tryverify/${name}/${email}/${key}`,
       "GET",
       {},
     );

@@ -57,11 +57,12 @@ router.post("/sendverify", async function (req, res, next) {
   return res.json(sendResult);
 });
 
-router.get("/tryverify/:email/:key", async function (req, res, next) {
+router.get("/tryverify/:name/:email/:key", async function (req, res, next) {
   try {
     const verdict = await Emails.tryVerifyEmail(
+      req.params.name,
       req.params.email,
-      req.params.key
+      req.params.key,
     );
     return res.json(verdict);
   } catch (err) {
