@@ -1,0 +1,1 @@
+pg_dump -C -c --no-owner --inserts flipya > flipya.sql
