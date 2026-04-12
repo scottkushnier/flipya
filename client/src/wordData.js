@@ -67,7 +67,7 @@ async function chooseNextWordNoRandom() {
     currentWordsetId,
     count,
     minLevel,
-    maxLevel
+    maxLevel,
   );
   if (count < wordsetPoolSize) {
     count++;
@@ -168,7 +168,7 @@ class wordData {
       wordsetPoolSize = await FlipyaDB.numWordsInSet(
         currentWordsetId,
         minLevel,
-        maxLevel
+        maxLevel,
       );
       // console.log(
       //   "pool for: ",
@@ -294,11 +294,11 @@ class wordData {
     practiceSetSize = newSize;
   }
 
-  static async generateEmailTextForSession() {
+  static async generateEmailTextForSession(username) {
     // console.log("composing...");
     let acc = "";
     const d = new Date();
-    acc += "FlipYa Session @ \n" + d.toUTCString() + "\n\n";
+    acc += `FlipYa Session (for ${username}) @ \n` + d.toUTCString() + "\n\n";
     if (wordArray) {
       const wordSet = await FlipyaDB.getWordSet(wordArray[0].wordset_id);
       acc += wordSet.language1 + ", " + wordSet.language2 + "\n\n";

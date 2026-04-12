@@ -267,7 +267,7 @@ function EmailSession({ username, started }) {
     // console.log("status: ", emailStatus);
     // console.log("current: ", currentEmail);
     if (emailStatus === "verified") {
-      wordData.generateEmailTextForSession().then((text) => {
+      wordData.generateEmailTextForSession(username).then((text) => {
         // console.log(text);
         EmailAPI.sendEmail(
           "flipya@hstreet.com",
