@@ -2,7 +2,7 @@
 
 const db = require("../db");
 const bcrypt = require("bcryptjs");
-const EmailAPI = require("./flipmail-api");
+const EmailAPI = require("./email-api");
 
 function randomWord(n) {
   let acc = "";

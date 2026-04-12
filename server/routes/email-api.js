@@ -1,6 +1,6 @@
 const express = require("express");
 
-const EmailAPI = require("../models/flipmail-api");
+const EmailAPI = require("../models/email-api");
 
 const { checkToken } = require("../middleware.js");
 

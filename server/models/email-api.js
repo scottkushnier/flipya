@@ -1,14 +1,14 @@
 const axios = require("axios");
 
-// Using Postmark email API
-const BASE_URL = process.env.EMAIL_URL || "https://api.postmarkapp.com";
-const POSTMARK_TOKEN = process.env.POSTMARK_API_TOKEN;
+const BASE_URL = process.env.EMAIL_API_HOST;
+const APP_TOKEN = process.env.EMAIL_API_TOKEN;
 const APP_BASE_URL = process.env.APP_BASE_URL;
+const EMAIL_ENDPOINT = process.env.EMAIL_API_ENDPOINT;
 
 class EmailAPI {
-  static async request(endpoint, data, headers) {
-    // console.debug("EMAIL API Call:", endpoint, data, headers);
-    const url = `${BASE_URL}/${endpoint}`;
+  static async request(data, headers) {
+    // console.debug("EMAIL API Call:", data, headers);
+    const url = `${BASE_URL}/${EMAIL_ENDPOINT}`;
     // console.log("url: ", url);
     // console.log("data: ", data);
     // console.log("headers: ", headers);
@@ -26,13 +26,14 @@ class EmailAPI {
     const headers = {
       "Content-Type": "application/json",
       Accept: "application/json",
-      "X-Postmark-Server-Token": POSTMARK_TOKEN,
+      //   "X-Postmark-Server-Token": POSTMARK_TOKEN,
+      "X-Flipmail-Username": process.env.EMAIL_API_USERNAME,
+      "X-Flipmail-Api": process.env.EMAIL_API_TOKEN,
     };
     const newBody = body.replace("$APP_BASE_URL$", APP_BASE_URL);
     // console.log("token :", POSTMARK_TOKEN);
     const data = { From: from, To: to, Subject: subject, TextBody: newBody };
-    const endpoint = "email";
-    this.request(endpoint, data, headers)
+    return this.request(data, headers)
       .then((ret) => {
         // console.log("ret @ server: ", ret);
         return ret;
