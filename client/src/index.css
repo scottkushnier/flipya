@@ -4,6 +4,10 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+body.dev {
+  background-color: rgb(255, 230, 200);
+}
+
 .title {
   font-size: 4.5vw;
   text-align: center;
