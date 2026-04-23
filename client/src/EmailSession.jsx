@@ -245,14 +245,23 @@ function EmailSession({ username, started }) {
 
   function decodeEmailReturn(ret) {
     let result;
+    let msg;
+    if (typeof ret.data === "string") {
+      msg = ret.data;
+    } else {
+      msg = ret.data.Message || ret.data.message;
+    }
     // console.log("need to decode: ", ret);
-    if (ret.data == "sent") {
+    // console.log("msg: ", msg);
+    if (msg == "sent" || msg == "OK") {
       result = "Session sent.";
-    } else if (ret.data == "declined") {
+    } else if (msg == "declined") {
       result = "Email was declined.";
-    } else if (ret.data == "unauthorized") {
+    } else if (msg == "unauthorized") {
       result = "Authorization failed.";
-    } else if (ret.data == "unavailable") {
+    } else if (msg == "Request does not contain a valid Server token.") {
+      result = "Bad API token";
+    } else if (msg == "unavailable") {
       result = "Email service unreponsive.";
     } else {
       result = "Unknown error occurred.";

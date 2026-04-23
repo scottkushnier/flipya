@@ -23,18 +23,20 @@ class EmailAPI {
   }
 
   static async sendEmail(from, to, subject, body) {
+    // console.log("url: ", BASE_URL);
     const headers = {
       "Content-Type": "application/json",
       Accept: "application/json",
     };
-    if (APP_BASE_URL.indexOf("postmark") > 0) {
-      headers["X-Postmark-Server-Token"] = EMAIL_API_TOKEN;
+    if (BASE_URL.indexOf("postmark") >= 0) {
+      headers["X-Postmark-Server-Token"] = process.env.EMAIL_API_TOKEN;
     } else {
       headers["X-Flipmail-Username"] = process.env.EMAIL_API_USERNAME;
       headers["X-Flipmail-Api"] = process.env.EMAIL_API_TOKEN;
     }
     const newBody = body.replace("$APP_BASE_URL$", APP_BASE_URL);
     // console.log("token :", POSTMARK_TOKEN);
+    // console.log("headers: ", headers);
     const data = { From: from, To: to, Subject: subject, TextBody: newBody };
     return this.request(data, headers)
       .then((ret) => {
