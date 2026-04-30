@@ -3,6 +3,11 @@ function saveUser(user) {
   // console.log("user saved");
 }
 
+function saveIsAdmin(admin) {
+  localStorage.setItem("isadmin", JSON.stringify(admin));
+  // console.log("admin saved");
+}
+
 function retrieveUser() {
   const user = JSON.parse(localStorage.getItem("user"));
   // console.log("retrieving: ", user);
@@ -145,6 +150,7 @@ function setLoginMessage(msg) {
 
 export {
   saveUser,
+  saveIsAdmin,
   retrieveUser,
   clearUser,
   saveUserField,

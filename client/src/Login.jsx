@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import FlipyaDB from "./FlipyaDB";
 import {
   saveUser,
+  saveIsAdmin,
   saveUserField,
   retrieveUserField,
   registerLoginMessageHandler,
@@ -129,10 +130,11 @@ function Login() {
   const handleButton = async (e) => {
     e.preventDefault();
     const loginRes = await FlipyaDB.login(username, password);
-    // console.log("login result: ", loginRes);
+//    console.log("login result: ", loginRes);
     if (typeof loginRes == "object") {
       // if got profile back, else error
       saveUser(username);
+      saveIsAdmin(loginRes.user.is_admin);
       // console.log("navigating to console");
       navigate(`/console`);
     } else {
