@@ -320,11 +320,11 @@ class wordData {
 
   static async replaceFrontWord(newWord) {
     if (newWord === wordArray[currentWordIndex].word1) {
-      console.log("no change");
+      // console.log("no change");
       return;
     }
-    console.log("replacing front word ", currentWordIndex, " with ", newWord);
-    console.log("currently: ", wordArray[currentWordIndex]);
+    // console.log("replacing front word ", currentWordIndex, " with ", newWord);
+    // console.log("currently: ", wordArray[currentWordIndex]);
     wordArray[currentWordIndex].word1 = newWord;
     saveWordArrayInLS(wordArray);
     FlipyaDB.modWord(
@@ -336,11 +336,11 @@ class wordData {
 
   static async replaceFlipWord(newWord) {
     if (newWord === wordArray[currentWordIndex].word2) {
-      console.log("no change");
+      // console.log("no change");
       return;
     }
-    console.log("replacing flip word ", currentWordIndex, " with ", newWord);
-    console.log("currently: ", wordArray[currentWordIndex]);
+    // console.log("replacing flip word ", currentWordIndex, " with ", newWord);
+    // console.log("currently: ", wordArray[currentWordIndex]);
     wordArray[currentWordIndex].word2 = newWord;
     saveWordArrayInLS(wordArray);
     FlipyaDB.modWord(
@@ -354,7 +354,7 @@ class wordData {
     wordArray[currentWordIndex].id = newId;
     saveWordArrayInLS(wordArray);
     const newWord = await FlipyaDB.getWordById(newId);
-    console.log("new word: ", newWord);
+    // console.log("new word: ", newWord);
     wordArray[currentWordIndex].word1 = newWord.word1;
     wordArray[currentWordIndex].word2 = newWord.word2;
     saveWordArrayInLS(wordArray);

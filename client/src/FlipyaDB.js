@@ -131,7 +131,7 @@ class FlipyaDB {
 
   // modify a word & its translation in the dictionaries
   static async modWord(word1, word2, wordset_id) {
-    console.log("modWord in flipyaDB", word1, word2, wordset_id);
+    // console.log("modWord in flipyaDB", word1, word2, wordset_id);
     const res = await this.request(`api/word/${wordset_id}`, "POST", {
       word1,
       word2,
@@ -140,7 +140,7 @@ class FlipyaDB {
   }
 
   static async getWordById(id) {
-    console.log("get word by id", id);
+    // console.log("get word by id", id);
     const res = await this.request(`api/word/${id}`);
     return res.word[0];
   }

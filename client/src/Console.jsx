@@ -114,17 +114,17 @@ function Console() {
   saveFrontConfigRef.current = saveFrontConfig;
 
   const changeTopWord = (newWord) => {
-    console.log("changing top word to: ", newWord);
+    // console.log("changing top word to: ", newWord);
     setTopWord(newWord);
   };
 
   const changeBottomWord = (newWord) => {
-    console.log("changing bottom word to: ", newWord);
+    // console.log("changing bottom word to: ", newWord);
     setBottomWord(newWord);
   };
 
   const changeFlipWord = (newWord) => {
-    console.log("changing flip word to: ", newWord);
+    // console.log("changing flip word to: ", newWord);
     setFlipWord(newWord);
   };
 
@@ -223,7 +223,7 @@ function Console() {
         // console.log("setting bottom word to: ", word.word1);
         setBottomWord(word.word1); // put new word below...
         setCardId(word.id);
-        console.log("next word: ", word);
+        // console.log("next word: ", word);
         setTotCards(word.totWords);
         setCurrentIndex(word.cardIndex);
         if (process.env.NODE_ENV !== "test") {

@@ -225,7 +225,7 @@ function Card({
 
   const onPointerDown = (e) => {
     if (!editable) {
-      console.log("pointer down", e.clientX, e.clientY);
+      // console.log("pointer down", e.clientX, e.clientY);
       clickX = e.clientX;
       clickY = e.clientY;
       isClick = true;
@@ -245,7 +245,7 @@ function Card({
   };
 
   const onPointerUp = (e) => {
-    console.log("pointer up", e.clientX, e.clientY);
+    // console.log("pointer up", e.clientX, e.clientY);
     if (!isClick) {
       e.currentTarget.style.userSelect = "text";
       e.currentTarget.style.outline = "none";
@@ -265,21 +265,21 @@ function Card({
 
   const onBlur = (e) => {
     if (!isAdmin) return;
-    console.log("blur");
+    // console.log("blur");
     setEditable(false);
     isClick = true;
     const newText = e.currentTarget.innerText;
-    console.log("text: ", newText);
+    // console.log("text: ", newText);
     if (config === Config.ShowTopWord) {
-      console.log("show-top-word");
+      // console.log("show-top-word");
       changeTopWord(newText);
       wordData.replaceFrontWord(newText);
     } else if (config === Config.ShowBottomWord) {
-      console.log("show-bottom-word");
+      // console.log("show-bottom-word");
       changeBottomWord(newText);
       wordData.replaceFrontWord(newText);
     } else {
-      console.log("flipped");
+      // console.log("flipped");
       changeFlipWord(newText);
       wordData.replaceFlipWord(newText);
     }
@@ -287,13 +287,13 @@ function Card({
   };
 
   const onIdBlur = (e) => {
-    console.log("id blur");
+    // console.log("id blur");
     setIdEditable(false);
     const newId = e.currentTarget.innerText;
-    console.log("id: ", newId);
+    // console.log("id: ", newId);
     changeCardId(newId);
     wordData.replaceCardId(newId).then((newWord) => {
-      console.log("word @ onIdBlur: ", newWord);
+      // console.log("word @ onIdBlur: ", newWord);
       if (config === Config.ShowTopWord) {
         changeTopWord(newWord.word1);
       } else if (config === Config.ShowBottomWord) {
@@ -304,13 +304,13 @@ function Card({
   };
 
   const onIdClick = (e) => {
-    console.log("id click");
+    // console.log("id click");
     e.stopPropagation();
     setIdEditable(true);
   };
 
   const onIdFocus = (e) => {
-    console.log("id focus");
+    // console.log("id focus");
   };
 
   return (

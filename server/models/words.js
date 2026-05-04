@@ -33,7 +33,7 @@ class Word {
 
   // modify existing word in dictionaries
   static async modWord(word1, word2, wordId) {
-    console.log("mod word: ", word1, word2, wordId);
+    // console.log("mod word: ", word1, word2, wordId);
     const query = "UPDATE words SET word1 = $1, word2 = $2 WHERE id = $3";
     const res = await db.query(query, [word1, word2, wordId]);
     return res;
