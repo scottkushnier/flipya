@@ -129,6 +129,16 @@ class FlipyaDB {
     return res.word[0];
   }
 
+  // modify a word & its translation in the dictionaries
+  static async modWord(word1, word2, wordset_id) {
+    console.log("modWord in flipyaDB", word1, word2, wordset_id);
+    const res = await this.request(`api/word/${wordset_id}`, "POST", {
+      word1,
+      word2,
+    });
+    return res;
+  }
+
   ////////////////////////////////////////////////////////////////////////////////////////
 
   static async getAllEmails() {

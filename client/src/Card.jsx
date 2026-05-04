@@ -2,7 +2,8 @@
 //    State variables record "state" of the card, i.e. flipped, scrolled up, down, etc.
 //    Props sent down from console tell how card -should- appear, so console (UI) directs card motion.
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import wordData from "./wordData";
 
 // Functions to size fonts properly - longer words should use smaller fonts
 //   It's a little tricky, Hebrew vowels don't take extra space
@@ -150,10 +151,15 @@ function Card({
   fadeOut,
   quickChange,
   flipFn,
+  changeTopWord,
+  changeBottomWord,
+  changeFlipWord,
+  isAdmin,
 }) {
   const [showingFront, setShowingFront] = useState(config !== Config.Flipped);
   const [showingTop, setShowingTop] = useState(config === Config.ShowTopWord);
   const [abrupt, setAbrupt] = useState(false); // scroll speed - fast for window size change
+  const [editable, setEditable] = useState(false);
 
   // console.log("fadeOut: ", fadeOut);
 
@@ -210,6 +216,73 @@ function Card({
     slideDown();
   }
 
+  let clickX, clickY;
+  let lastX, lastY;
+  let isClick = true;
+
+  const onPointerDown = (e) => {
+    if (!editable) {
+      console.log("pointer down", e.clientX, e.clientY);
+      clickX = e.clientX;
+      clickY = e.clientY;
+      isClick = true;
+    }
+  };
+
+  const onPointerMove = (e) => {
+    // console.log("pointer move", e.clientX, e.clientY);
+    if (!isAdmin) return;
+    if (
+      isClick &&
+      Math.abs(e.clientX - clickX) + Math.abs(e.clientY - clickY) > 10
+    ) {
+      isClick = false;
+      // console.log("not a click");
+    }
+  };
+
+  const onPointerUp = (e) => {
+    console.log("pointer up", e.clientX, e.clientY);
+    if (!isClick) {
+      e.currentTarget.style.userSelect = "text";
+      e.currentTarget.style.outline = "none";
+      setEditable(true);
+      const tgt = e.currentTarget;
+      setTimeout(() => {
+        tgt.focus();
+        const range = document.caretRangeFromPoint(e.clientX, e.clientY);
+        if (range) {
+          const sel = window.getSelection();
+          sel.removeAllRanges();
+          sel.addRange(range);
+        }
+      }, 100);
+    }
+  };
+
+  const onBlur = (e) => {
+    if (!isAdmin) return;
+    console.log("blur");
+    setEditable(false);
+    isClick = true;
+    const newText = e.currentTarget.innerText;
+    console.log("text: ", newText);
+    if (config === Config.ShowTopWord) {
+      console.log("show-top-word");
+      changeTopWord(newText);
+      wordData.replaceFrontWord(newText);
+    } else if (config === Config.ShowBottomWord) {
+      console.log("show-bottom-word");
+      changeBottomWord(newText);
+      wordData.replaceFrontWord(newText);
+    } else {
+      console.log("flipped");
+      changeFlipWord(newText);
+      wordData.replaceFlipWord(newText);
+    }
+    e.currentTarget.style.userSelect = "none";
+  };
+
   return (
     <div className="container" id="myContainer">
       <div
@@ -225,7 +298,11 @@ function Card({
         //   ,
         //    transition: flipCardTransform(speed)
         // }
-        onClick={flipFn}
+        onClick={() => {
+          if (!editable) {
+            flipFn();
+          }
+        }}
       >
         <div className="front">
           <div className="card-top" style={{ backgroundColor: color }}></div>
@@ -243,10 +320,39 @@ function Card({
               transition: abrupt || quickChange ? "transform 0ms" : scrollSpeed,
             }}
           >
-            <div className="top-text" style={{ opacity: fadeOut ? 0 : 1 }}>
+            <div
+              className="top-text"
+              style={{
+                opacity: fadeOut ? 0 : 1,
+              }}
+              spellcheck="false"
+              contentEditable={editable}
+              // contentEditable
+              suppressContentEditableWarning
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={onPointerUp}
+              onBlur={onBlur}
+              // dangerouslySetInnerHTML={editable ? undefined : { __html: "foo" }}
+              dangerouslySetInnerHTML={undefined}
+            >
               {decorateWord(topWord)}
             </div>
-            <div className="bottom-text" style={{ opacity: fadeOut ? 0 : 1 }}>
+            <div
+              className="bottom-text"
+              style={{
+                opacity: fadeOut ? 0 : 1,
+              }}
+              spellcheck="false"
+              contentEditable={editable}
+              suppressContentEditableWarning
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={onPointerUp}
+              onBlur={onBlur}
+              // dangerouslySetInnerHTML={editable ? undefined : { __html: "foo" }}
+              dangerouslySetInnerHTML={undefined}
+            >
               {decorateWord(bottomWord)}
             </div>
           </div>
@@ -257,7 +363,20 @@ function Card({
             <div className="card-index">{cardIndex}</div>
           </div>
           <div className="back-text-box text-box">
-            <div className="back-text">{decorateWord(flipWord)}</div>
+            <div
+              className="back-text"
+              spellcheck="false"
+              contentEditable={editable}
+              suppressContentEditableWarning
+              onPointerDown={onPointerDown}
+              onPointerMove={onPointerMove}
+              onPointerUp={onPointerUp}
+              onBlur={onBlur}
+              // dangerouslySetInnerHTML={editable ? undefined : { __html: "foo" }}
+              dangerouslySetInnerHTML={undefined}
+            >
+              {decorateWord(flipWord)}
+            </div>
           </div>
         </div>
       </div>

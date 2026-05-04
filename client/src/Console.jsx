@@ -13,6 +13,7 @@ import EmailSession from "./EmailSession";
 import Navbar from "./Navbar";
 import {
   retrieveUser,
+  retrieveIsAdmin,
   saveSpeedInLS,
   getSpeedFromLS,
   getReverseFromLS,
@@ -65,6 +66,7 @@ function Console() {
 
   // card config controlled by console UI
   const [user, setUser] = useState(retrieveUser());
+  const [isAdmin, setIsAdmin] = useState(retrieveIsAdmin());
   const [topWord, setTopWord] = useState("");
   const [bottomWord, setBottomWord] = useState(INITIAL_WORD);
   const [flipWord, setFlipWord] = useState(INITIAL_WORD);
@@ -109,6 +111,21 @@ function Console() {
   runIdRef.current = runId;
   const saveFrontConfigRef = useRef();
   saveFrontConfigRef.current = saveFrontConfig;
+
+  const changeTopWord = (newWord) => {
+    console.log("changing top word to: ", newWord);
+    setTopWord(newWord);
+  };
+
+  const changeBottomWord = (newWord) => {
+    console.log("changing bottom word to: ", newWord);
+    setBottomWord(newWord);
+  };
+
+  const changeFlipWord = (newWord) => {
+    console.log("changing flip word to: ", newWord);
+    setFlipWord(newWord);
+  };
 
   const refillWordData = () => {
     const rev = getReverseFromLS();
@@ -513,6 +530,10 @@ function Console() {
               fadeOut={fadeOut}
               quickChange={quickChange}
               flipFn={flip}
+              changeTopWord={changeTopWord}
+              changeBottomWord={changeBottomWord}
+              changeFlipWord={changeFlipWord}
+              isAdmin={isAdmin}
             />
             {!auto && (
               <div className="prev-next-row">

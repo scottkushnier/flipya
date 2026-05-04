@@ -317,6 +317,38 @@ class wordData {
       return acc;
     }
   }
+
+  static async replaceFrontWord(newWord) {
+    if (newWord === wordArray[currentWordIndex].word1) {
+      console.log("no change");
+      return;
+    }
+    console.log("replacing front word ", currentWordIndex, " with ", newWord);
+    console.log("currently: ", wordArray[currentWordIndex]);
+    wordArray[currentWordIndex].word1 = newWord;
+    saveWordArrayInLS(wordArray);
+    FlipyaDB.modWord(
+      wordArray[currentWordIndex].word1,
+      wordArray[currentWordIndex].word2,
+      wordArray[currentWordIndex].id,
+    );
+  }
+
+  static async replaceFlipWord(newWord) {
+    if (newWord === wordArray[currentWordIndex].word2) {
+      console.log("no change");
+      return;
+    }
+    console.log("replacing flip word ", currentWordIndex, " with ", newWord);
+    console.log("currently: ", wordArray[currentWordIndex]);
+    wordArray[currentWordIndex].word2 = newWord;
+    saveWordArrayInLS(wordArray);
+    FlipyaDB.modWord(
+      wordArray[currentWordIndex].word1,
+      wordArray[currentWordIndex].word2,
+      wordArray[currentWordIndex].id,
+    );
+  }
 }
 
 export default wordData;

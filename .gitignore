@@ -31,4 +31,6 @@ build
 out.txt
 flipya.service
 flipya.sql
+*.sql
+
 

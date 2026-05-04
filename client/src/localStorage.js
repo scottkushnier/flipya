@@ -14,6 +14,11 @@ function retrieveUser() {
   return user;
 }
 
+function retrieveIsAdmin() {
+  const ret = JSON.parse(localStorage.getItem("isadmin"));
+  return ret;
+}
+
 function clearUser() {
   localStorage.removeItem("user");
   // console.log("user cleared");
@@ -152,6 +157,7 @@ export {
   saveUser,
   saveIsAdmin,
   retrieveUser,
+  retrieveIsAdmin,
   clearUser,
   saveUserField,
   retrieveUserField,
