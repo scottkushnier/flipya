@@ -139,6 +139,12 @@ class FlipyaDB {
     return res;
   }
 
+  static async getWordById(id) {
+    console.log("get word by id", id);
+    const res = await this.request(`api/word/${id}`);
+    return res.word[0];
+  }
+
   ////////////////////////////////////////////////////////////////////////////////////////
 
   static async getAllEmails() {

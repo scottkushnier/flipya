@@ -14,6 +14,14 @@ class Word {
     return res.rows;
   }
 
+  static async getWordById(id) {
+    let query = `SELECT * FROM words WHERE id = $1 LIMIT 1`;
+    // console.log("query: ", query);
+    // console.log("params: ", wordset_id, minLevel, maxLevel, n - 1);
+    const res = await db.query(query, [id]);
+    return res.rows;
+  }
+
   // used to fill DB
   static async addWord(word1, word2, wordset_id, level) {
     // console.log("add word: ", word1, word2, wordset_id);

@@ -146,6 +146,7 @@ function Card({
   color,
   cardMessage,
   cardIndex,
+  cardId,
   flipSpeed,
   scrollSpeed,
   fadeOut,
@@ -155,11 +156,13 @@ function Card({
   changeBottomWord,
   changeFlipWord,
   isAdmin,
+  changeCardId,
 }) {
   const [showingFront, setShowingFront] = useState(config !== Config.Flipped);
   const [showingTop, setShowingTop] = useState(config === Config.ShowTopWord);
   const [abrupt, setAbrupt] = useState(false); // scroll speed - fast for window size change
   const [editable, setEditable] = useState(false);
+  const [idEditable, setIdEditable] = useState(false);
 
   // console.log("fadeOut: ", fadeOut);
 
@@ -283,6 +286,33 @@ function Card({
     e.currentTarget.style.userSelect = "none";
   };
 
+  const onIdBlur = (e) => {
+    console.log("id blur");
+    setIdEditable(false);
+    const newId = e.currentTarget.innerText;
+    console.log("id: ", newId);
+    changeCardId(newId);
+    wordData.replaceCardId(newId).then((newWord) => {
+      console.log("word @ onIdBlur: ", newWord);
+      if (config === Config.ShowTopWord) {
+        changeTopWord(newWord.word1);
+      } else if (config === Config.ShowBottomWord) {
+        changeBottomWord(newWord.word1);
+      }
+      changeFlipWord(newWord.word2);
+    });
+  };
+
+  const onIdClick = (e) => {
+    console.log("id click");
+    e.stopPropagation();
+    setIdEditable(true);
+  };
+
+  const onIdFocus = (e) => {
+    console.log("id focus");
+  };
+
   return (
     <div className="container" id="myContainer">
       <div
@@ -304,11 +334,23 @@ function Card({
           }
         }}
       >
+        {/* className="card-id" */}
         <div className="front">
           <div className="card-top" style={{ backgroundColor: color }}></div>
           <div className="card-bottom" style={{ backgroundColor: color }}>
             {cardMessage && <div className="card-message"> {cardMessage} </div>}
             <div className="card-index">{cardIndex}</div>
+            <div
+              className="card-id"
+              onClick={onIdClick}
+              onBlur={onIdBlur}
+              onFocus={onIdFocus}
+              contentEditable={idEditable}
+              suppressContentEditableWarning
+              dangerouslySetInnerHTML={undefined}
+            >
+              {cardId}
+            </div>
           </div>
           <div
             className={

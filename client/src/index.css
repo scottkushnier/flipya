@@ -354,6 +354,20 @@ body.dev {
   /* background-color: rgba(240, 240, 240, 0.4); */
 }
 
+.card-id {
+  font-size: 1.8vw;
+  /* margin-top: 17vw; */
+  bottom: 0.5vw;
+  user-select: none;
+  font-style: italic;
+  width: 7vw;
+  margin-left: 1vw;
+  text-align: left;
+  color: rgba(255, 255, 255, 0.7);
+  position: absolute;
+  /* background-color: rgba(240, 240, 240, 0.4); */
+}
+
 .verified-box {
   background-color: rgb(166, 238, 166);
   padding: 15px 30px 15px 30px;

@@ -21,6 +21,16 @@ router.get("/:wordset_id/:n", async function (req, res, next) {
   }
 });
 
+router.get("/:id", async function (req, res, next) {
+  // console.log("req-query: ", req.query);
+  try {
+    const word = await Word.getWordById(req.params.id);
+    return res.json({ word });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 router.post("/:id", async function (req, res, next) {
   try {
     const modResult = await Word.modWord(

@@ -69,6 +69,7 @@ function Console() {
   const [isAdmin, setIsAdmin] = useState(retrieveIsAdmin());
   const [topWord, setTopWord] = useState("");
   const [bottomWord, setBottomWord] = useState(INITIAL_WORD);
+  const [cardId, setCardId] = useState("");
   const [flipWord, setFlipWord] = useState(INITIAL_WORD);
   const [config, setConfig] = useState(Config.ShowBottomWord);
   const [cardMessage, setCardMessage] = useState("click card to flip");
@@ -127,6 +128,10 @@ function Console() {
     setFlipWord(newWord);
   };
 
+  const changeCardId = (newId) => {
+    setCardId(newId);
+  };
+
   const refillWordData = () => {
     const rev = getReverseFromLS();
     const refillData = wordData.refillWordData();
@@ -149,6 +154,7 @@ function Console() {
           setTopWord(lastWord.word1);
         }
       }
+      setCardId(word.id);
       setAtFirstWord(!lastWord);
       setStarted(true);
       setTotCards(word.totWords);
@@ -216,7 +222,8 @@ function Console() {
         setConfig(Config.ShowTopWord); // and -quickly- switch to showing top
         // console.log("setting bottom word to: ", word.word1);
         setBottomWord(word.word1); // put new word below...
-        // console.log("next word: ", word);
+        setCardId(word.id);
+        console.log("next word: ", word);
         setTotCards(word.totWords);
         setCurrentIndex(word.cardIndex);
         if (process.env.NODE_ENV !== "test") {
@@ -246,6 +253,7 @@ function Console() {
         // console.log("next word: ", word);
         setTotCards(word.totWords);
         setCurrentIndex(word.cardIndex);
+        setCardId(word.id);
       });
     }
     if (!wordData.noMoreHistory()) {
@@ -273,6 +281,7 @@ function Console() {
         // console.log("prev word: ", word);
         setQuickChange(() => true);
         setBottomWord(topWord); // put current word (at top) at bottom position
+        setCardId(word.id);
         setConfig(Config.ShowBottomWord); // then -quickly- switch to showing bottom
         setTopWord(word.word1);
         setCurrentIndex(word.cardIndex);
@@ -296,6 +305,7 @@ function Console() {
         // console.log("prev word: ", word);
         setCurrentIndex(word.cardIndex);
         setFlipWord(word.word2);
+        setCardId(word.id);
       });
     }
     if (wordData.noMoreHistory()) {
@@ -423,6 +433,7 @@ function Console() {
       wordData.clearWordInfo();
       setConfig(Config.ShowBottomWord);
       setBottomWord(INITIAL_WORD);
+      setCardId("");
       setFlipWord(INITIAL_WORD);
       setTotCards(0);
       setCurrentIndex(0);
@@ -455,6 +466,7 @@ function Console() {
       // console.log("prev word: ", word);
       if (word) {
         setTopWord(word.word2);
+        setCardId(word.id);
         wordData.getNextWord(wordsetId, reverse);
       }
     });
@@ -473,6 +485,7 @@ function Console() {
     wordData.getNextWord(wordsetId, reverse).then((word) => {
       // console.log("next word: ", word);
       setBottomWord(word.word2);
+      setCardId(word.id);
       wordData.getPreviousWord(wordsetId, reverse);
     });
     setReverse(() => !reverse);
@@ -525,6 +538,7 @@ function Console() {
               color={cardColor}
               cardMessage={cardMessage}
               cardIndex={totCards ? currentIndex + "/" + totCards : ""}
+              cardId={isAdmin ? cardId : ""}
               flipSpeed={flipCardTransform(speed)}
               scrollSpeed={newWordTransform(speed)}
               fadeOut={fadeOut}
@@ -534,6 +548,7 @@ function Console() {
               changeBottomWord={changeBottomWord}
               changeFlipWord={changeFlipWord}
               isAdmin={isAdmin}
+              changeCardId={changeCardId}
             />
             {!auto && (
               <div className="prev-next-row">
