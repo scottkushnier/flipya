@@ -132,6 +132,14 @@ function Console() {
     setCardId(newId);
   };
 
+  const changeCardColor = (newColor) => {
+    setCardColor(newColor);
+  };
+
+  const changeWordsetId = (id) => {
+    setWordsetId(id);
+  };
+
   const refillWordData = () => {
     const rev = getReverseFromLS();
     const refillData = wordData.refillWordData();
@@ -222,6 +230,13 @@ function Console() {
         setConfig(Config.ShowTopWord); // and -quickly- switch to showing top
         // console.log("setting bottom word to: ", word.word1);
         setBottomWord(word.word1); // put new word below...
+        if (wordsetId !== word.wordset_id) {
+          console.log("wrong color");
+          FlipyaDB.getWordSet(word.wordset_id).then((wordset) => {
+            setCardColor(wordset.color);
+            setWordsetId(word.wordset_id);
+          });
+        }
         setCardId(word.id);
         // console.log("next word: ", word);
         setTotCards(word.totWords);
@@ -254,6 +269,13 @@ function Console() {
         setTotCards(word.totWords);
         setCurrentIndex(word.cardIndex);
         setCardId(word.id);
+        if (wordsetId !== word.wordset_id) {
+          console.log("wrong color (3)");
+          FlipyaDB.getWordSet(word.wordset_id).then((wordset) => {
+            setCardColor(wordset.color);
+            setWordsetId(word.wordset_id);
+          });
+        }
       });
     }
     if (!wordData.noMoreHistory()) {
@@ -284,6 +306,13 @@ function Console() {
         setCardId(word.id);
         setConfig(Config.ShowBottomWord); // then -quickly- switch to showing bottom
         setTopWord(word.word1);
+        if (wordsetId !== word.wordset_id) {
+          console.log("wrong color");
+          FlipyaDB.getWordSet(word.wordset_id).then((wordset) => {
+            setCardColor(wordset.color);
+            setWordsetId(word.wordset_id);
+          });
+        }
         setCurrentIndex(word.cardIndex);
         if (process.env.NODE_ENV !== "test") {
           setTimeout(() => {
@@ -306,6 +335,13 @@ function Console() {
         setCurrentIndex(word.cardIndex);
         setFlipWord(word.word2);
         setCardId(word.id);
+        if (wordsetId !== word.wordset_id) {
+          console.log("wrong color (4)");
+          FlipyaDB.getWordSet(word.wordset_id).then((wordset) => {
+            setCardColor(wordset.color);
+            setWordsetId(word.wordset_id);
+          });
+        }
       });
     }
     if (wordData.noMoreHistory()) {
@@ -549,6 +585,8 @@ function Console() {
               changeFlipWord={changeFlipWord}
               isAdmin={isAdmin}
               changeCardId={changeCardId}
+              changeCardColor={changeCardColor}
+              changeWordsetId={changeWordsetId}
             />
             {!auto && (
               <div className="prev-next-row">

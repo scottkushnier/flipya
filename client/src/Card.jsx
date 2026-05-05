@@ -4,6 +4,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import wordData from "./wordData";
+import FlipyaDB from "./FlipyaDB";
 
 // Functions to size fonts properly - longer words should use smaller fonts
 //   It's a little tricky, Hebrew vowels don't take extra space
@@ -157,6 +158,8 @@ function Card({
   changeFlipWord,
   isAdmin,
   changeCardId,
+  changeCardColor,
+  changeWordsetId,
 }) {
   const [showingFront, setShowingFront] = useState(config !== Config.Flipped);
   const [showingTop, setShowingTop] = useState(config === Config.ShowTopWord);
@@ -292,8 +295,13 @@ function Card({
     const newId = e.currentTarget.innerText;
     // console.log("id: ", newId);
     changeCardId(newId);
+    // changeCardColor("pink");
     wordData.replaceCardId(newId).then((newWord) => {
-      // console.log("word @ onIdBlur: ", newWord);
+      console.log("word @ onIdBlur: ", newWord);
+      FlipyaDB.getWordSet(newWord.wordset_id).then((wordset) => {
+        changeCardColor(wordset.color);
+        changeWordsetId(wordset.id);
+      });
       if (config === Config.ShowTopWord) {
         changeTopWord(newWord.word1);
       } else if (config === Config.ShowBottomWord) {
