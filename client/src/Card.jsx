@@ -297,7 +297,7 @@ function Card({
     changeCardId(newId);
     // changeCardColor("pink");
     wordData.replaceCardId(newId).then((newWord) => {
-      console.log("word @ onIdBlur: ", newWord);
+      // console.log("word @ onIdBlur: ", newWord);
       FlipyaDB.getWordSet(newWord.wordset_id).then((wordset) => {
         changeCardColor(wordset.color);
         changeWordsetId(wordset.id);

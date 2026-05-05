@@ -231,7 +231,7 @@ function Console() {
         // console.log("setting bottom word to: ", word.word1);
         setBottomWord(word.word1); // put new word below...
         if (wordsetId !== word.wordset_id) {
-          console.log("wrong color");
+          // console.log("wrong color");
           FlipyaDB.getWordSet(word.wordset_id).then((wordset) => {
             setCardColor(wordset.color);
             setWordsetId(word.wordset_id);
@@ -270,7 +270,7 @@ function Console() {
         setCurrentIndex(word.cardIndex);
         setCardId(word.id);
         if (wordsetId !== word.wordset_id) {
-          console.log("wrong color (3)");
+          // console.log("wrong color (3)");
           FlipyaDB.getWordSet(word.wordset_id).then((wordset) => {
             setCardColor(wordset.color);
             setWordsetId(word.wordset_id);
@@ -307,7 +307,7 @@ function Console() {
         setConfig(Config.ShowBottomWord); // then -quickly- switch to showing bottom
         setTopWord(word.word1);
         if (wordsetId !== word.wordset_id) {
-          console.log("wrong color");
+          // console.log("wrong color");
           FlipyaDB.getWordSet(word.wordset_id).then((wordset) => {
             setCardColor(wordset.color);
             setWordsetId(word.wordset_id);
@@ -336,7 +336,7 @@ function Console() {
         setFlipWord(word.word2);
         setCardId(word.id);
         if (wordsetId !== word.wordset_id) {
-          console.log("wrong color (4)");
+          // console.log("wrong color (4)");
           FlipyaDB.getWordSet(word.wordset_id).then((wordset) => {
             setCardColor(wordset.color);
             setWordsetId(word.wordset_id);

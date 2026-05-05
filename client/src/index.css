@@ -356,6 +356,7 @@ body.dev {
 
 .card-id {
   font-size: 1.8vw;
+  padding: 0.6vw;
   /* margin-top: 17vw; */
   bottom: 0.5vw;
   user-select: none;

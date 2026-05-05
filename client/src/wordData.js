@@ -354,7 +354,7 @@ class wordData {
     wordArray[currentWordIndex].id = newId;
     saveWordArrayInLS(wordArray);
     const newWord = await FlipyaDB.getWordById(newId);
-    console.log("new word: ", newWord);
+    // console.log("new word: ", newWord);
     wordArray[currentWordIndex].word1 = newWord.word1;
     wordArray[currentWordIndex].word2 = newWord.word2;
     wordArray[currentWordIndex].wordset_id = newWord.wordset_id;
