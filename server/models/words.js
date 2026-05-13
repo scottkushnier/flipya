@@ -9,7 +9,13 @@ class Word {
     // console.log("params: ", wordset_id, minLevel, maxLevel, n - 1);
     const res = await db.query(query, [wordset_id, minLevel, maxLevel, n - 1]);
     if (process.env.NODE_ENV !== "test") {
-      console.log("From DB: ", res.rows[0].word1, "-", res.rows[0].word2);
+      console.log(
+        "From DB: ",
+        res.rows[0].word1,
+        "-",
+        res.rows[0].word2,
+        res.rows[0].id,
+      );
     }
     return res.rows;
   }
