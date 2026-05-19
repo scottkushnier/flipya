@@ -156,6 +156,7 @@ function Card({
   changeTopWord,
   changeBottomWord,
   changeFlipWord,
+  username,
   isAdmin,
   changeCardId,
   changeCardColor,
@@ -276,11 +277,11 @@ function Card({
     if (config === Config.ShowTopWord) {
       // console.log("show-top-word");
       changeTopWord(newText);
-      wordData.replaceFrontWord(newText);
+      wordData.replaceFrontWord(newText, username);
     } else if (config === Config.ShowBottomWord) {
       // console.log("show-bottom-word");
       changeBottomWord(newText);
-      wordData.replaceFrontWord(newText);
+      wordData.replaceFrontWord(newText, username);
     } else {
       // console.log("flipped");
       changeFlipWord(newText);
@@ -321,6 +322,13 @@ function Card({
     // console.log("id focus");
   };
 
+  const onKeyDown = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.currentTarget.blur();
+    }
+  };
+
   return (
     <div className="container" id="myContainer">
       <div
@@ -353,6 +361,7 @@ function Card({
               onClick={onIdClick}
               onBlur={onIdBlur}
               onFocus={onIdFocus}
+              onKeyDown={onKeyDown}
               contentEditable={idEditable}
               suppressContentEditableWarning
               dangerouslySetInnerHTML={undefined}

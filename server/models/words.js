@@ -38,11 +38,19 @@ class Word {
   }
 
   // modify existing word in dictionaries
-  static async modWord(word1, word2, wordId) {
-    // console.log("mod word: ", word1, word2, wordId);
-    const query = "UPDATE words SET word1 = $1, word2 = $2 WHERE id = $3";
-    const res = await db.query(query, [word1, word2, wordId]);
-    return res;
+  static async modWord(word1, word2, wordId, username) {
+    console.log("mod word: ", word1, word2, wordId, username);
+    const userQuery = "SELECT rw_db FROM users WHERE username = $1";
+    const userRes = await db.query(userQuery, [username]);
+    const rwAccess = userRes.rows[0].rw_db;
+    // console.log("rw: ", rwAccess);
+    if (rwAccess) {
+      const query = "UPDATE words SET word1 = $1, word2 = $2 WHERE id = $3";
+      const res = await db.query(query, [word1, word2, wordId]);
+      return res;
+    } else {
+      return "unauthorized";
+    }
   }
 
   // used in setting up DB

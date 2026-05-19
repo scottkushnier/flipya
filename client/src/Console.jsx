@@ -583,6 +583,7 @@ function Console() {
               changeTopWord={changeTopWord}
               changeBottomWord={changeBottomWord}
               changeFlipWord={changeFlipWord}
+              username={user}
               isAdmin={isAdmin}
               changeCardId={changeCardId}
               changeCardColor={changeCardColor}

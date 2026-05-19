@@ -37,6 +37,7 @@ router.post("/:id", async function (req, res, next) {
       req.body.word1,
       req.body.word2,
       req.params.id,
+      req.body.username,
     );
     // console.log(
     //   "route: modword: ",

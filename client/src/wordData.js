@@ -318,7 +318,7 @@ class wordData {
     }
   }
 
-  static async replaceFrontWord(newWord) {
+  static async replaceFrontWord(newWord, username) {
     if (newWord === wordArray[currentWordIndex].word1) {
       // console.log("no change");
       return;
@@ -331,10 +331,11 @@ class wordData {
       wordArray[currentWordIndex].word1,
       wordArray[currentWordIndex].word2,
       wordArray[currentWordIndex].id,
+      username,
     );
   }
 
-  static async replaceFlipWord(newWord) {
+  static async replaceFlipWord(newWord, username) {
     if (newWord === wordArray[currentWordIndex].word2) {
       // console.log("no change");
       return;
@@ -347,6 +348,7 @@ class wordData {
       wordArray[currentWordIndex].word1,
       wordArray[currentWordIndex].word2,
       wordArray[currentWordIndex].id,
+      username,
     );
   }
 
