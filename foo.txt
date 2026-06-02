@@ -1,2 +1,3 @@
 Here's a foo file for the 'foo' branch.
+Line #2
 SDK
